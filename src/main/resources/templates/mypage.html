@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="dashboard">
+    <!-- 사이드바 -->
+    <div class="sidebar">
+        <div class="profile-section">
+            <img src="profile-pic.png" alt="Profile Picture" class="profile-img">
+            <h3>다다 사원</h3>
+            <p>인사팀</p>
+        </div>
+        <ul class="menu">
+            <li><a href="#">홈</a></li>
+            <li><a href="#">커뮤니티</a></li>
+            <li><a href="#">게시판</a></li>
+            <li><a href="#">일정</a></li>
+            <li><a href="#">메일</a></li>
+            <li><a href="#">설정</a></li>
+        </ul>
+    </div>
+
+    <!-- 메인 대시보드 -->
+    <div class="main-content">
+        <header class="header">
+            <h2>My Portal</h2>
+            <div class="header-right">
+                <input type="text" placeholder="통합검색">
+                <i class="bell-icon">🔔</i>
+                <i class="user-icon">👤</i>
+            </div>
+        </header>
+
+        <section class="stats">
+            <div class="stat-card">
+                <h3>진행 중인 프로젝트</h3>
+                <div class="progress-circle">
+                    <span>72%</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <h3>담당자별 프로젝트 진행 현황</h3>
+                <canvas id="project-chart"></canvas>
+            </div>
+            <div class="stat-card">
+                <h3>업무 진행 현황</h3>
+                <canvas id="task-chart"></canvas>
+            </div>
+        </section>
+
+        <section class="notifications">
+            <div class="notification-card">
+                <h3>최근 알림</h3>
+                <ul>
+                    <li>피우: DO 마케팅 팀 업무 현황 등록됨</li>
+                    <li>우람: 공지 사항 게시</li>
+                    <li>스피카: 긴급 공사 안내 등록</li>
+                </ul>
+            </div>
+            <div class="notification-card">
+                <h3>메일함</h3>
+                <ul>
+                    <li>스피카: 긴급 공사 안내</li>
+                    <li>우람: 다우 오피스 사용 안내</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+</div>
+</body>
+</html>
