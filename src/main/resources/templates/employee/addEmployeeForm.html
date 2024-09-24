@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>나의 정보</title>
+</head>
+<body>
+<table class="table table-striped">
+<thead>
+<tr>
+    <th>아이디</th>
+    <th>이름</th>
+    <th>직급</th>
+    <th>닉네임</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+    <tr th:each="Employee : ${emp}">
+    <td th:text="${Employee.id}">아이디</td>
+    <td th:text="${Employee.empName}">이름</td>
+    <td th:text="${Employee.empRank}">직급</td>
+    <td th:text="${Employee.empNickname}">닉네임</td>
+</tr>
+</tbody>
+</table>
+
+<div>
+    <i class="fa-solid fa-house"></i>
+</div>
+</body>
+</html>

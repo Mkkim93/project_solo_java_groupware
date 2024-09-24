@@ -18,17 +18,10 @@ public class AttendanceService {
      * 근태 정보 생성
      * 생성된 근태 정보 id 와 saveEmployee() att_id 에 주입
      */
-    public Attendance saveAttendance(AttendanceDTO newAttDto) {
-        Attendance attendance = createAttendance(newAttDto);
+    public Attendance saveAttendance() {
+        Attendance attendance = Attendance.builder()
+                .attCreate(LocalDateTime.now())
+                .build();
         return attendanceRepository.save(attendance);
-    }
-
-    // attendance 생성 메서드
-    public Attendance createAttendance(AttendanceDTO newAttDto) {
-        Attendance attendance = new Attendance();
-        LocalDateTime now = LocalDateTime.now();
-        newAttDto.setAttCreate(now);
-        attendance.setAttCreate(newAttDto.getAttCreate());
-        return attendance;
     }
 }

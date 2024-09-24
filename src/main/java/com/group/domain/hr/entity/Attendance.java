@@ -2,19 +2,21 @@ package com.group.domain.hr.entity;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static jakarta.persistence.GenerationType.*;
 
-@Getter @Setter
 @Entity
 @Table(name = "attendance")
+@Builder
+@Getter @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Attendance {
 
     @Id @GeneratedValue(strategy = IDENTITY)
@@ -40,4 +42,7 @@ public class Attendance {
 
     @Column(name = "att_create")
     private LocalDateTime attCreate;
+
+    @OneToMany(mappedBy = "attendance")
+    private List<Employee> employees = new ArrayList<>();
 }

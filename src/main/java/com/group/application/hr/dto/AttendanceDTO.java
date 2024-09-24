@@ -19,6 +19,11 @@ public class AttendanceDTO {
     private Date attDate;
     private LocalDateTime attCreate;
 
+    /**
+     *
+     * @param id 근태 번호
+     * COMMENT : 사원 등록 시 근태번호가 자동으로 생성되도록 로직 구현
+     */
     public AttendanceDTO(Integer id) {
         this. id= id;
     }

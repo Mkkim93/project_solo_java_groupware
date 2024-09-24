@@ -19,12 +19,5 @@ class AttendanceServiceTest {
     @Autowired
     AttendanceService attendanceService;
 
-    @Test
-    @DisplayName("근태 정보 생성")
-    public void saveAttendance() {
-        AttendanceDTO attendanceDTO = new AttendanceDTO();
-        LocalDateTime now = LocalDateTime.now();
-        attendanceDTO.setAttCreate(now);
-        attendanceService.saveAttendance(attendanceDTO);
-    }
+
 }

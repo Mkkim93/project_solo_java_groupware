@@ -35,6 +35,7 @@ public class DepartmentService {
     private static void departValidation(Integer departCode, Department updateDepart) {
         if (departCode != updateDepart.getId()) {
             log.info("부서 코드가 존재하지 않습니다.");
+            return;
         }
     }
 

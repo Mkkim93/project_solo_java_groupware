@@ -5,17 +5,18 @@ import com.group.domain.hr.entity.Department;
 import com.group.domain.hr.enums.EmpIsAdmin;
 import com.group.domain.hr.enums.EmpJoinYN;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import static jakarta.persistence.EnumType.*;
+import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "employee")
+@Getter @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Employee {
 
     @Id
@@ -50,40 +51,19 @@ public class Employee {
     private Integer empMileage;
 
     @Column(name = "emp_joinyn")
-    @Enumerated(EnumType.STRING)
-    private EmpJoinYN empJoinYN;
+    private String empJoinYN;
 
     @Column(name = "emp_isadmin")
-    @Enumerated(EnumType.STRING)
-    private EmpIsAdmin empIsAdmin;
+    private String empIsAdmin;
 
     @Column(name = "emp_no")
     private String empNo;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "dept_id") // 실제 db Employee 테이블에 있는 department 의 외래 키
     private Department department;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "att_id")
     private Attendance attendance;
-
-    @Override
-    public String toString() {
-        return "Employee{" +
-                "id=" + id +
-                ", empPass='" + empPass + '\'' +
-                ", empName='" + empName + '\'' +
-                ", empRank='" + empRank + '\'' +
-                ", empRegNo='" + empRegNo + '\'' +
-                ", empNickname='" + empNickname + '\'' +
-                ", userTel='" + userTel + '\'' +
-                ", empEmail='" + empEmail + '\'' +
-                ", userEmail='" + userEmail + '\'' +
-                ", empMileage=" + empMileage +
-                ", empJoinYN=" + empJoinYN +
-                ", empIsAdmin=" + empIsAdmin +
-                ", departmentName=" + department.getDeptName() + ", departmentCode=" + department.getDeptCode() +
-                '}';
-    }
 }

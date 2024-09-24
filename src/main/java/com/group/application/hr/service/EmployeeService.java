@@ -7,9 +7,12 @@ import com.group.domain.hr.entity.Department;
 import com.group.domain.hr.entity.Employee;
 import com.group.domain.hr.repository.EmployeeCustomRepository;
 import com.group.domain.hr.repository.EmployeeRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,11 +30,11 @@ public class EmployeeService {
     private final EmployeeCustomRepository employeeCustomRepository;
 
     // 회원 가입
-    public String saveEmployee(EmployeeDTO newEmpDto) {
-        Employee newEmpInfo = createEmployee(newEmpDto);
-        employeeRepository.save(newEmpInfo);
-        return newEmpInfo.getEmpName();
-    }
+    /*public EmployeeDTO saveEmployee(EmployeeDTO newEmpDto) {
+        // Employee EmpJoin = createEmployee(newEmpDto);
+        // employeeRepository.save(EmpJoin);
+        return null;
+    }*/
 
     // 모든 사원 조회
     public List<Employee> findAllEmployee() {
@@ -41,6 +44,7 @@ public class EmployeeService {
 
     // 나의 정보 조회
     public List<Employee> findByEmployee(Integer empId) {
+        employeeRepository.existsById(empId);
         return employeeRepository.findById(empId).stream().toList();
     }
 
@@ -50,42 +54,16 @@ public class EmployeeService {
     }
 
     // 나의 정보 수정
-    public void updateMyInfo() {
-
+    public void updateMyInfo(Integer empId, EmployeeDTO updateParam) {
+        updateParam.getUserEmail();
+        updateParam.getEmpNickName();
+        updateParam.getEmpName();
+        updateParam.getEmpPass();
+        employeeCustomRepository.updateMyInfo(updateParam, empId);
     }
 
-    // 회원 가입 메서드
-    public Employee createEmployee(EmployeeDTO newEmpDtO) {
-        Employee employee = new Employee();
+    public Employee findByEmpEmail(EmployeeDTO employeeDTO) {
 
-        employee.setEmpPass(newEmpDtO.getEmpPass());
-        employee.setEmpName(newEmpDtO.getEmpName());
-        employee.setEmpRank(newEmpDtO.getEmpRank());
-        employee.setEmpRegNo(newEmpDtO.getEmpRegNo());
-        employee.setEmpNickname(newEmpDtO.getEmpNickName());
-        employee.setUserTel(newEmpDtO.getUserTel());
-        employee.setUserEmail(newEmpDtO.getUserEmail());
-        employee.setEmpEmail(newEmpDtO.getEmpEmail());
-        employee.setEmpMileage(newEmpDtO.getEmpMileage());
-        employee.setEmpJoinYN(newEmpDtO.getEmpJoinYn());
-        employee.setEmpIsAdmin(newEmpDtO.getEmpIsAdmin());
-        employee.setEmpNo(newEmpDtO.getEmpNo());
-
-        Department department = new Department();
-        Attendance attendance = new Attendance();
-        AttendanceDTO attendanceDTO = new AttendanceDTO();
-
-        department.setId(newEmpDtO.getDeptId());
-
-        Attendance newAttendance = attendanceService.saveAttendance(attendanceDTO);
-
-        attendance.setId(newAttendance.getId());
-
-        // 부서정보, 근태정보 추가
-        employee.setDepartment(department);
-        employee.setAttendance(attendance);
-
-        return employee;
+        return employeeRepository.findByEmpEmail(employeeDTO.getEmpEmail());
     }
-
 }

@@ -5,12 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static jakarta.persistence.GenerationType.IDENTITY;
 
-@Getter
-@Setter
+
 @Entity
 @Table(name = "department")
+@Getter @Setter
 @NoArgsConstructor
 public class Department {
 
@@ -23,12 +26,6 @@ public class Department {
     @Column(name = "dept_name")
     private String deptName;
 
-    @Override
-    public String toString() {
-        return "Department{" +
-                "id=" + id +
-                ", deptCode='" + deptCode + '\'' +
-                ", deptName='" + deptName + '\'' +
-                '}';
-    }
+    @OneToMany(mappedBy = "department")
+    private List<Employee> employees = new ArrayList<>();
 }
