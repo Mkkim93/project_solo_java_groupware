@@ -1,18 +1,18 @@
 package com.group.application.login.service;
 
-import com.group.application.hr.dto.AttendanceDTO;
 import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.hr.service.AttendanceService;
-import com.group.domain.hr.entity.Attendance;
-import com.group.domain.hr.entity.Department;
+import com.group.application.hr.service.DepartmentService;
 import com.group.domain.hr.entity.Employee;
 import com.group.domain.hr.repository.AttendanceRepository;
 import com.group.domain.hr.repository.DepartmentRepository;
 import com.group.domain.hr.repository.EmployeeRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class JoinService {
 
@@ -21,70 +21,60 @@ public class JoinService {
     private final DepartmentRepository departmentRepository;
     private final AttendanceRepository attendanceRepository;
     private final AttendanceService attendanceService;
+    private final DepartmentService departmentService;
 
     @Autowired
     public JoinService(EmployeeRepository employeeRepository,
                        BCryptPasswordEncoder bCryptPasswordEncoder,
                        DepartmentRepository departmentRepository,
                        AttendanceRepository attendanceRepository,
-                       AttendanceService attendanceService) {
+                       AttendanceService attendanceService,
+                       DepartmentService departmentService) {
         this.employeeRepository = employeeRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.departmentRepository = departmentRepository;
         this.attendanceRepository = attendanceRepository;
         this.attendanceService = attendanceService;
+        this.departmentService = departmentService;
     }
 
     /**
      * # 회원가입 : 사원 등록
-     *
-     * @param newEmpDtO
      */
-    public void joinProcess(EmployeeDTO newEmpDtO) {
-        Boolean isByEmpEmail = employeeRepository.existsByEmpEmail(newEmpDtO.getEmpEmail());
-        // TODO
+    public EmployeeDTO joinProcess(EmployeeDTO newEmpDto) {
+        Boolean isByEmpEmail = employeeRepository.existsByEmpEmail(newEmpDto.getEmpEmail());
         if (isByEmpEmail) {
-            return;
+            log.info("id 중복 true or false ={}", true);
+            return null;
         }
-        boolean isByAttId = attendanceRepository.existsById(newEmpDtO.getAttId());
-        // TODO
-        if (isByAttId) {
-            return;
-        }
-        boolean isByDeptId = departmentRepository.existsById(newEmpDtO.getDeptId());
-        // TODO
-        if (!isByDeptId) {
-            return;
-        }
-        attendanceService.saveAttendance();
-
-        // TODO RuntimeException 처리
-        Department deptId = departmentRepository.findById(newEmpDtO.getDeptId())
-                .orElseThrow(() -> new RuntimeException());
-
-        Attendance attId = attendanceRepository.findById(newEmpDtO.getAttId())
-                .orElseThrow(() -> new RuntimeException());
-
-        Employee employee = dtoConverterEmployee(newEmpDtO, deptId, attId);
-        employeeRepository.save(employee);
+        Employee employee = getEntityForJoin(newEmpDto);
+        Employee saveEmployee = employeeRepository.save(employee);
+        EmployeeDTO savedEmpDto = getDtoForJoin(saveEmployee);
+        return savedEmpDto;
     }
 
-    // Dto -> Entity
-    private Employee dtoConverterEmployee(EmployeeDTO newEmpDtO, Department deptId, Attendance attId) {
-        Employee employee = Employee.builder()
-                .empEmail(newEmpDtO.getEmpEmail())
-                .empPass(bCryptPasswordEncoder.encode(newEmpDtO.getEmpPass()))
-                .empRank(newEmpDtO.getEmpRank())
-                .empName(newEmpDtO.getEmpName())
-                .empRegNo(newEmpDtO.getEmpRegNo())
-                .empNickname(newEmpDtO.getEmpNickName())
-                .userTel(newEmpDtO.getUserTel())
-                .userEmail(newEmpDtO.getUserEmail())
-                .empIsAdmin(newEmpDtO.getEmpIsAdmin())
-                .department(deptId)
-                .attendance(attId)
-                .empNo(newEmpDtO.getEmpNo())
+    private EmployeeDTO getDtoForJoin(Employee saveEmployee) {
+
+        EmployeeDTO employeeDTO = EmployeeDTO.builder()
+                .empEmail(saveEmployee.getEmpEmail())
+                .empPass(saveEmployee.getEmpPass())
+                .empName(saveEmployee.getEmpName())
+                .empRegNo(saveEmployee.getEmpRegNo())
+                .userEmail(saveEmployee.getUserEmail())
+                .empNickName(saveEmployee.getEmpNickname())
                 .build();
-        return employee;
+        return employeeDTO;
+    }
+
+    private Employee getEntityForJoin(EmployeeDTO newEmpDto) {
+        Employee empEntity = Employee.builder()
+                .empEmail(newEmpDto.getEmpEmail())
+                .empPass(bCryptPasswordEncoder.encode(newEmpDto.getEmpPass()))
+                .empName(newEmpDto.getEmpName())
+                .empRegNo(newEmpDto.getEmpRegNo())
+                .userEmail(newEmpDto.getUserEmail())
+                .empNickname(newEmpDto.getEmpNickName())
+                .build();
+        return empEntity;
     }
 }

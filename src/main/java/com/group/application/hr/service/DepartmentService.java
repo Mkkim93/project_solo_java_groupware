@@ -3,68 +3,97 @@ package com.group.application.hr.service;
 import com.group.application.hr.dto.DepartmentDTO;
 import com.group.domain.hr.entity.Department;
 import com.group.domain.hr.repository.DepartmentRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Slf4j
+import static com.group.domain.hr.entity.QDepartment.*;
+
 @Service
-@RequiredArgsConstructor
+@Transactional
 public class DepartmentService {
 
-    @Autowired
     private final DepartmentRepository departmentrepository;
 
-    /**
-     * 부서 업데이트
-     * @param departCode 기본키를 입력
-     * @param updateParam 입력된 기본키의 부서코드, 부서명 변경
-     */
-    public void updateDepart(Integer departCode, DepartmentDTO updateParam) {
-        Department updateDepart = departmentrepository.findById(departCode).orElseThrow();
-        updateDepart.setDeptCode(updateParam.getDeptCode());
-        updateDepart.setDeptName(updateParam.getDeptName());
-        departValidation(departCode, updateDepart);
-        departmentrepository.save(updateDepart);
+    @Autowired
+    private EntityManager entityManager;
+
+    private JPAQueryFactory jpaQueryFactory;
+
+    public DepartmentService(DepartmentRepository departmentrepository, EntityManager entityManager) {
+        this.departmentrepository = departmentrepository;
+        jpaQueryFactory = new JPAQueryFactory(entityManager);
     }
 
-    // TODO validation : department Code 없을 때 예외
-    private static void departValidation(Integer departCode, Department updateDepart) {
-        if (departCode != updateDepart.getId()) {
-            log.info("부서 코드가 존재하지 않습니다.");
-            return;
-        }
-    }
+    // 부서 생성
+    public void save(DepartmentDTO departmentDTO) {
 
-    /**
-     * 부서 삭제
-     * @param deleteParam
-     */
-    public void deleteDepartment(DepartmentDTO deleteParam) {
-        Integer deptId = deleteParam.getId();
-        departmentrepository.deleteById(deptId);
-    }
-
-    /**
-     * 부서 등록
-     * @param saveParam
-     */
-    public void saveDepartment(DepartmentDTO saveParam) {
-        Department department = new Department();
-        department.setDeptCode(saveParam.getDeptCode());
-        department.setDeptName(saveParam.getDeptName());
+        Department department = getEntityForSave(departmentDTO);
         departmentrepository.save(department);
     }
 
-    /**
-     * 부서 조회 (all)
-     */
-    public void findAllDepartment() {
-        List<Department> departmentList = departmentrepository.findAll();
-        departmentList.stream().forEach(System.out::println);
+    // DTO -> Entity
+    private Department getEntityForSave(DepartmentDTO departmentDTO) {
+
+        Department department = Department.builder()
+                .deptCode(departmentDTO.getDeptCode())
+                .deptName(departmentDTO.getDeptName())
+                .deptIsDeleted("Y")
+                .build();
+        return department;
+    }
+
+    // 전체 부서 조회
+    public List<DepartmentDTO> findAll() {
+
+        return jpaQueryFactory
+                .select(Projections.fields(DepartmentDTO.class,
+                        department.id,
+                        department.deptCode,
+                        department.deptName))
+                .from(department)
+                .fetch();
+    }
+
+    // 부서 정보 수정
+    public Department update(DepartmentDTO departmentDTO) {
+        Department department = departmentrepository
+                .findById(departmentDTO.getId())
+                .orElseThrow(() -> new EntityNotFoundException(""));
+
+        department.setDeptName(departmentDTO.getDeptName());
+        department.setDeptCode(departmentDTO.getDeptCode());
+
+        return departmentrepository.save(department);
+    }
+
+    // 부서 삭제 isdeleted : (N -> Y)
+    public void delete(DepartmentDTO departmentDTO) {
+
+        Department department = departmentrepository
+                .findById(departmentDTO.getId())
+                .orElseThrow(() -> new EntityNotFoundException("notFountEntity " + departmentDTO.getId()));
+
+        department.setDeptIsDeleted("Y");
+
+        departmentrepository.save(department);
+    }
+
+    // 삭제된 부서 활성화 isdeleted : (Y -> N)
+    public void enable(DepartmentDTO departmentDTO) {
+        Department department = departmentrepository
+                .findById(departmentDTO.getId())
+                .orElseThrow(() -> new EntityNotFoundException("notFountEntity " + departmentDTO.getId()));
+
+        department.setDeptIsDeleted("N");
+
+        departmentrepository.save(department);
     }
 }
 

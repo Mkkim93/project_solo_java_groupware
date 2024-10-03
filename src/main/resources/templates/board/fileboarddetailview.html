@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>파일 게시판 상세 페이지</title>
+</head>
+<body>
+<h1 th:text="${fileBoardDTO.boardTitle}"></h1>
+<p th:text="${fileBoardDTO.boardContent}"></p>
+<p th:text="${fileBoardDTO.boardContent}"></p>
+
+<a th:href="@{${fileBoardDTO.fBoardPath}}">이미지 보기</a>
+</body>
+</html>

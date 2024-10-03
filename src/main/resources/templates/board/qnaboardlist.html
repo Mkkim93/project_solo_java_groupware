@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>건의 게시판 리스트</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .pagination a {
+            color: #007bff;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+        .pagination a:hover {
+            text-decoration: underline;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>건의 게시판 리스트</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+            <th>조회</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="qnABoardDTO : ${qnABoardDTO.content}">
+            <td>
+                <a href="javascript:void(0);"
+                   th:text="${qnABoardDTO.boardTitle}"
+                   th:onclick="inputPass([[${qnABoardDTO.id}]])">
+                </a>
+            </td>
+            <td th:text="${qnABoardDTO.empName}"></td>
+            <td th:text="${qnABoardDTO.boardRegDate}"></td>
+            <td th:text="${qnABoardDTO.boardViewCount}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <span th:if="${qnABoardDTO.hasPrevious()}">
+            <a th:href="@{/board/qnaboardlist(page=${qnABoardDTO.number - 1})}">이전</a>
+        </span>
+
+        <span th:each="i : ${#numbers.sequence(0, qnABoardDTO.totalPages - 1)}">
+            <a th:href="@{/board/qnaboardlist(page=${i})}" th:text="${i + 1}"></a>
+        </span>
+
+        <span th:if="${qnABoardDTO.hasNext()}">
+            <a th:href="@{/board/qnaboardlist(page=${qnABoardDTO.number + 1})}">다음</a>
+        </span>
+    </div>
+
+    <a class="btn" th:onclick="|location.href='@{/board/qnaboardwrite}'|">글 작성</a>
+</div>
+
+<script>
+    // TODO 비밀번호 오류 시 qnaboardlist 로 이동 하는 기능 구현
+    function inputPass(boardId) {
+        var qBoardPass = prompt("비밀번호를 입력하세요:");
+        var url;
+        if (qBoardPass) {
+            // 비밀번호를 포함한 게시글 조회 URL로 이동
+            url = `/board/qnaboarddetailview/${boardId}?qBoardPass=${qBoardPass}`;
+            window.location.href = url;
+        }
+        else {
+            alert("비밀번호를 입력하지 않았습니다.");
+        }
+    }
+</script>
+</body>
+</html>

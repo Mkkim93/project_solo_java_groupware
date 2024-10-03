@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class CustomUserDetails implements UserDetails {
 
@@ -39,6 +38,10 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public String getUsername() {
         return employee.getEmpEmail();
+    }
+
+    public Employee getEmployee() {
+        return employee;
     }
 
     @Override

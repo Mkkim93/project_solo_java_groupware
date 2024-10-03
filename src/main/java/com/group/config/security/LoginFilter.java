@@ -37,7 +37,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         System.out.println("Attempting login with password: " + password);
 
         // parameters 3번째에 roleType
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(empEmail, password, null);
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(empEmail, password);
 
         return authenticationManager.authenticate(authToken);
     }
@@ -50,14 +50,16 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         String empEmail = customUserDetails.getUsername();
 
+        Integer id = customUserDetails.getEmployee().getId();
+
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
 
         String role = auth.getAuthority();
 
-        String token = jwtUtil.createJwt(empEmail, role, 3600 * 3600 * 10L);
-        response.addHeader("Authorization", "Bearer " + token); // TODO 띄어쓰기 하는 이유 (?)
+        String token = jwtUtil.createJwt(empEmail, role, id, 60 * 60 * 10L);
+        response.addHeader("Authorization", "Bearer " + token);
     }
 
     // Authorization : 타입 인증 토큰

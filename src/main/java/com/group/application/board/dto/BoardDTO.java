@@ -1,44 +1,99 @@
 package com.group.application.board.dto;
 
-import com.group.application.hr.dto.EmployeeDTO;
+import com.group.domain.board.entity.Board;
 import com.group.domain.hr.entity.Employee;
-import jakarta.persistence.Column;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.querydsl.core.annotations.QueryProjection;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class BoardDTO {
 
+    // 모든 게시판 공용
     private Integer id;
-
     private String boardTitle;
-
-    private String boardWriter;
-
     private String boardContent;
-
+    private String empName;
     private LocalDateTime boardRegDate;
-
     private LocalDateTime boardUpdateDate;
-
     private LocalDateTime boardDeleteDate;
-
     private Integer boardViewCount;
+    private String isDeleted;
+    private Employee empId;
 
-    private Integer empId;
+    // qna 게시판 비밀번호 사용을 위한 필드 변수 생성
+    private Integer qBoardPass;
 
-    public BoardDTO(){}
+    // 파일 게시판을 위한 필드 변수 생성
+    private String fBoardName;
+    private Long fBoardSize;
+    private String fBoardType;
+    private String fBoardPath;
 
-    // 게시글 작성
-    public BoardDTO(String boardTitle, String boardWriter, String boardContent,
-                    LocalDateTime boardRegDate, Integer boardViewCount, Integer empId) {
+    //자유 게시판 조회를 위한 dto 생성
+    @QueryProjection
+    public BoardDTO(Integer id, String boardTitle, String boardContent,
+                    String empName, LocalDateTime boardRegDate, Integer boardViewCount,
+                    String isDeleted) {
+        this.id = id;
         this.boardTitle = boardTitle;
-        this.boardWriter = boardWriter;
         this.boardContent = boardContent;
+        this.empName = empName;
         this.boardRegDate = boardRegDate;
         this.boardViewCount = boardViewCount;
+        this.isDeleted = isDeleted;
+    }
+
+    public BoardDTO(Integer qBoardPass) {
+        this.qBoardPass = qBoardPass;
+    }
+
+    @Builder
+    public void updateFromDto(String boardTitle, String boardContent, Employee empId) {
+        this.boardTitle = boardTitle;
+        this.boardContent = boardContent;
         this.empId = empId;
+    }
+
+    // 게시판 공용으로 사용 하기 위한 dto 생성
+    public BoardDTO(Integer id, String boardTitle, String boardContent) {
+        this.id = id;
+        this.boardTitle = boardTitle;
+        this.boardContent = boardContent;
+    }
+
+    public void setAuthor(String empName) {
+        this.empName = empName;
+    }
+
+    public void setBoardDTO(FileBoardDTO fileBoardDTO) {
+        this.boardTitle = fileBoardDTO.getBoardTitle();
+        this.boardContent = fileBoardDTO.getBoardContent();
+    }
+
+    public void freeConverterBoard(FreeBoardDTO freeBoardDTO) {
+        this.boardTitle = freeBoardDTO.getBoardTitle();
+        this.boardContent = freeBoardDTO.getBoardContent();
+    }
+
+    public void noticeConverterBoard(NoticeBoardDTO noticeBoardDTO) {
+        this.boardTitle = noticeBoardDTO.getBoardTitle();
+        this.boardContent = noticeBoardDTO.getBoardContent();
+    }
+
+    public void qnaConverterBoard(QnABoardDTO qnABoardDTO) {
+        this.boardTitle = qnABoardDTO.getBoardTitle();
+        this.boardContent = qnABoardDTO.getBoardContent();
+    }
+
+    public BoardDTO fromDTO(Board board) {
+        this.id = board.getId();
+        this.boardTitle = board.getBoardTitle();
+        this.boardContent = board.getBoardContent();
+        return this;
     }
 }

@@ -1,14 +1,16 @@
 package com.group.domain.board.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
 
 @Entity
 @Table(name = "fileboard")
-@Getter @NoArgsConstructor
+@Getter @Setter
+@NoArgsConstructor
 public class FileBoard {
 
     @Id @GeneratedValue(strategy = IDENTITY)
@@ -18,7 +20,7 @@ public class FileBoard {
     private String fBoardName;
 
     @Column(name = "fboard_size")
-    private String fBoardSize;
+    private Long fBoardSize;
 
     @Column(name = "fboard_type")
     private String fBoardType;
@@ -26,7 +28,17 @@ public class FileBoard {
     @Column(name = "fboard_path")
     private String fBoardPath;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = "board_id")
     private Board boardId;
+
+    @Builder
+    public FileBoard(String fBoardName, Long fBoardSize, String fBoardPath, String fBoardType,
+                     Board boardId) {
+        this.fBoardName = fBoardName;
+        this.fBoardSize = fBoardSize;
+        this.fBoardPath = fBoardPath;
+        this.fBoardType = fBoardType;
+        this.boardId = boardId;
+    }
 }

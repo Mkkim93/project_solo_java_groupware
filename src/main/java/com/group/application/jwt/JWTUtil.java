@@ -1,5 +1,6 @@
 package com.group.application.jwt;
 
+import com.group.domain.hr.entity.Employee;
 import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -35,6 +36,15 @@ public class JWTUtil {
                 .get("empEmail", String.class);
     }
 
+    public Integer getUserId(String token) {
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("id", Integer.class);
+    }
+
     public String getRole(String token) {
         return Jwts.parser()
                 .verifyWith(secretKey)
@@ -53,8 +63,10 @@ public class JWTUtil {
                 .before(new Date());
     }
 
-    public String createJwt(String empEmail, String empIsAdmin, Long expiredMs) {
+    // 토큰 발급 받을 컬럼 추가 엄
+    public String createJwt(String empEmail, String empIsAdmin, Integer id, Long expiredMs) {
         return Jwts.builder()
+                .claim("id", id)
                 .claim("empEmail", empEmail)
                 .claim("empIsAdmin", empIsAdmin)
                 .issuedAt(new Date(System.currentTimeMillis()))

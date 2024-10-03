@@ -2,7 +2,9 @@ package com.group.web.login.controller;
 
 import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.hr.service.EmployeeService;
+import com.group.application.login.dto.CustomUserDetails;
 import com.group.domain.hr.entity.Employee;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,27 +20,23 @@ import java.util.List;
 @ResponseBody
 public class MainController {
 
-    private final EmployeeService employeeService;
-
-    public MainController(EmployeeService employeeService) {
-        this.employeeService = employeeService;
-    }
-
     @GetMapping("/")
     public String mainP() {
-        String empEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-        GrantedAuthority auth = iterator.next();
-        String role = auth.getAuthority();
-        EmployeeDTO employeeDTO = new EmployeeDTO();
-        employeeDTO.setEmpEmail(empEmail);
+        if (authentication.getPrincipal() instanceof CustomUserDetails) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        Employee findByEmpList = employeeService.findByEmpEmail(employeeDTO);
+            // Employee 정보 가져오기
+            String empEmail = userDetails.getUsername();
+            // 권한(ROLE) 가져오기
+            Integer id = userDetails.getEmployee().getId();
+            Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
+            String role = authorities.iterator().next().getAuthority();
 
-        return "Main Controller" + findByEmpList.toString() + role;
+            return "Main Controller : " + empEmail + ", ID: " + id + ", roleType : " + role;
+        }
+
+        return "Unauthorized";
     }
 }

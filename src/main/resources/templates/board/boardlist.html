@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판 리스트</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .table-header {
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        th {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        .pagination {
+            margin-top: 15px;
+        }
+        .btn-create {
+            margin-top: 15px;
+        }
+        .page-link {
+            margin: 0 5px;
+        }
+        .page-item.active .page-link {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 class="text-center mb-4">게시판 리스트</h2>
+    <div>
+        <table class="table table-header table-striped">
+            <thead>
+            <tr>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>작성일</th>
+                <th>조회</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="boardDTO : ${boardDTO.content}">
+                <td><a th:text="${boardDTO.boardTitle}" th:href="@{/board/boarddetailview(id=${boardDTO.id})}" class="text-decoration-none"></a></td>
+                <td th:text="${boardDTO.empName}"></td>
+                <td th:text="${boardDTO.boardRegDate}"></td>
+                <td th:text="${boardDTO.boardViewCount}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="pagination">
+            <span th:if="${boardDTO.hasPrevious()}">
+                <a th:href="@{/board/boardlist(page=${boardDTO.number - 1})}" class="btn btn-link">이전</a>
+            </span>
+            <span th:each="i : ${#numbers.sequence(0, boardDTO.totalPages - 1)}">
+                <a th:href="@{/board/boardlist(page=${i})}" class="btn btn-link" th:text="${i + 1}"></a>
+            </span>
+            <span th:if="${boardDTO.hasNext()}">
+                <a th:href="@{/board/boardlist(page=${boardDTO.number + 1})}" class="btn btn-link">다음</a>
+            </span>
+        </div>
+    </div>
+    <button th:onclick="|location.href='@{/board/boardwrite}'|" class="btn btn-primary btn-create">글 작성</button>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

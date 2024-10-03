@@ -1,13 +1,8 @@
 package com.group.domain.hr.entity;
 
-import com.group.application.hr.dto.EmployeeDTO;
-import com.group.domain.hr.entity.Department;
-import com.group.domain.hr.enums.EmpIsAdmin;
-import com.group.domain.hr.enums.EmpJoinYN;
 import jakarta.persistence.*;
 import lombok.*;
 
-import static jakarta.persistence.EnumType.*;
 import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.IDENTITY;
 

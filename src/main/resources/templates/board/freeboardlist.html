@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>자유 게시판</title>
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f4f8;
+        }
+        .container {
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #343a40;
+        }
+        .table-header {
+            background-color: #0062cc;
+            color: white;
+        }
+        .table-header th {
+            font-weight: bold;
+            text-align: center;
+        }
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #e2e6ea;
+        }
+        .table-striped tbody tr:hover {
+            background-color: #cfe2f3;
+        }
+        .pagination {
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .pagination .btn-outline-secondary {
+            color: #0062cc;
+            border-color: #0062cc;
+        }
+        .pagination .btn-outline-secondary:hover {
+            background-color: #0062cc;
+            color: white;
+        }
+        .btn-primary {
+            background-color: #28a745;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #218838;
+        }
+        .btn-outline-primary {
+            border-color: #28a745;
+            color: #28a745;
+        }
+        .btn-outline-primary:hover {
+            background-color: #28a745;
+            color: white;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 class="text-center mb-4">자유 게시판</h2>
+    <table class="table table-header table-striped table-hover">
+        <thead>
+        <tr>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+            <th>조회</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="freeBoardDTO : ${freeBoardDTO.content}">
+            <td>
+                <a th:text="${freeBoardDTO.boardTitle}" th:href="@{/board/freeboarddetailview(id=${freeBoardDTO.id})}"></a>
+            </td>
+            <td th:text="${freeBoardDTO.empName}" class="text-center"></td>
+            <td th:text="${freeBoardDTO.boardRegDate}" class="text-center"></td>
+            <td th:text="${freeBoardDTO.boardViewCount}" class="text-center"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <span th:if="${freeBoardDTO.hasPrevious()}">
+            <a class="btn btn-outline-primary" th:href="@{/board/freeboardlist(page=${freeBoardDTO.number - 1})}">이전</a>
+        </span>
+
+        <span th:each="i : ${#numbers.sequence(0, freeBoardDTO.totalPages - 1)}">
+            <a class="btn btn-outline-secondary" th:href="@{/board/freeboardlist(page=${i})}" th:text="${i + 1}"></a>
+        </span>
+
+        <span th:if="${freeBoardDTO.hasNext()}">
+            <a class="btn btn-outline-primary" th:href="@{/board/freeboardlist(page=${freeBoardDTO.number + 1})}">다음</a>
+        </span>
+    </div>
+
+    <div class="text-center">
+        <button class="btn btn-primary" th:onclick="|location.href='@{/board/freeboardwrite}'|">글 작성</button>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
