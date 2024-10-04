@@ -49,4 +49,21 @@ public class NoticeBoardController {
         model.addAttribute("noticeBoardDTO", noticeBoardService.findByIdNoticeBoard(id));
         return "/board/noticeboarddetailview";
     }
+
+    @GetMapping("/noticeboardmodify/{id}")
+    public String boardModifyView(Model model,
+                                  @PathVariable("id") Integer id) {
+        model.addAttribute("noticeBoardDTO", noticeBoardService.findByIdNoticeBoardId(id));
+        return "/board/noticeboardmodify";
+    }
+
+    @PostMapping("/noticeboardmodify/update/{id}")
+    public String boardWritingForm(@PathVariable("id") Integer id,
+                                   @ModelAttribute NoticeBoardDTO noticeBoardDTO) {
+        NoticeBoardDTO noticeBoardTemp = noticeBoardService.findByIdNoticeBoard(id);
+        noticeBoardTemp.setBoardTitle(noticeBoardDTO.getBoardTitle());
+        noticeBoardTemp.setBoardContent(noticeBoardTemp.getBoardContent());
+        noticeBoardService.updateNoticeBoard(noticeBoardTemp);
+        return "redirect:/board/noticeboardlist";
+    }
 }

@@ -12,4 +12,7 @@ public interface NoticeBoardRepository extends JpaRepository<NoticeBoard, Intege
     @Modifying
     @Query("update Board b set b.boardViewCount = b.boardViewCount + 1 where b.id = :id")
     Integer updateBoardViewCount(@Param("id") Integer id);
+
+    @Query("select n.boardId.id from NoticeBoard n where n.id = :id")
+    Integer findBoardIdByNoticeBoardId(@Param("id") Integer id);
 }

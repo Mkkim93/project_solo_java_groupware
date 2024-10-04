@@ -1,5 +1,7 @@
 package com.group.application.board.dto;
 
+import com.group.domain.board.entity.Board;
+import com.group.domain.board.entity.FreeBoard;
 import com.group.domain.hr.entity.Employee;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
@@ -32,5 +34,15 @@ public class FreeBoardDTO {
         this.boardRegDate = boardRegDate;
         this.boardViewCount = boardViewCount;
         this.isDeleted = isDeleted;
+    }
+
+    public FreeBoardDTO fromFreeBoardDTO(Board board) {
+        this.boardId = board.getId();
+        return this;
+    }
+
+    public FreeBoardDTO setDto(FreeBoard freeBoard) {
+        this.id = freeBoard.getBoardId().getId();
+        return this;
     }
 }

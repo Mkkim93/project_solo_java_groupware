@@ -24,7 +24,8 @@ public class NoticeBoard {
     private Board boardId;
 
     @Builder
-    public NoticeBoard(Board boardId) {
+    public NoticeBoard(Board boardId, Integer id) {
+        this.id = id;
         this.boardId = boardId;
     }
 }

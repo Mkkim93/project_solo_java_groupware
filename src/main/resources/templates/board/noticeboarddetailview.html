@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>공지 사항 상세 페이지</title>
+    <title>공지 게시판 상세 페이지</title>
 </head>
 <body>
+<input type="hidden" th:value="*{noticeBoardDTO.id}" th:field="*{noticeBoardDTO.id}" />
 <h1 th:text="${noticeBoardDTO.boardTitle}">제목입니다.</h1>
 <p th:text="${noticeBoardDTO.boardContent}"></p>
-<p th:text="${noticeBoardDTO.empName}"></p>
+<!--<p th:text="${freeBoardDTO.empName}"></p>-->
+<a th:href="@{/board/noticeboardmodify/{id}(id = ${noticeBoardDTO.id})}">수정</a>
 </body>
 </html>

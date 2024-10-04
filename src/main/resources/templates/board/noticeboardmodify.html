@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>공지글 수정 페이지</title>
+</head>
+<body>
+<div class="layout">
+    <h2>공지 수정</h2>
+
+    <form th:action="@{/board/noticeboardmodify/update/{id}(id=${noticeBoardDTO.id})}"
+          th:object="${noticeBoardDTO}" method="post">
+        <input type="hidden" th:field="*{id}" />
+        <input type="text" name="boardTitle" th:field="*{boardTitle}" placeholder="제목" required/>
+        <textarea name="boardContent" th:field="*{boardContent}" placeholder="내용" required></textarea>
+        <button type="submit">게시글 수정</button>
+    </form>
+</div>
+</div>
+</body>
+</html>

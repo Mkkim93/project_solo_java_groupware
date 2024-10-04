@@ -1,6 +1,7 @@
 package com.group.domain.board.entity;
 
 import com.group.application.board.dto.BoardDTO;
+import com.group.application.board.dto.FreeBoardDTO;
 import com.group.domain.hr.entity.Employee;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,7 +36,7 @@ public class Board {
     private String boardContent;
 
     // @CreatedDate
-    @Column(name = "board_regdate", updatable = false, nullable = false)
+    @Column(name = "board_regdate", updatable = false)
     private LocalDateTime boardRegDate;
 
     @Column(name = "board_updatedate")
@@ -47,7 +48,7 @@ public class Board {
     @Column(name = "board_viewcount", updatable = false)
     private Integer boardViewCount;
 
-    @Column(name = "board_isdeleted")
+    @Column(name = "board_isdeleted", updatable = false)
     private String boardIsDeleted;
 
     @ManyToOne(fetch = LAZY)
@@ -65,10 +66,11 @@ public class Board {
     }
 
     @Builder
-    public Board (String boardTitle, String boardContent, Employee empId, Integer id) {
+    public Board (String boardTitle, String boardContent, Employee empId, Integer id, LocalDateTime boardRegDate) {
         this.id = id;
         this.boardTitle = boardTitle;
         this.boardContent = boardContent;
         this.empId = empId;
+        this.boardRegDate = boardRegDate;
     }
 }

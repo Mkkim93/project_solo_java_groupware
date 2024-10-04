@@ -18,14 +18,15 @@ public class QnABoardDTO {
     private Integer boardViewCount;
     private String isDeleted;
     private String qBoardIsSecret;
-    private Integer qBoardPass;
+    private String qBoardPass;
+    private Integer boardId;
 
     @QueryProjection
     public QnABoardDTO(Integer id,
                        String boardTitle,
                        String boardContent,
                        String empName,
-                       Integer qBoardPass,
+                       String qBoardPass,
                        LocalDateTime boardRegDate,
                        Integer boardViewCount,
                        String isDeleted,
@@ -41,7 +42,7 @@ public class QnABoardDTO {
         this.qBoardIsSecret = qBoardIsSecret;
     }
 
-    public QnABoardDTO(Integer qBoardPass) {
+    public QnABoardDTO(String qBoardPass) {
         this.qBoardPass = qBoardPass;
     }
 }

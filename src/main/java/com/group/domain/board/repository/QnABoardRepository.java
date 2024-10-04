@@ -14,4 +14,7 @@ public interface QnABoardRepository extends JpaRepository<QnABoard, Integer> {
     @Modifying
     @Query("update Board b set b.boardViewCount = b.boardViewCount + 1 where b.id = :id")
     Integer updateBoardViewCount(@Param("id") Integer id);
+
+    @Query("select q.boardId.id from QnABoard q where q.id = :id and q.qBoardPass = :qBoardPass")
+    Integer findQnABoardByQnAAndBoardId(@Param("id") Integer id, @Param("qBoardPass") String qBoardPass);
 }

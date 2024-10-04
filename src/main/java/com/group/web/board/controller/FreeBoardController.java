@@ -1,14 +1,11 @@
 package com.group.web.board.controller;
 
-import com.group.application.board.dto.BoardDTO;
 import com.group.application.board.dto.FreeBoardDTO;
+import com.group.application.board.service.BoardService;
 import com.group.application.board.service.FreeBoardService;
-import com.group.application.login.dto.CustomUserDetails;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -46,9 +43,25 @@ public class FreeBoardController {
     }
 
     @GetMapping("/freeboarddetailview")
-    public String boardDetailView(Model model, @RequestParam("id") int id) {
+    public String boardDetailView(Model model, @RequestParam("id") Integer id) {
         model.addAttribute("freeBoardDTO", freeBoardService.findByIdFreeBoard(id));
         return "/board/freeboarddetailview";
+    }
+
+    @GetMapping("freeboardmodify/{id}")
+    public String boardModifyView(Model model, @PathVariable("id") Integer id) {
+        model.addAttribute("freeBoardDTO", freeBoardService.findBoardIdByFreeBoardId(id));
+        return "/board/freeboardmodify";
+    }
+
+    @PostMapping("/freeboardmodify/update/{id}")
+    public String freeBoardModifyWriting(@PathVariable("id") Integer id,
+                                          @ModelAttribute FreeBoardDTO freeBoardDTO) {
+        FreeBoardDTO freeBoardTemp = freeBoardService.findByIdFreeBoard(id);
+        freeBoardTemp.setBoardTitle(freeBoardDTO.getBoardTitle());
+        freeBoardTemp.setBoardContent(freeBoardDTO.getBoardContent());
+        freeBoardService.updateFreeBoard(freeBoardTemp);
+        return "redirect:/board/freeboardlist";
     }
 }
 

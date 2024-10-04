@@ -8,7 +8,6 @@ import com.group.domain.board.repository.BoardRepositoryImpl;
 import com.group.domain.board.repository.QnABoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,8 +52,25 @@ public class QnABoardService {
         return boardRepositoryImpl.findAllByQnABoard(pageable);
     }
 
-    public QnABoardDTO findByIdQnABoard(Integer id, Integer qBoardPass) {
+    public QnABoardDTO findByIdQnABoard(Integer id, String qBoardPass) {
         qnABoardRepository.updateBoardViewCount(id);
         return boardRepositoryImpl.findByIdQnABoard(id, qBoardPass);
+    }
+
+    public QnABoardDTO findQnABoardByQnAAndBoardId(Integer id, String qBoardPass) {
+        QnABoardDTO qnABoardDTO = new QnABoardDTO();
+        Integer qnaBoardId = qnABoardRepository.findQnABoardByQnAAndBoardId(id, qBoardPass);
+        qnABoardDTO.setId(id);
+        qnABoardDTO.setBoardId(qnaBoardId);
+        qnABoardDTO.setQBoardPass(qBoardPass);
+        return qnABoardDTO;
+    }
+
+    public void updateQnABoard(QnABoardDTO qnABoardDTO) {
+        BoardDTO boardDTO = new BoardDTO();
+        boardDTO.qnaConverterBoard(qnABoardDTO);
+        Board boardId = boardService.saveProcessAllBoard(boardDTO);
+        QnABoard entity = getEntity(qnABoardDTO, boardId);
+        qnABoardRepository.save(entity);
     }
 }

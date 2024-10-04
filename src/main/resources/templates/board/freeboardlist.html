@@ -8,17 +8,18 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #f0f4f8;
+            background-color: #f8f9fa; /* 더 부드러운 배경색 */
+            color: #333; /* 텍스트 색상 조정 */
         }
         .container {
             margin-top: 30px;
             margin-bottom: 30px;
         }
         h2 {
-            color: #343a40;
+            color: #495057; /* 더 차분한 헤더 색상 */
         }
         .table-header {
-            background-color: #0062cc;
+            background-color: #343a40; /* 헤더를 어둡게 변경 */
             color: white;
         }
         .table-header th {
@@ -26,40 +27,40 @@
             text-align: center;
         }
         .table-striped tbody tr:nth-of-type(odd) {
-            background-color: #e2e6ea;
+            background-color: #e9ecef; /* 연한 회색으로 줄무늬 조정 */
         }
         .table-striped tbody tr:hover {
-            background-color: #cfe2f3;
+            background-color: #dee2e6; /* 호버 색상 약하게 조정 */
         }
         .pagination {
             justify-content: center;
             margin: 20px 0;
         }
         .pagination .btn-outline-secondary {
-            color: #0062cc;
-            border-color: #0062cc;
+            color: #6c757d; /* 버튼 색상을 더 중립적으로 */
+            border-color: #6c757d;
         }
         .pagination .btn-outline-secondary:hover {
-            background-color: #0062cc;
+            background-color: #6c757d;
             color: white;
         }
         .btn-primary {
-            background-color: #28a745;
+            background-color: #007bff;
             border: none;
         }
         .btn-primary:hover {
-            background-color: #218838;
+            background-color: #0056b3;
         }
         .btn-outline-primary {
-            border-color: #28a745;
-            color: #28a745;
+            border-color: #007bff;
+            color: #007bff;
         }
         .btn-outline-primary:hover {
-            background-color: #28a745;
+            background-color: #007bff;
             color: white;
         }
         a {
-            color: #007bff;
+            color: #007bff; /* 링크 색상은 기본 색상 유지 */
             text-decoration: none;
         }
         a:hover {
@@ -74,15 +75,17 @@
     <table class="table table-header table-striped table-hover">
         <thead>
         <tr>
-            <th>제목</th>
-            <th>작성자</th>
-            <th>작성일</th>
-            <th>조회</th>
+            <th class="text-center">id</th>
+            <th class="text-center">제목</th>
+            <th class="text-center">작성자</th>
+            <th class="text-center">작성일</th>
+            <th class="text-center">조회</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="freeBoardDTO : ${freeBoardDTO.content}">
-            <td>
+            <td th:text="${freeBoardDTO.id}" class="text-center"></td>
+            <td class="text-center">
                 <a th:text="${freeBoardDTO.boardTitle}" th:href="@{/board/freeboarddetailview(id=${freeBoardDTO.id})}"></a>
             </td>
             <td th:text="${freeBoardDTO.empName}" class="text-center"></td>

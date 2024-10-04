@@ -40,10 +40,10 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
     }
 
     @Override
-    public QnABoardDTO findByIdQnABoard(Integer id, Integer qBoardPass) {
+    public QnABoardDTO findByIdQnABoard(Integer id, String qBoardPass) {
        return jpaQueryFactory
                 .select(new QQnABoardDTO(
-                        board.id,
+                        qnABoard.id,
                         board.boardTitle,
                         board.boardContent,
                         employee.empName,
@@ -65,7 +65,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
     public NoticeBoardDTO findByIdNoticeBoard(Integer id) {
 
         return jpaQueryFactory.select(new QNoticeBoardDTO(
-                board.id,
+                noticeBoard.id,
                 board.boardTitle,
                 employee.empName,
                 board.boardContent,
@@ -128,7 +128,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
 
         List<FreeBoardDTO> results = jpaQueryFactory
                 .select(new QFreeBoardDTO(
-                        board.id,
+                        freeBoard.id,
                         board.boardTitle,
                         employee.empName,
                         board.boardContent,
@@ -157,7 +157,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
 
         List<NoticeBoardDTO> results = jpaQueryFactory
                 .select(new QNoticeBoardDTO(
-                        board.id,
+                        noticeBoard.id,
                         board.boardTitle,
                         board.boardContent,
                         employee.empName,
@@ -187,7 +187,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
 
         List<FileBoardDTO> results = jpaQueryFactory
                 .select(new QFileBoardDTO(
-                        board.id,
+                        fileBoard.id,
                         board.boardTitle,
                         board.boardContent,
                         employee.empName,
@@ -220,7 +220,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
 
         List<QnABoardDTO> results = jpaQueryFactory
                 .select(new QQnABoardDTO(
-                        board.id,
+                        qnABoard.id,
                         board.boardTitle,
                         board.boardContent,
                         employee.empName,
@@ -250,7 +250,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
     public FreeBoardDTO findByIdFreeBoard(Integer id) {
 
         FreeBoardDTO freeBoardDTO = jpaQueryFactory.select(new QFreeBoardDTO(
-                        board.id,
+                        freeBoard.id,
                         board.boardTitle,
                         employee.empName,
                         board.boardContent,
@@ -276,7 +276,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
 
         return jpaQueryFactory
                 .select(new QFileBoardDTO(
-                        board.id,
+                        fileBoard.id,
                         board.boardTitle,
                         board.boardContent,
                         employee.empName,

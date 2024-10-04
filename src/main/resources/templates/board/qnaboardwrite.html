@@ -74,11 +74,11 @@
     <h2>건의게시판 글 등록</h2>
     <form th:action="@{/board/qnaboardwrite}" th:object="${qnABoardDTO}" method="post">
         <input type="text" id="boardTitle" th:field="*{boardTitle}" placeholder="제목" required>
-        <div class="required">* 필수 입력 사항입니다.</div>
+
         <textarea id="boardContent" th:field="*{boardContent}" placeholder="내용" required></textarea>
-        <div class="required">* 필수 입력 사항입니다.</div>
-        <input type="number" id="QBoardPass" th:field="*{QBoardPass}" placeholder="비밀번호" required>
-        <div class="required">* 필수 입력 사항입니다.</div>
+
+        <input type="password" id="QBoardPass" th:field="*{QBoardPass}" placeholder="비밀번호">
+
         <button type="submit">작성하기</button>
     </form>
 </div>

@@ -20,12 +20,13 @@ public class FreeBoard {
     @Id @GeneratedValue(strategy = IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = LAZY, cascade = ALL)
+    @ManyToOne(cascade = ALL, fetch = LAZY)
     @JoinColumn(name = "board_id")
     private Board boardId;
 
     @Builder
-    public FreeBoard(Board boardId) {
+    public FreeBoard(Integer id, Board boardId) {
+        this.id = id;
         this.boardId = boardId;
     }
 }

@@ -43,9 +43,29 @@ public class QnABoardController {
 
     @GetMapping(value = "/qnaboarddetailview/{id}")
     public String boardDetailView(Model model,
-                                  @PathVariable("id") int id,
-                                  @RequestParam("qBoardPass") int qBoardPass) {
+                                  @PathVariable("id") Integer id,
+                                  @RequestParam("qBoardPass") String qBoardPass) {
         model.addAttribute("qnABoardDTO", qnABoardService.findByIdQnABoard(id, qBoardPass));
         return "/board/qnaboarddetailview";
+    }
+
+    @GetMapping("/qnaboardmodify/{id}")
+    public String boardModifyView(Model model,
+                                  @PathVariable("id") Integer id,
+                                  @RequestParam("qBoardPass") String qBoardPass) {
+        model.addAttribute("qnABoardDTO", qnABoardService.findQnABoardByQnAAndBoardId(id, qBoardPass));
+        return "/board/qnaboardmodify";
+    }
+
+    @PostMapping("/qnaboardmodify/update/{id}")
+    public String boardModifyWriting(@PathVariable("id") Integer id,
+                                     @RequestParam(value = "qBoardPass", required = false, defaultValue = "default") String qBoardPass,
+                                     @ModelAttribute QnABoardDTO qnABoardDTO) {
+        QnABoardDTO qnABoardTemp = qnABoardService.findQnABoardByQnAAndBoardId(id, qBoardPass);
+        qnABoardTemp.setBoardTitle(qnABoardDTO.getBoardTitle());
+        qnABoardTemp.setBoardContent(qnABoardDTO.getBoardContent());
+        qnABoardTemp.setQBoardPass(qnABoardDTO.getQBoardPass());
+        qnABoardService.updateQnABoard(qnABoardTemp);
+        return "redirect:/board/qnaboardlist";
     }
 }

@@ -46,8 +46,7 @@ public class BoardController {
     }
 
     @GetMapping("/boarddetailview")
-    public String detailView(Model model,
-                             @RequestParam("id") Integer id) {
+    public String detailView(Model model, @RequestParam("id") Integer id) {
         model.addAttribute("boardDTO", boardService.findById(id));
         return "/board/boarddetailview";
     }
@@ -64,6 +63,7 @@ public class BoardController {
                                      @ModelAttribute BoardDTO boardDTO) {
         // 기존 게시글을 조회하여 수정
         BoardDTO boardTemp = boardService.getBoardById(id);
+
         // 새로운 값으로 수정
         boardTemp.setId(id);
         boardTemp.setBoardTitle(boardDTO.getBoardTitle());

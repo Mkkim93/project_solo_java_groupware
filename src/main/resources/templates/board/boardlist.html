@@ -50,18 +50,20 @@
         <table class="table table-header table-striped">
             <thead>
             <tr>
-                <th>제목</th>
-                <th>작성자</th>
-                <th>작성일</th>
-                <th>조회</th>
+                <th class="text-center">id</th>
+                <th class="text-center">제목</th>
+                <th class="text-center">작성자</th>
+                <th class="text-center">작성일</th>
+                <th class="text-center">조회</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="boardDTO : ${boardDTO.content}">
-                <td><a th:text="${boardDTO.boardTitle}" th:href="@{/board/boarddetailview(id=${boardDTO.id})}" class="text-decoration-none"></a></td>
-                <td th:text="${boardDTO.empName}"></td>
-                <td th:text="${boardDTO.boardRegDate}"></td>
-                <td th:text="${boardDTO.boardViewCount}"></td>
+                <td th:text="${boardDTO.id}" class="text-center"></td>
+                <td class="text-center"><a th:text="${boardDTO.boardTitle}" th:href="@{/board/boarddetailview(id=${boardDTO.id})}" class="text-decoration-none" ></a></td>
+                <td th:text="${boardDTO.empName}" class="text-center"></td>
+                <td th:text="${boardDTO.boardRegDate}" class="text-center"></td>
+                <td th:text="${boardDTO.boardViewCount}" class="text-center"></td>
             </tr>
             </tbody>
         </table>

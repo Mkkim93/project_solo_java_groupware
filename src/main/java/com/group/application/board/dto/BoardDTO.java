@@ -24,9 +24,10 @@ public class BoardDTO {
     private Integer boardViewCount;
     private String isDeleted;
     private Employee empId;
+    private Integer boardId;
 
     // qna 게시판 비밀번호 사용을 위한 필드 변수 생성
-    private Integer qBoardPass;
+    private String qBoardPass;
 
     // 파일 게시판을 위한 필드 변수 생성
     private String fBoardName;
@@ -48,7 +49,7 @@ public class BoardDTO {
         this.isDeleted = isDeleted;
     }
 
-    public BoardDTO(Integer qBoardPass) {
+    public BoardDTO(String qBoardPass) {
         this.qBoardPass = qBoardPass;
     }
 
@@ -60,8 +61,7 @@ public class BoardDTO {
     }
 
     // 게시판 공용으로 사용 하기 위한 dto 생성
-    public BoardDTO(Integer id, String boardTitle, String boardContent) {
-        this.id = id;
+    public BoardDTO(String boardTitle, String boardContent) {
         this.boardTitle = boardTitle;
         this.boardContent = boardContent;
     }
@@ -76,11 +76,13 @@ public class BoardDTO {
     }
 
     public void freeConverterBoard(FreeBoardDTO freeBoardDTO) {
+        this.id = freeBoardDTO.getId();
         this.boardTitle = freeBoardDTO.getBoardTitle();
         this.boardContent = freeBoardDTO.getBoardContent();
     }
 
     public void noticeConverterBoard(NoticeBoardDTO noticeBoardDTO) {
+        this.id = noticeBoardDTO.getId();
         this.boardTitle = noticeBoardDTO.getBoardTitle();
         this.boardContent = noticeBoardDTO.getBoardContent();
     }
@@ -88,6 +90,8 @@ public class BoardDTO {
     public void qnaConverterBoard(QnABoardDTO qnABoardDTO) {
         this.boardTitle = qnABoardDTO.getBoardTitle();
         this.boardContent = qnABoardDTO.getBoardContent();
+        this.qBoardPass = qnABoardDTO.getQBoardPass();
+        this.id = qnABoardDTO.getId();
     }
 
     public BoardDTO fromDTO(Board board) {
