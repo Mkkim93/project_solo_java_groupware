@@ -76,22 +76,22 @@ public class BoardDTO {
     }
 
     public void freeConverterBoard(FreeBoardDTO freeBoardDTO) {
-        this.id = freeBoardDTO.getId();
+        this.id = freeBoardDTO.getBoardId();
         this.boardTitle = freeBoardDTO.getBoardTitle();
         this.boardContent = freeBoardDTO.getBoardContent();
     }
 
     public void noticeConverterBoard(NoticeBoardDTO noticeBoardDTO) {
-        this.id = noticeBoardDTO.getId();
+        this.id = noticeBoardDTO.getBoardId();
         this.boardTitle = noticeBoardDTO.getBoardTitle();
         this.boardContent = noticeBoardDTO.getBoardContent();
     }
 
     public void qnaConverterBoard(QnABoardDTO qnABoardDTO) {
+        this.id = qnABoardDTO.getBoardId();
         this.boardTitle = qnABoardDTO.getBoardTitle();
         this.boardContent = qnABoardDTO.getBoardContent();
         this.qBoardPass = qnABoardDTO.getQBoardPass();
-        this.id = qnABoardDTO.getId();
     }
 
     public BoardDTO fromDTO(Board board) {

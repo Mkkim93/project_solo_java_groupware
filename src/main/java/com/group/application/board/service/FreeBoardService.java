@@ -50,7 +50,7 @@ public class FreeBoardService {
     }
 
     public FreeBoardDTO findByIdFreeBoard(Integer id) {
-        freeBoardRepository.updateBoardViewCount(id);
+        boardService.updateBoardViewCount(id);
         return boardRepositoryImpl.findByIdFreeBoard(id);
     }
 
@@ -62,27 +62,16 @@ public class FreeBoardService {
         return freeBoardDTO;
     }
 
-   /* public void updateFreeBoard(FreeBoardDTO freeBoardDTO) {
-        BoardDTO boardDTO = new BoardDTO();
-        boardDTO.freeConverterBoard(freeBoardDTO);
+    public FreeBoardDTO findByIdOnlyFreeBoard(Integer id) {
+        return boardRepositoryImpl.findByIdFreeBoard(id);
+    }
 
-        // 기존 게시글 ID로 저장/업데이트 처리
-        Board board = boardService.saveProcessAllBoard(boardDTO);
-
-        // FreeBoard 엔티티를 업데이트
-        FreeBoard freeBoard = freeBoardRepository.findById(freeBoardDTO.getId())
-                .orElseThrow(() -> new RuntimeException("해당 게시글을 찾을 수 없습니다."));
-
-        freeBoard.setBoardId(board);  // board 정보 업데이트
-
-        freeBoardRepository.save(freeBoard);
-    }*/
     public void updateFreeBoard(FreeBoardDTO freeBoardDTO) {
         BoardDTO boardDTO = new BoardDTO();
         boardDTO.freeConverterBoard(freeBoardDTO);
         Board boardId = boardService.saveProcessAllBoard(boardDTO);
         FreeBoard setEntity = getSetEntity(freeBoardDTO, boardId);
-        freeBoardRepository.save(setEntity);
+        // freeBoardRepository.save(setEntity);
     }
 
     private FreeBoard getSetEntity(FreeBoardDTO freeBoardDTO, Board boardId) {

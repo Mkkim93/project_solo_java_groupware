@@ -6,6 +6,7 @@ import com.group.domain.board.entity.Board;
 import com.group.domain.board.entity.QnABoard;
 import com.group.domain.board.repository.BoardRepositoryImpl;
 import com.group.domain.board.repository.QnABoardRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,16 +34,15 @@ public class QnABoardService {
         BoardDTO boardDTO = new BoardDTO();
         boardDTO.qnaConverterBoard(qnABoardDTO);
         Board boardId = boardService.saveProcessAllBoard(boardDTO);
-
         qnABoardDTO.setId(boardId.getId());
         QnABoard qnaEntity = getEntity(qnABoardDTO, boardId);
-
         qnABoardRepository.save(qnaEntity);
     }
 
     // TODO 비밀글 여부 default 적용되는지 확인 할 것
     private QnABoard getEntity(QnABoardDTO qnABoardDTO, Board boardId) {
         return QnABoard.builder()
+                .id(qnABoardDTO.getId())
                 .qBoardPass(qnABoardDTO.getQBoardPass())
                 .boardId(boardId)
                 .build();
@@ -52,25 +52,13 @@ public class QnABoardService {
         return boardRepositoryImpl.findAllByQnABoard(pageable);
     }
 
-    public QnABoardDTO findByIdQnABoard(Integer id, String qBoardPass) {
-        qnABoardRepository.updateBoardViewCount(id);
-        return boardRepositoryImpl.findByIdQnABoard(id, qBoardPass);
-    }
-
-    public QnABoardDTO findQnABoardByQnAAndBoardId(Integer id, String qBoardPass) {
-        QnABoardDTO qnABoardDTO = new QnABoardDTO();
-        Integer qnaBoardId = qnABoardRepository.findQnABoardByQnAAndBoardId(id, qBoardPass);
-        qnABoardDTO.setId(id);
-        qnABoardDTO.setBoardId(qnaBoardId);
-        qnABoardDTO.setQBoardPass(qBoardPass);
-        return qnABoardDTO;
+    public QnABoardDTO findByIdOnly(Integer id) {
+       return boardRepositoryImpl.findByIdQnABoard(id);
     }
 
     public void updateQnABoard(QnABoardDTO qnABoardDTO) {
         BoardDTO boardDTO = new BoardDTO();
         boardDTO.qnaConverterBoard(qnABoardDTO);
-        Board boardId = boardService.saveProcessAllBoard(boardDTO);
-        QnABoard entity = getEntity(qnABoardDTO, boardId);
-        qnABoardRepository.save(entity);
+        boardService.saveProcessAllBoard(boardDTO);
     }
 }

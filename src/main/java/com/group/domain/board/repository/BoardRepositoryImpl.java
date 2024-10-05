@@ -40,46 +40,6 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
     }
 
     @Override
-    public QnABoardDTO findByIdQnABoard(Integer id, String qBoardPass) {
-       return jpaQueryFactory
-                .select(new QQnABoardDTO(
-                        qnABoard.id,
-                        board.boardTitle,
-                        board.boardContent,
-                        employee.empName,
-                        qnABoard.qBoardPass,
-                        board.boardRegDate,
-                        board.boardViewCount,
-                        board.boardIsDeleted,
-                        qnABoard.qBoardIsSecret
-                )).from(qnABoard)
-                .leftJoin(qnABoard.boardId, board)
-                .leftJoin(board.empId, employee)
-                .where(
-                        board.id.eq(id),
-                        qnABoard.qBoardPass.eq(qBoardPass)
-                ).fetchOne();
-    }
-
-    @Override
-    public NoticeBoardDTO findByIdNoticeBoard(Integer id) {
-
-        return jpaQueryFactory.select(new QNoticeBoardDTO(
-                noticeBoard.id,
-                board.boardTitle,
-                employee.empName,
-                board.boardContent,
-                board.boardRegDate,
-                board.boardViewCount,
-                board.boardIsDeleted
-        )).from(noticeBoard)
-                .leftJoin(noticeBoard.boardId, board)
-                .leftJoin(board.empId, employee)
-                .where(board.id.eq(id))
-                .fetchOne();
-    }
-
-    @Override
     public BoardDTO findByIdBoard(Integer id) {
 
        return jpaQueryFactory
@@ -92,7 +52,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                         board.boardViewCount,
                         board.boardIsDeleted))
                 .from(board)
-               .leftJoin(board.empId, employee)
+               .join(board.empId, employee)
                 .where(board.id.eq(id))
                 .fetchOne();
     }
@@ -129,6 +89,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
         List<FreeBoardDTO> results = jpaQueryFactory
                 .select(new QFreeBoardDTO(
                         freeBoard.id,
+                        freeBoard.boardId.id,
                         board.boardTitle,
                         employee.empName,
                         board.boardContent,
@@ -146,10 +107,31 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
         JPAQuery<Long> count = jpaQueryFactory
                 .select(freeBoard.count())
                 .from(freeBoard)
-                .leftJoin(freeBoard.boardId, board)
-                .leftJoin(board.empId, employee);
+                .join(freeBoard.boardId, board)
+                .join(board.empId, employee);
 
         return PageableExecutionUtils.getPage(results, pageable, () -> count.fetchCount());
+    }
+
+    @Override
+    public FreeBoardDTO findByIdFreeBoard(Integer id) {
+
+        FreeBoardDTO freeBoardDTO = jpaQueryFactory.select(new QFreeBoardDTO(
+                        freeBoard.id,
+                        freeBoard.boardId.id,
+                        board.boardTitle,
+                        employee.empName,
+                        board.boardContent,
+                        board.boardRegDate,
+                        board.boardViewCount,
+                        board.boardIsDeleted
+                )).from(freeBoard)
+                .join(freeBoard.boardId, board)
+                .join(board.empId, employee)
+                .where(freeBoard.id.eq(id))
+                .fetchOne();
+
+        return freeBoardDTO;
     }
 
     @Override
@@ -158,6 +140,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
         List<NoticeBoardDTO> results = jpaQueryFactory
                 .select(new QNoticeBoardDTO(
                         noticeBoard.id,
+                        noticeBoard.boardId.id,
                         board.boardTitle,
                         board.boardContent,
                         employee.empName,
@@ -166,8 +149,8 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                         board.boardIsDeleted
                 ))
                 .from(noticeBoard)
-                .leftJoin(noticeBoard.boardId, board)
-                .leftJoin(board.empId, employee)
+                .join(noticeBoard.boardId, board)
+                .join(board.empId, employee)
                 .where(board.boardIsDeleted.eq("N"))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -176,8 +159,8 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
         JPAQuery<Long> count = jpaQueryFactory
                 .select(noticeBoard.count())
                 .from(noticeBoard)
-                .leftJoin(noticeBoard.boardId, board)
-                .leftJoin(board.empId, employee);
+                .join(noticeBoard.boardId, board)
+                .join(board.empId, employee);
 
         return PageableExecutionUtils.getPage(results, pageable, () -> count.fetchCount());
     }
@@ -199,8 +182,8 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                         fileBoard.fBoardType,
                         fileBoard.fBoardPath
                 )).from(fileBoard)
-                .leftJoin(fileBoard.boardId, board)
-                .leftJoin(board.empId, employee)
+                .join(fileBoard.boardId, board)
+                .join(board.empId, employee)
                 .where(board.boardIsDeleted.eq("N"))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -209,8 +192,8 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
         JPAQuery<Long> count = jpaQueryFactory
                 .select(fileBoard.count())
                 .from(fileBoard)
-                .leftJoin(fileBoard.boardId, board)
-                .leftJoin(board.empId, employee);
+                .join(fileBoard.boardId, board)
+                .join(board.empId, employee);
 
         return PageableExecutionUtils.getPage(results, pageable, () -> count.fetchCount());
     }
@@ -221,6 +204,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
         List<QnABoardDTO> results = jpaQueryFactory
                 .select(new QQnABoardDTO(
                         qnABoard.id,
+                        qnABoard.boardId.id,
                         board.boardTitle,
                         board.boardContent,
                         employee.empName,
@@ -239,32 +223,14 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
 
         Long count = jpaQueryFactory.select(qnABoard.count())
                 .from(qnABoard)
-                .leftJoin(qnABoard.boardId, board)
-                .leftJoin(board.empId, employee)
+                .join(qnABoard.boardId, board)
+                .join(board.empId, employee)
                 .fetchOne();
 
         return new PageImpl<>(results, pageable, count);
     }
 
-    @Override
-    public FreeBoardDTO findByIdFreeBoard(Integer id) {
 
-        FreeBoardDTO freeBoardDTO = jpaQueryFactory.select(new QFreeBoardDTO(
-                        freeBoard.id,
-                        board.boardTitle,
-                        employee.empName,
-                        board.boardContent,
-                        board.boardRegDate,
-                        board.boardViewCount,
-                        board.boardIsDeleted
-                )).from(freeBoard)
-                .join(freeBoard.boardId, board)
-                .join(board.empId, employee)
-                .where(board.id.eq(id))
-                .fetchOne();
-
-        return freeBoardDTO;
-    }
 
     /**
      * 하나의 비즈니스 로직에서 두개의 쿼리가 실행된다
@@ -276,7 +242,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
 
         return jpaQueryFactory
                 .select(new QFileBoardDTO(
-                        fileBoard.id,
+                        board.id,
                         board.boardTitle,
                         board.boardContent,
                         employee.empName,
@@ -292,5 +258,47 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                 .join(board.empId, employee)
                 .where(board.id.eq(id))
                 .fetchOne();
+    }
+
+    @Override
+    public NoticeBoardDTO findByIdNoticeBoard(Integer id) {
+
+        return jpaQueryFactory.select(new QNoticeBoardDTO(
+                        noticeBoard.id,
+                        noticeBoard.boardId.id,
+                        board.boardTitle,
+                        employee.empName,
+                        board.boardContent,
+                        board.boardRegDate,
+                        board.boardViewCount,
+                        board.boardIsDeleted
+                )).from(noticeBoard)
+                .join(noticeBoard.boardId, board)
+                .join(board.empId, employee)
+                .where(noticeBoard.id.eq(id))
+                .fetchOne();
+    }
+
+    @Override
+    public QnABoardDTO findByIdQnABoard(Integer id) {
+        return jpaQueryFactory
+                .select(new QQnABoardDTO(
+                        qnABoard.id,
+                        qnABoard.boardId.id,
+                        board.boardTitle,
+                        board.boardContent,
+                        employee.empName,
+                        qnABoard.qBoardPass,
+                        board.boardRegDate,
+                        board.boardViewCount,
+                        board.boardIsDeleted,
+                        qnABoard.qBoardIsSecret
+                )).from(qnABoard)
+                .join(qnABoard.boardId, board)
+                .join(board.empId, employee)
+                .where(
+                        qnABoard.id.eq(id)
+                        // qnABoard.qBoardPass.eq(qBoardPass)
+                ).fetchOne();
     }
 }

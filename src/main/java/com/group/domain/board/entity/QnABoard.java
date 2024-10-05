@@ -23,7 +23,7 @@ public class QnABoard {
     @Column(name = "qboard_pass")
     private String qBoardPass;
 
-    @ManyToOne(fetch = LAZY, cascade = ALL)
+    @ManyToOne(cascade = ALL)
     @JoinColumn(name = "board_id")
     private Board boardId;
 
@@ -31,7 +31,8 @@ public class QnABoard {
     private String qBoardIsSecret;
 
     @Builder
-    public QnABoard(String qBoardPass, Board boardId) {
+    public QnABoard(String qBoardPass, Board boardId, Integer id) {
+        this.id = id;
         this.qBoardPass = qBoardPass;
         this.boardId = boardId;
     }

@@ -24,10 +24,11 @@ public class FreeBoardDTO {
     private Employee empId;
 
     @QueryProjection
-    public FreeBoardDTO(Integer id, String boardTitle, String empName, String boardContent,
+    public FreeBoardDTO(Integer id, Integer boardId, String boardTitle, String empName, String boardContent,
                         LocalDateTime boardRegDate, Integer boardViewCount,
                         String isDeleted) {
         this.id = id;
+        this.boardId = boardId;
         this.boardTitle = boardTitle;
         this.boardContent = boardContent;
         this.empName = empName;

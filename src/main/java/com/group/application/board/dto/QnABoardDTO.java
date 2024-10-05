@@ -1,5 +1,6 @@
 package com.group.application.board.dto;
 
+import com.group.domain.board.entity.QnABoard;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ public class QnABoardDTO {
 
     @QueryProjection
     public QnABoardDTO(Integer id,
+                       Integer boardId,
                        String boardTitle,
                        String boardContent,
                        String empName,
@@ -32,6 +34,7 @@ public class QnABoardDTO {
                        String isDeleted,
                        String qBoardIsSecret) {
         this.id = id;
+        this.boardId = boardId;
         this.boardTitle = boardTitle;
         this.boardContent = boardContent;
         this.empName = empName;
@@ -42,7 +45,8 @@ public class QnABoardDTO {
         this.qBoardIsSecret = qBoardIsSecret;
     }
 
-    public QnABoardDTO(String qBoardPass) {
+    public QnABoardDTO(Integer id, String qBoardPass) {
+        this.id = id;
         this.qBoardPass = qBoardPass;
     }
 }

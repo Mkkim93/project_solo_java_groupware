@@ -80,4 +80,8 @@ public class BoardService {
         Board boardById = boardRepository.getBoardById(id);
         return boardDTO.fromDTO(boardById);
     }
+
+    public void updateBoardViewCount(Integer id) {
+        boardRepository.updateBoardViewCount(id);
+    }
 }

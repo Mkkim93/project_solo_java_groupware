@@ -48,17 +48,19 @@
         <table class="table table-striped table-hover align-middle">
             <thead>
             <tr>
-                <th class="text-center">id</th>
-                <th class="text-center">Title</th>
-                <th class="text-center">Author</th>
-                <th class="text-center">Date</th>
-                <th class="text-center">Views</th>
+                <th class="text-center">글번호</th>
+                <th class="text-center">제목</th>
+                <th class="text-center">작성자</th>
+                <th class="text-center">작성일</th>
+                <th class="text-center">조회</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="noticeBoardDTO : ${noticeBoardDTO.content}">
                 <td th:text="${noticeBoardDTO.id}" class="text-center"></td>
-                <td class="text-center"><a th:text="${noticeBoardDTO.boardTitle}" th:href="@{/board/noticeboarddetailview(id=${noticeBoardDTO.id})}" class="text-decoration-none text-dark"></a></td>
+                <td class="text-center"><a th:text="${noticeBoardDTO.boardTitle}"
+                                           th:href="@{/board/noticeboarddetailview(id=${noticeBoardDTO.id})}"
+                                           class="text-decoration-none text-dark"></a></td>
                 <td class="text-center" th:text="${noticeBoardDTO.empName}"></td>
                 <td class="text-center" th:text="${noticeBoardDTO.boardRegDate}"></td>
                 <td class="text-center" th:text="${noticeBoardDTO.boardViewCount}"></td>

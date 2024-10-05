@@ -2,11 +2,14 @@ package com.group.application.board.service;
 
 import com.group.application.board.dto.BoardDTO;
 import com.group.application.board.dto.QnABoardDTO;
+import com.group.domain.board.entity.NoticeBoard;
+import com.group.domain.board.entity.QnABoard;
+import com.group.domain.board.repository.QnABoardRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.stream.Stream;
 
 @SpringBootTest
 class QnABoardServiceTest {
@@ -14,25 +17,25 @@ class QnABoardServiceTest {
     @Autowired
     QnABoardService qnABoardService;
 
-    @Test
-    public void saveNoticeBoard() {
-        QnABoardDTO qnABoardDTO = new QnABoardDTO();
-        qnABoardDTO.setBoardTitle("비밀글 제목2");
-        qnABoardDTO.setBoardContent("비밀글 내용2");
-        qnABoardDTO.setQBoardPass("1234"); // 게시글 비밀번호
-        qnABoardService.saveQnABoard(qnABoardDTO);
-    }
+    @Autowired
+    QnABoardRepository qnABoardRepository;
+
+
 
     @Test
     public void findById() {
-        QnABoardDTO qnABoardDTO = new QnABoardDTO();
-        qnABoardDTO.setQBoardPass("1234");
-        qnABoardDTO.setId(1);
-
-        QnABoardDTO qnAAndBoardId = qnABoardService.findQnABoardByQnAAndBoardId(qnABoardDTO.getId(), qnABoardDTO.getQBoardPass());
-        System.out.println(
-                "qnAAndBoardId.getBoardTitle() + " + qnAAndBoardId.getBoardTitle() +
-                "qnAAndBoardId.getQBoardPass() = " + qnAAndBoardId.getQBoardPass());
+        QnABoard qnABoard = qnABoardRepository.findById(1).get();
+        System.out.println("qnABoard.getId() = " + qnABoard.getId());
+        System.out.println("qnABoard.getQBoardPass() = " + qnABoard.getQBoardPass());
     }
 
+    @Test
+    public void findByOnly() {
+        Integer id = 2;
+        QnABoardDTO byIdOnly = qnABoardService.findByIdOnly(id);
+        System.out.println("byIdOnly.getId() = " + byIdOnly.getId());
+        System.out.println("byIdOnly.getBoardId() = " + byIdOnly.getBoardId());
+        System.out.println("byIdOnly.getBoardTitle() = " + byIdOnly.getBoardTitle());
+        System.out.println("byIdOnly.getBoardId = " + byIdOnly.getBoardId());
+    }
 }

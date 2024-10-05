@@ -66,7 +66,7 @@ public class NoticeBoardService {
         boardDTO.noticeConverterBoard(noticeBoardDTO);
         Board boardId = boardService.saveProcessAllBoard(boardDTO);
         NoticeBoard setEntity = getSetEntity(noticeBoardDTO, boardId);
-        noticeBoardRepository.save(setEntity);
+        // noticeBoardRepository.save(setEntity);
     }
 
     private NoticeBoard getSetEntity(NoticeBoardDTO noticeBoardDTO, Board boardId) {
@@ -74,5 +74,9 @@ public class NoticeBoardService {
                 .id(noticeBoardDTO.getId())
                 .boardId(boardId)
                 .build();
+    }
+
+    public NoticeBoardDTO findByIdOnlyNoticeBoard(Integer id) {
+        return boardRepositoryImpl.findByIdNoticeBoard(id);
     }
 }

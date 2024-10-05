@@ -6,9 +6,9 @@
 </head>
 <body>
 <input type="hidden" th:value="${qnABoardDTO.id}" th:field="*{qnABoardDTO.id}" />
+<p th:text="${qnABoardDTO.id}"></p>
 <h1 th:text="${qnABoardDTO.boardTitle}">제목입니다.</h1>
 <p th:text="${qnABoardDTO.boardContent}"></p>
-<p type="hidden" th:value="${qnABoardDTO.QBoardPass}" th:field="*{qnABoardDTO.QBoardPass}"></p>
-<a th:href="@{/board/qnaboardmodify/{id}(id=${qnABoardDTO.id}, qBoardPass=${qnABoardDTO.QBoardPass})}">수정</a> <!-- 수정된 부분 -->
+<a th:href="@{/board/qnaboardmodify/{id}(id = ${qnABoardDTO.id})}">수정</a>
 </body>
 </html>

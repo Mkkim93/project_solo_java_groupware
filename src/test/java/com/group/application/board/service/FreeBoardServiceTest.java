@@ -83,4 +83,20 @@ class FreeBoardServiceTest {
         System.out.println("boardIdByFreeBoardId.getBoardId() = " + boardIdByFreeBoardId.getBoardId());
         freeBoardService.updateFreeBoard(freeBoardDTO);
     }
+
+    @Test
+    public void freeBoardIdV3() {
+        FreeBoardDTO byIdFreeBoard = freeBoardService.findByIdFreeBoard(1);
+        System.out.println("byIdFreeBoard.getBoardId() = " + byIdFreeBoard.getBoardId());
+        System.out.println("byIdFreeBoard = " + byIdFreeBoard.getId());
+    }
+
+    @Test
+    public void freeBoardFindByIdBoardList() {
+        FreeBoardDTO byIdOnlyFreeBoard = freeBoardService.findByIdOnlyFreeBoard(4);
+        System.out.println("byIdQnABoard.getId() = " + byIdOnlyFreeBoard.getId());
+        System.out.println("byIdQnABoard.getBoardTitle() = " + byIdOnlyFreeBoard.getBoardTitle());
+        System.out.println("byIdQnABoard.getBoardContent() = " + byIdOnlyFreeBoard.getBoardContent());
+        System.out.println("byIdQnABoard.getBoardId() = " + byIdOnlyFreeBoard.getBoardId());
+    }
 }

@@ -5,6 +5,8 @@ import com.group.application.board.service.QnABoardService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -41,30 +43,26 @@ public class QnABoardController {
         return "redirect:/board/qnaboardlist";
     }
 
-    @GetMapping(value = "/qnaboarddetailview/{id}")
+    @GetMapping("/qnaboarddetailview")
     public String boardDetailView(Model model,
-                                  @PathVariable("id") Integer id,
-                                  @RequestParam("qBoardPass") String qBoardPass) {
-        model.addAttribute("qnABoardDTO", qnABoardService.findByIdQnABoard(id, qBoardPass));
+                                  @RequestParam("id") Integer id) {
+        model.addAttribute("qnABoardDTO", qnABoardService.findByIdOnly(id));
         return "/board/qnaboarddetailview";
     }
 
-    @GetMapping("/qnaboardmodify/{id}")
+    @GetMapping("qnaboardmodify/{id}")
     public String boardModifyView(Model model,
-                                  @PathVariable("id") Integer id,
-                                  @RequestParam("qBoardPass") String qBoardPass) {
-        model.addAttribute("qnABoardDTO", qnABoardService.findQnABoardByQnAAndBoardId(id, qBoardPass));
+                                  @PathVariable("id") Integer id) {
+        model.addAttribute("qnABoardDTO", qnABoardService.findByIdOnly(id));
         return "/board/qnaboardmodify";
     }
 
     @PostMapping("/qnaboardmodify/update/{id}")
     public String boardModifyWriting(@PathVariable("id") Integer id,
-                                     @RequestParam(value = "qBoardPass", required = false, defaultValue = "default") String qBoardPass,
                                      @ModelAttribute QnABoardDTO qnABoardDTO) {
-        QnABoardDTO qnABoardTemp = qnABoardService.findQnABoardByQnAAndBoardId(id, qBoardPass);
+        QnABoardDTO qnABoardTemp = qnABoardService.findByIdOnly(id);
         qnABoardTemp.setBoardTitle(qnABoardDTO.getBoardTitle());
         qnABoardTemp.setBoardContent(qnABoardDTO.getBoardContent());
-        qnABoardTemp.setQBoardPass(qnABoardDTO.getQBoardPass());
         qnABoardService.updateQnABoard(qnABoardTemp);
         return "redirect:/board/qnaboardlist";
     }

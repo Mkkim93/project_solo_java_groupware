@@ -11,10 +11,6 @@
     <form th:action="@{/board/qnaboardmodify/update/{id}(id=${qnABoardDTO.id})}"
           th:object="${qnABoardDTO}" method="post">
         <input type="hidden" th:field="*{id}" />
-
-        <!-- 비밀번호 입력 창 -->
-        <input type="password" name="QBoardPass" th:field="*{QBoardPass}" placeholder="새 비밀번호"/>
-
         <input type="text" name="boardTitle" th:field="*{boardTitle}" placeholder="제목" required/>
         <textarea name="boardContent" th:field="*{boardContent}" placeholder="내용" required></textarea>
 

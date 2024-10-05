@@ -70,25 +70,26 @@
     <table>
         <thead>
         <tr>
-            <th>제목</th>
-            <th>작성자</th>
-            <th>작성일</th>
-            <th>조회</th>
+            <th class="text-center">글번호</th>
+            <th class="text-center">제목</th>
+            <th class="text-center">작성자</th>
+            <th class="text-center">작성일</th>
+            <th class="text-center">조회</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="qnABoardDTO : ${qnABoardDTO.content}">
-            <td>
-                <a href="javascript:void(0);"
-                   th:text="${qnABoardDTO.boardTitle}"
-                   th:onclick="inputPass([[${qnABoardDTO.id}]])">
-                </a>
+            <td th:text="${qnABoardDTO.id}" class="text-center"></td>
+            <td class="text-center">
+                <a th:text="${qnABoardDTO.boardTitle}"
+                   th:href="@{/board/qnaboarddetailview(id=${qnABoardDTO.id})}"></a>
             </td>
-            <td th:text="${qnABoardDTO.empName}"></td>
-            <td th:text="${qnABoardDTO.boardRegDate}"></td>
-            <td th:text="${qnABoardDTO.boardViewCount}"></td>
+            <td th:text="${qnABoardDTO.empName}" class="text-center"></td>
+            <td th:text="${qnABoardDTO.boardRegDate}" class="text-center"></td>
+            <td th:text="${qnABoardDTO.boardViewCount}" class="text-center"></td>
         </tr>
         </tbody>
+
     </table>
 
     <div class="pagination">
@@ -107,21 +108,5 @@
 
     <a class="btn" th:onclick="|location.href='@{/board/qnaboardwrite}'|">글 작성</a>
 </div>
-
-<script>
-    // TODO 비밀번호 오류 시 qnaboardlist 로 이동 하는 기능 구현
-    function inputPass(boardId) {
-        var qBoardPass = prompt("비밀번호를 입력하세요:");
-        var url;
-        if (qBoardPass) {
-            // 비밀번호를 포함한 게시글 조회 URL로 이동
-            url = `/board/qnaboarddetailview/${boardId}?qBoardPass=${qBoardPass}`;
-            window.location.href = url;
-        }
-        else {
-            alert("비밀번호를 입력하지 않았습니다.");
-        }
-    }
-</script>
 </body>
 </html>

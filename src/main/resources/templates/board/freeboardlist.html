@@ -75,7 +75,7 @@
     <table class="table table-header table-striped table-hover">
         <thead>
         <tr>
-            <th class="text-center">id</th>
+            <th class="text-center">글번호</th>
             <th class="text-center">제목</th>
             <th class="text-center">작성자</th>
             <th class="text-center">작성일</th>
@@ -86,7 +86,8 @@
         <tr th:each="freeBoardDTO : ${freeBoardDTO.content}">
             <td th:text="${freeBoardDTO.id}" class="text-center"></td>
             <td class="text-center">
-                <a th:text="${freeBoardDTO.boardTitle}" th:href="@{/board/freeboarddetailview(id=${freeBoardDTO.id})}"></a>
+                <a th:text="${freeBoardDTO.boardTitle}"
+                   th:href="@{/board/freeboarddetailview(id=${freeBoardDTO.id})}"></a>
             </td>
             <td th:text="${freeBoardDTO.empName}" class="text-center"></td>
             <td th:text="${freeBoardDTO.boardRegDate}" class="text-center"></td>

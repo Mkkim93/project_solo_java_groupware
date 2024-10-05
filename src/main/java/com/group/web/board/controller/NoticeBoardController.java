@@ -60,7 +60,7 @@ public class NoticeBoardController {
     @PostMapping("/noticeboardmodify/update/{id}")
     public String boardWritingForm(@PathVariable("id") Integer id,
                                    @ModelAttribute NoticeBoardDTO noticeBoardDTO) {
-        NoticeBoardDTO noticeBoardTemp = noticeBoardService.findByIdNoticeBoard(id);
+        NoticeBoardDTO noticeBoardTemp = noticeBoardService.findByIdOnlyNoticeBoard(id);
         noticeBoardTemp.setBoardTitle(noticeBoardDTO.getBoardTitle());
         noticeBoardTemp.setBoardContent(noticeBoardTemp.getBoardContent());
         noticeBoardService.updateNoticeBoard(noticeBoardTemp);

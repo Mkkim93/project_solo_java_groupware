@@ -21,6 +21,7 @@ public class NoticeBoardDTO {
 
     @QueryProjection
     public NoticeBoardDTO(Integer id,
+                          Integer boardId,
                           String boardTitle,
                           String boardContent,
                           String empName,
@@ -28,6 +29,7 @@ public class NoticeBoardDTO {
                           Integer boardViewCount,
                           String isDeleted) {
         this.id = id;
+        this.boardId = boardId;
         this.boardTitle = boardTitle;
         this.boardContent = boardContent;
         this.empName = empName;
