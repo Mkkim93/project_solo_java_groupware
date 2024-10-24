@@ -10,5 +10,6 @@
 <p th:text="${noticeBoardDTO.boardContent}"></p>
 <!--<p th:text="${freeBoardDTO.empName}"></p>-->
 <a th:href="@{/board/noticeboardmodify/{id}(id = ${noticeBoardDTO.id})}">수정</a>
+<a th:href="@{/board/noticeboarddetailview/delete/{id}(id=${noticeBoardDTO.id})}">삭제</a>
 </body>
 </html>

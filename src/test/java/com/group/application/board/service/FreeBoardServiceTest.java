@@ -84,12 +84,6 @@ class FreeBoardServiceTest {
         freeBoardService.updateFreeBoard(freeBoardDTO);
     }
 
-    @Test
-    public void freeBoardIdV3() {
-        FreeBoardDTO byIdFreeBoard = freeBoardService.findByIdFreeBoard(1);
-        System.out.println("byIdFreeBoard.getBoardId() = " + byIdFreeBoard.getBoardId());
-        System.out.println("byIdFreeBoard = " + byIdFreeBoard.getId());
-    }
 
     @Test
     public void freeBoardFindByIdBoardList() {

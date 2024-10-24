@@ -2,17 +2,15 @@ package com.group.domain.board.repository;
 
 import com.group.application.board.dto.*;
 import com.group.domain.board.entity.*;
-import com.group.web.board.controller.BoardController;
-import com.querydsl.core.QueryResults;
-import com.querydsl.jpa.JPAExpressions;
+
+import com.group.domain.file.entity.QFileStore;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import org.apache.ibatis.ognl.BooleanExpression;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
@@ -25,6 +23,7 @@ import static com.group.domain.board.entity.QFileBoard.*;
 import static com.group.domain.board.entity.QFreeBoard.*;
 import static com.group.domain.board.entity.QNoticeBoard.*;
 import static com.group.domain.board.entity.QQnABoard.*;
+import static com.group.domain.file.entity.QFileStore.*;
 import static com.group.domain.hr.entity.QEmployee.*;
 
 @Repository
@@ -32,7 +31,6 @@ import static com.group.domain.hr.entity.QEmployee.*;
 public class BoardRepositoryImpl extends QuerydslRepositorySupport implements BoardRepositoryCustom{
 
     private final JPAQueryFactory jpaQueryFactory;
-
 
     public BoardRepositoryImpl(EntityManager entityManager) {
         super(Board.class);
@@ -171,16 +169,13 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
         List<FileBoardDTO> results = jpaQueryFactory
                 .select(new QFileBoardDTO(
                         fileBoard.id,
+                        fileBoard.boardId.id,
                         board.boardTitle,
                         board.boardContent,
                         employee.empName,
                         board.boardRegDate,
                         board.boardViewCount,
-                        board.boardIsDeleted,
-                        fileBoard.fBoardName,
-                        fileBoard.fBoardSize,
-                        fileBoard.fBoardType,
-                        fileBoard.fBoardPath
+                        board.boardIsDeleted
                 )).from(fileBoard)
                 .join(fileBoard.boardId, board)
                 .join(board.empId, employee)
@@ -216,9 +211,9 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                 )).from(qnABoard)
                 .leftJoin(qnABoard.boardId, board)
                 .leftJoin(board.empId, employee)
+                .where(board.boardIsDeleted.eq("N"))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .where(board.boardIsDeleted.eq("N"))
                 .fetch();
 
         Long count = jpaQueryFactory.select(qnABoard.count())
@@ -242,21 +237,18 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
 
         return jpaQueryFactory
                 .select(new QFileBoardDTO(
-                        board.id,
+                        fileBoard.id,
+                        fileBoard.boardId.id,
                         board.boardTitle,
                         board.boardContent,
                         employee.empName,
                         board.boardRegDate,
                         board.boardViewCount,
-                        board.boardIsDeleted,
-                        fileBoard.fBoardName,
-                        fileBoard.fBoardSize,
-                        fileBoard.fBoardType,
-                        fileBoard.fBoardPath
+                        board.boardIsDeleted
                 )).from(fileBoard)
                 .join(fileBoard.boardId, board)
                 .join(board.empId, employee)
-                .where(board.id.eq(id))
+                .where(fileBoard.id.eq(id))
                 .fetchOne();
     }
 
@@ -280,7 +272,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
     }
 
     @Override
-    public QnABoardDTO findByIdQnABoard(Integer id) {
+    public QnABoardDTO findByIdQnABoard(Integer id, String qBoardPass) {
         return jpaQueryFactory
                 .select(new QQnABoardDTO(
                         qnABoard.id,
@@ -297,8 +289,18 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                 .join(qnABoard.boardId, board)
                 .join(board.empId, employee)
                 .where(
-                        qnABoard.id.eq(id)
-                        // qnABoard.qBoardPass.eq(qBoardPass)
+                        qnABoard.id.eq(id),
+                        (getAllEq(qBoardPass))
                 ).fetchOne();
+    }
+
+    private BooleanExpression getAllEq(String qBoardPass) {
+        if (qBoardPass == null) {
+            return null;
+        } else if (qBoardPass.trim().isEmpty()) {
+            return qnABoard.qBoardPass.isNull(); // 공백 문자열에 대해 다른 처리
+        } else {
+            return qnABoard.qBoardPass.eq(qBoardPass);
+        }
     }
 }

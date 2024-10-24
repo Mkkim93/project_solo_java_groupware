@@ -11,5 +11,6 @@
 <p th:text="${freeBoardDTO.boardContent}"></p>
 <!--<p th:text="${freeBoardDTO.empName}"></p>-->
 <a th:href="@{/board/freeboardmodify/{id}(id = ${freeBoardDTO.id})}">수정</a>
+<a th:href="@{/board/freeboarddetailview/delete/{id}(id=${freeBoardDTO.id})}">삭제</a>
 </body>
 </html>

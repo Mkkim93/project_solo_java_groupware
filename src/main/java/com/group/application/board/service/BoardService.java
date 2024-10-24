@@ -84,4 +84,8 @@ public class BoardService {
     public void updateBoardViewCount(Integer id) {
         boardRepository.updateBoardViewCount(id);
     }
+
+    public void deleteBoard(Integer id) {
+        boardRepository.updateBoardDeleted(id);
+    }
 }

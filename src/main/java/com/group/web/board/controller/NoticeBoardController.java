@@ -53,17 +53,24 @@ public class NoticeBoardController {
     @GetMapping("/noticeboardmodify/{id}")
     public String boardModifyView(Model model,
                                   @PathVariable("id") Integer id) {
-        model.addAttribute("noticeBoardDTO", noticeBoardService.findByIdNoticeBoardId(id));
+        model.addAttribute("noticeBoardDTO", noticeBoardService.findById(id));
         return "/board/noticeboardmodify";
     }
 
     @PostMapping("/noticeboardmodify/update/{id}")
     public String boardWritingForm(@PathVariable("id") Integer id,
                                    @ModelAttribute NoticeBoardDTO noticeBoardDTO) {
-        NoticeBoardDTO noticeBoardTemp = noticeBoardService.findByIdOnlyNoticeBoard(id);
+        NoticeBoardDTO noticeBoardTemp = noticeBoardService.findById(id);
         noticeBoardTemp.setBoardTitle(noticeBoardDTO.getBoardTitle());
         noticeBoardTemp.setBoardContent(noticeBoardTemp.getBoardContent());
         noticeBoardService.updateNoticeBoard(noticeBoardTemp);
+        return "redirect:/board/noticeboardlist";
+    }
+
+    @GetMapping("/noticeboarddetailview/delete/{id}")
+    public String deleteBoard(@PathVariable("id") Integer id) {
+        NoticeBoardDTO noticeBoardDTO = noticeBoardService.findById(id);
+        noticeBoardService.deleteBoard(noticeBoardDTO.getBoardId());
         return "redirect:/board/noticeboardlist";
     }
 }

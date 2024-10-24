@@ -6,13 +6,19 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface FreeBoardRepository extends JpaRepository<FreeBoard, Integer>{
-   /* @Modifying
+    @Modifying
     @Query("update Board b set b.boardViewCount = b.boardViewCount + 1 where b.id = :id")
-    Integer updateBoardViewCount(@Param("id") Integer id);*/
+    Integer updateBoardViewCount(@Param("id") Integer id);
 
     @Query("SELECT f.id FROM FreeBoard f WHERE f.id = :id")
     Integer findBoardIdByFreeBoardId(@Param("id") Integer id);
+
+    @Modifying
+    @Transactional // 이거 나중에 영속성 걸릴듯
+    @Query("update Board b set b.boardDeleteDate = CURRENT_TIMESTAMP, b.boardIsDeleted = 'Y' where b.id = :id")
+    Integer updateBoardDeleted(@Param("id") Integer id);
 }

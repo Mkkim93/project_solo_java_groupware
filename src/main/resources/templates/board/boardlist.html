@@ -55,6 +55,7 @@
                 <th class="text-center">작성자</th>
                 <th class="text-center">작성일</th>
                 <th class="text-center">조회</th>
+                <th class="text-center">삭제여부</th>
             </tr>
             </thead>
             <tbody>
@@ -64,6 +65,7 @@
                 <td th:text="${boardDTO.empName}" class="text-center"></td>
                 <td th:text="${boardDTO.boardRegDate}" class="text-center"></td>
                 <td th:text="${boardDTO.boardViewCount}" class="text-center"></td>
+                <td th:text="${boardDTO.isDeleted}" class="text-center"></td>
             </tr>
             </tbody>
         </table>

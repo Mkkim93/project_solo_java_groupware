@@ -34,4 +34,13 @@ class BoardServiceTest {
         boardDTO.setBoardContent("게시글 내용 수정");
         boardService.updateBoard(boardDTO);
     }
+
+    @Test
+    public void delete() {
+        Integer id = 115;
+        boardService.deleteBoard(115);
+        BoardDTO boardDTO = boardService.findById(115);
+        System.out.println("boardDTO.getBoardDeleteDate() = " + boardDTO.getBoardDeleteDate());
+        System.out.println("boardDTO.getIsDeleted() = " + boardDTO.getIsDeleted());
+    }
 }

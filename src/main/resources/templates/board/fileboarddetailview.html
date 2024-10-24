@@ -1,14 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>파일 게시판 상세 페이지</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            margin: 20px 0;
+            border: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            font-size: 1.5rem;
+        }
+        .download-link {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .download-link:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-<h1 th:text="${fileBoardDTO.boardTitle}"></h1>
-<p th:text="${fileBoardDTO.boardContent}"></p>
-<p th:text="${fileBoardDTO.boardContent}"></p>
+<div class="container">
+    <input type="hidden" th:value="*{fileBoardDTO.id}" th:field="*{fileBoardDTO.id}" />
+    <h1 class="mt-4" th:text="${fileBoardDTO.boardTitle}"></h1>
 
-<a th:href="@{${fileBoardDTO.fBoardPath}}">이미지 보기</a>
+    <div class="list-group">
+        <ul th:each="fileStore : ${fileBoardStoreDTO}">
+            <li class="list-group-item">
+                <div class="card">
+                    <div class="card-header">
+                        파일 정보
+                    </div>
+                    <div class="card-body">
+                        <strong>id:</strong> <span th:text="${fileStore.id}"></span><br/>
+                        <strong>fileBoardId:</strong> <span th:text="${fileStore.fileBoardId}"></span><br/>
+                        <strong>파일 이름:</strong> <span th:text="${fileStore.fileName}">파일명</span><br/>
+
+                        <!-- 파일 다운로드 링크 수정 -->
+                        첨부파일: <a th:if="${fileStore.fileName}"
+                                 th:href="@{/board/download/{id}(id=${fileStore.id})}"
+                                 class="download-link"
+                                 th:text="${fileStore.getOriginFileName()}">Download</a><br/>
+                        <img th:src="|/images/${fileStore.getFileName()}|" class="img-fluid mt-2" alt="파일 미리보기" />
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <p class="mt-4" th:text="${fileBoardDTO.boardContent}"></p>
+    <a th:href="@{/board/fileboardmodify/{id}(id = ${fileBoardDTO.id})}">수정</a>
+    <a th:href="@{/board/fileboarddetailview/delete/{id}(id=${fileBoardDTO.id})}">삭제</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

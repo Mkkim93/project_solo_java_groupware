@@ -1,6 +1,7 @@
 package com.group.domain.board.entity;
 
 import com.group.application.board.dto.BoardDTO;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,14 +32,19 @@ public class QnABoard {
     private String qBoardIsSecret;
 
     @Builder
-    public QnABoard(String qBoardPass, Board boardId, Integer id) {
+    public QnABoard(String qBoardPass, Board boardId, Integer id, String qBoardIsSecret) {
         this.id = id;
         this.qBoardPass = qBoardPass;
         this.boardId = boardId;
+        this.qBoardIsSecret = qBoardIsSecret;
     }
 
     @PrePersist
     void createAt() {
-        this.qBoardIsSecret = "Y";
+        if (qBoardPass.isEmpty()) {
+            qBoardIsSecret = "N";
+        } else {
+            qBoardIsSecret = "Y";
+        }
     }
 }

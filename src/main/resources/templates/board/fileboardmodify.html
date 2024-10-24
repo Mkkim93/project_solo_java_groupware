@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>파일 게시판 수정 페이지</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            margin: 20px 0;
+            border: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-4">파일 게시판 수정</h1>
+    <form th:action="@{/board/fileboardmodify/update/{id}(id=${fileBoardDTO.id})}" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="boardTitle">제목</label>
+            <input type="text" class="form-control" id="boardTitle" name="boardTitle" th:value="${fileBoardDTO.boardTitle}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="boardContent">내용</label>
+            <textarea class="form-control" id="boardContent" name="boardContent" rows="5" required th:text="${fileBoardDTO.boardContent}"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="file">첨부파일</label>
+            <input type="file" class="form-control-file" id="file" name="file" multiple>
+
+            <ul th:each="fileStore : ${fileBoardStoreDTO}">
+                <li>
+                    <p type="hidden" th:value="${fileStore.id}" th:field="${fileStore.id}" /> 기존 파일:<p th:text="${fileStore.getOriginFileName()}"></p>
+                </li>
+            </ul>
+        </div>
+
+        <button type="submit" class="btn btn-primary">수정 완료</button>
+        <a th:href="@{/board/fileboardlist}" class="btn btn-secondary">취소</a>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

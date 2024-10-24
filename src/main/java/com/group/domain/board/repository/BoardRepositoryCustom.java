@@ -25,5 +25,5 @@ public interface BoardRepositoryCustom {
 
     NoticeBoardDTO findByIdNoticeBoard(Integer id);
 
-    QnABoardDTO findByIdQnABoard(Integer id);
+    QnABoardDTO findByIdQnABoard(Integer id, String qBoardPass);
 }

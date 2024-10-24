@@ -28,7 +28,7 @@
         <form th:action="@{/board/fileboardwrite}" th:object="${fileBoardDTO}" method="post" enctype="multipart/form-data">
             <input type="text" th:field="*{boardTitle}">
             <textarea th:field="*{boardContent}"></textarea>
-            <input type="file" name="file" th:filed="*{FBoardPath}">
+            <input type="file" name="file" multiple="multiple" th:filed="*{fileName}">
             <button type="submit">작성하기</button>
         </form>
     </div>

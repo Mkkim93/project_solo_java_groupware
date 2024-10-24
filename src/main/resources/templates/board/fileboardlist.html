@@ -65,12 +65,13 @@
                 </thead>
                 <tbody>
                 <tr th:each="fileBoardDTO : ${fileBoardDTO.content}">
-                    <td>
+                    <td th:text="${fileBoardDTO.id}" class="text-center"></td>
+                    <td class="text-center">
                         <a th:text="${fileBoardDTO.boardTitle}" th:href="@{/board/fileboarddetailview(id=${fileBoardDTO.id})}"></a>
                     </td>
-                    <td th:text="${fileBoardDTO.empName}"></td>
-                    <td th:text="${fileBoardDTO.boardRegDate}"></td>
-                    <td th:text="${fileBoardDTO.boardViewCount}"></td>
+                    <td th:text="${fileBoardDTO.empName}" class="text-center"></td>
+                    <td th:text="${fileBoardDTO.boardRegDate}" class="text-center"></td>
+                    <td th:text="${fileBoardDTO.boardViewCount}" class="text-center"></td>
                 </tr>
                 </tbody>
             </table>

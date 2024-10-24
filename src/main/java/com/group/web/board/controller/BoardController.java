@@ -71,6 +71,13 @@ public class BoardController {
         boardService.updateBoard(boardTemp);
         return "redirect:/board/boardlist";
     }
+
+    @GetMapping("/boarddetailview/delete/{id}")
+    public String boardDelete(@PathVariable("id") Integer id) {
+        BoardDTO boardDTO = boardService.findById(id);
+        boardService.deleteBoard(boardDTO.getId());
+        return "redirect:/board/boardlist";
+    }
 }
 
 

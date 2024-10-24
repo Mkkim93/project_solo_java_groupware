@@ -75,8 +75,9 @@ public class SecurityConfig {
 
         // TODO 경로별 인가 작업
         http
+
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/", "/**").permitAll() // USER, ADMIN 모두 접근 가능 하도록 설정
+                        .requestMatchers("/login", "/**").permitAll() // USER, ADMIN 모두 접근 가능 하도록 설정
                         .requestMatchers("/mail").hasAuthority("ADMIN") // ADMIN 만 접근 가능하도록 설정
                         .anyRequest().authenticated());
 

@@ -48,19 +48,26 @@ public class FreeBoardController {
         return "/board/freeboarddetailview";
     }
 
-    @GetMapping("freeboardmodify/{id}")
+    @GetMapping("/freeboardmodify/{id}")
     public String boardModifyView(Model model, @PathVariable("id") Integer id) {
-        model.addAttribute("freeBoardDTO", freeBoardService.findByIdOnlyFreeBoard(id));
+        model.addAttribute("freeBoardDTO", freeBoardService.findById(id));
         return "/board/freeboardmodify";
     }
 
     @PostMapping("/freeboardmodify/update/{id}")
     public String freeBoardModifyWriting(@PathVariable("id") Integer id,
                                          @ModelAttribute FreeBoardDTO freeBoardDTO) {
-        FreeBoardDTO freeBoardTemp = freeBoardService.findByIdOnlyFreeBoard(id);
+        FreeBoardDTO freeBoardTemp = freeBoardService.findById(id);
         freeBoardTemp.setBoardTitle(freeBoardDTO.getBoardTitle());
         freeBoardTemp.setBoardContent(freeBoardDTO.getBoardContent());
         freeBoardService.updateFreeBoard(freeBoardTemp);
+        return "redirect:/board/freeboardlist";
+    }
+
+    @GetMapping("/freeboarddetailview/delete/{id}")
+    public String deleteBoard(@PathVariable("id") Integer id) {
+        FreeBoardDTO freeBoardDTO = freeBoardService.findById(id);
+        freeBoardService.deleteBoard(freeBoardDTO.getBoardId());
         return "redirect:/board/freeboardlist";
     }
 }

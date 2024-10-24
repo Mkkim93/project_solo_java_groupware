@@ -34,6 +34,7 @@ public class BoardDTO {
     private Long fBoardSize;
     private String fBoardType;
     private String fBoardPath;
+    private String fOriginFileName;
 
     //자유 게시판 조회를 위한 dto 생성
     @QueryProjection
@@ -70,7 +71,9 @@ public class BoardDTO {
         this.empName = empName;
     }
 
-    public void setBoardDTO(FileBoardDTO fileBoardDTO) {
+    // TODO
+    public void fileConverterBoard(FileBoardDTO fileBoardDTO) {
+        this.id = fileBoardDTO.getBoardId();
         this.boardTitle = fileBoardDTO.getBoardTitle();
         this.boardContent = fileBoardDTO.getBoardContent();
     }

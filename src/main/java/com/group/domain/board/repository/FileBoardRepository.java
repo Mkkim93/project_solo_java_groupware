@@ -14,5 +14,4 @@ public interface FileBoardRepository extends JpaRepository<FileBoard, Integer> {
     @Query("update Board b set b.boardViewCount = b.boardViewCount + 1 where b.id = :id")
     Integer updateBoardViewCount(@Param("id") Integer id);
 
-
 }

@@ -7,6 +7,8 @@ import com.group.domain.board.entity.QnABoard;
 import com.group.domain.board.repository.BoardRepositoryImpl;
 import com.group.domain.board.repository.QnABoardRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class QnABoardService {
 
+    private static final Logger log = LoggerFactory.getLogger(QnABoardService.class);
     private final QnABoardRepository qnABoardRepository;
     private final BoardService boardService;
     private final BoardRepositoryImpl boardRepositoryImpl;
@@ -45,6 +48,7 @@ public class QnABoardService {
                 .id(qnABoardDTO.getId())
                 .qBoardPass(qnABoardDTO.getQBoardPass())
                 .boardId(boardId)
+                .qBoardIsSecret(qnABoardDTO.getQBoardIsSecret())
                 .build();
     }
 
@@ -52,13 +56,30 @@ public class QnABoardService {
         return boardRepositoryImpl.findAllByQnABoard(pageable);
     }
 
-    public QnABoardDTO findByIdOnly(Integer id) {
-       return boardRepositoryImpl.findByIdQnABoard(id);
+    public QnABoardDTO findByIdOnly(Integer id, String qBoardPass) {
+        QnABoardDTO qnaBoardDTO = boardRepositoryImpl.findByIdQnABoard(id, qBoardPass);
+        boardService.updateBoardViewCount(qnaBoardDTO.getBoardId());
+        return qnaBoardDTO;
     }
 
     public void updateQnABoard(QnABoardDTO qnABoardDTO) {
         BoardDTO boardDTO = new BoardDTO();
         boardDTO.qnaConverterBoard(qnABoardDTO);
         boardService.saveProcessAllBoard(boardDTO);
+    }
+
+    public QnABoardDTO findById(Integer id, String qBoardPass) {
+        return boardRepositoryImpl.findByIdQnABoard(id, qBoardPass);
+    }
+
+    public QnABoardDTO findByIdOne(Integer id) {
+        QnABoard qnABoard = qnABoardRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("not id"));
+        QnABoardDTO qnABoardDTO = new QnABoardDTO();
+        qnABoardDTO.setBoardId(qnABoard.getBoardId().getId());
+        return qnABoardDTO;
+    }
+
+    public void deleteBoard(Integer id) {
+        boardService.deleteBoard(id);
     }
 }

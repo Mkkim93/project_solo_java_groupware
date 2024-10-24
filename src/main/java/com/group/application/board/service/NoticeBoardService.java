@@ -49,8 +49,9 @@ public class NoticeBoardService {
     }
 
     public NoticeBoardDTO findByIdNoticeBoard(Integer id) {
-        noticeBoardRepository.updateBoardViewCount(id);
-        return boardRepositoryImpl.findByIdNoticeBoard(id);
+        NoticeBoardDTO noticeBoardDTO = boardRepositoryImpl.findByIdNoticeBoard(id);
+        boardService.updateBoardViewCount(noticeBoardDTO.getBoardId());
+        return noticeBoardDTO;
     }
 
     public NoticeBoardDTO findByIdNoticeBoardId(Integer id) {
@@ -76,7 +77,11 @@ public class NoticeBoardService {
                 .build();
     }
 
-    public NoticeBoardDTO findByIdOnlyNoticeBoard(Integer id) {
+    public NoticeBoardDTO findById(Integer id) {
         return boardRepositoryImpl.findByIdNoticeBoard(id);
+    }
+
+    public void deleteBoard(Integer id) {
+        boardService.deleteBoard(id);
     }
 }

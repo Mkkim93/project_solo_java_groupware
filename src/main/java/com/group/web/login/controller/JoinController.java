@@ -26,7 +26,9 @@ public class JoinController {
     private final EmployeeService employeeService;
 
 
-    public JoinController(JoinService joinService, JWTUtil jwtUtil, EmployeeService employeeService) {
+    public JoinController(JoinService joinService,
+                          JWTUtil jwtUtil,
+                          EmployeeService employeeService) {
         this.employeeService = employeeService;
         this.joinService = joinService;
         this.jwtUtil = jwtUtil;
@@ -55,6 +57,6 @@ public class JoinController {
     @PostMapping("/login")
     public String loginProcess(Model model, EmployeeDTO employeeDto) {
         model.addAttribute("employeeDto", employeeDto);
-        return "boardlist";
+        return "/board/boardlist";
     }
 }

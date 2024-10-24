@@ -10,5 +10,6 @@
 <p th:text="${boardDTO.boardContent}"></p>
 <!--<p th:text="${boardDTO.empName}"></p>-->
 <a th:href="@{/board/boardmodify/{id}(id = ${boardDTO.id})}">수정</a>
+<a th:href="@{/board/boarddetailview/delete/{id}(id=${boardDTO.id})}">삭제</a>
 </body>
 </html>

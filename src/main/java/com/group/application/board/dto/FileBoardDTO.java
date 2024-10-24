@@ -3,8 +3,10 @@ package com.group.application.board.dto;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -12,10 +14,12 @@ public class FileBoardDTO {
 
     private Integer id;
 
-    private String fBoardName;
-    private Long fBoardSize;
-    private String fBoardType;
-    private String fBoardPath;
+    private String fileName;
+    private Long fileSize;
+    private String fileType;
+    private String filePath;
+    private LocalDateTime fileRegDate;
+    private Integer fileBoardId;
 
     private String boardTitle;
     private String boardContent;
@@ -23,31 +27,21 @@ public class FileBoardDTO {
     private LocalDateTime boardRegDate;
     private Integer boardViewCount;
     private String isDeleted;
-
-    private FileInfoDTO fileInfoDTO;
+    private Integer boardId;
+    private String originFileName;
+    private MultipartFile file;
 
     @QueryProjection
-    public FileBoardDTO(Integer id, String boardTitle, String boardContent,
+    public FileBoardDTO(Integer id, Integer boardId, String boardTitle, String boardContent,
                         String empName, LocalDateTime boardRegDate, Integer boardViewCount,
-                        String isDeleted, String fBoardName, Long fBoardSize, String fBoardType,
-                        String fBoardPath) {
+                        String isDeleted) {
         this.id = id;
+        this.boardId = boardId;
         this.boardTitle = boardTitle;
         this.boardContent = boardContent;
         this.empName = empName;
         this.boardRegDate = boardRegDate;
         this.boardViewCount = boardViewCount;
         this.isDeleted = isDeleted;
-        this.fBoardName = fBoardName;
-        this.fBoardSize = fBoardSize;
-        this.fBoardType = fBoardType;
-        this.fBoardPath = fBoardPath;
-    }
-
-    public void setFileInfo(FileInfoDTO fileInfoDTO) {
-        this.fBoardName = fileInfoDTO.getFBoardName();
-        this.fBoardSize = fileInfoDTO.getFBoardSize();
-        this.fBoardType = fileInfoDTO.getFBoardType();
-        this.fBoardPath = fileInfoDTO.getFBoardPath();
     }
 }

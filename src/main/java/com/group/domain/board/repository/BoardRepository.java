@@ -4,6 +4,7 @@ import com.group.application.board.dto.BoardDTO;
 import com.group.domain.board.entity.Board;
 import org.apache.ibatis.annotations.Param;
 import org.hibernate.query.Page;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
