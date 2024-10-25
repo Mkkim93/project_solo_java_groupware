@@ -2,6 +2,7 @@ package com.group.web.board.controller;
 
 import com.group.application.board.dto.FreeBoardDTO;
 import com.group.application.board.service.BoardService;
+import com.group.application.board.service.CommentService;
 import com.group.application.board.service.FreeBoardService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,9 +16,14 @@ import org.springframework.web.bind.annotation.*;
 public class FreeBoardController {
 
     private final FreeBoardService freeBoardService;
+    private final CommentService commentService;
+    private final BoardService boardService;
 
-    public FreeBoardController(FreeBoardService freeBoardService) {
+    public FreeBoardController(FreeBoardService freeBoardService, CommentService commentService,
+                               BoardService boardService) {
         this.freeBoardService = freeBoardService;
+        this.commentService = commentService;
+        this.boardService = boardService;
     }
 
     @GetMapping("/freeboardlist")
@@ -43,8 +49,14 @@ public class FreeBoardController {
     }
 
     @GetMapping("/freeboarddetailview")
-    public String boardDetailView(Model model, @RequestParam("id") Integer id) {
+    public String boardDetailView(Model model, @RequestParam("id") Integer id,
+                                  @RequestParam(value = "page", defaultValue = "0") int page,
+                                  @RequestParam(value = "size", defaultValue = "10") int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        model.addAttribute("boardDTO", boardService.findById(id));
+        FreeBoardDTO boardId = freeBoardService.findBoardIdByFreeBoardId(id);
         model.addAttribute("freeBoardDTO", freeBoardService.findByIdOnlyFreeBoard(id));
+        model.addAttribute("commentDTO", commentService.findAll(boardId.getBoardId(), pageRequest));
         return "/board/freeboarddetailview";
     }
 

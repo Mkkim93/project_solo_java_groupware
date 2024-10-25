@@ -1,9 +1,12 @@
 package com.group.domain.board.entity;
 
+import com.group.application.board.dto.CommentDTO;
 import com.group.domain.hr.entity.Employee;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -12,21 +15,21 @@ import static jakarta.persistence.GenerationType.*;
 
 @Entity
 @Table(name = "commentboard")
-@Getter
+@Getter @Setter
 @NoArgsConstructor
 public class CommentBoard {
 
     @Id @GeneratedValue(strategy = IDENTITY)
     private Integer id;
 
-    @Column(name = "cboard_content")
-    private String cBoardContent;
+    @Column(name = "com_content")
+    private String comContent;
 
-    @Column(name = "cboard_regdate")
-    private LocalDateTime cBoardRegDate;
+    @Column(name = "com_regdate")
+    private LocalDateTime comRegDate;
 
-    @Column(name = "cboard_update")
-    private LocalDateTime cBoardUpdate;
+    @Column(name = "com_update")
+    private LocalDateTime comUpdate;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "board_id")
@@ -38,11 +41,24 @@ public class CommentBoard {
 
     @PrePersist
     void createComment() {
-        this.cBoardRegDate = LocalDateTime.now();
+        this.comRegDate = LocalDateTime.now();
     }
 
     // 댓글 수정
-    void UpdateComment(String cBoardContent) {
-        this.cBoardContent = cBoardContent;
+    void UpdateComment(String comContent) {
+        this.comContent = comContent;
+    }
+
+    @Builder
+    public CommentBoard(CommentDTO commentDTO) {
+        this.id = commentDTO.getId();
+        this.comContent = commentDTO.getComContent();
+        this.comRegDate = commentDTO.getComRegDate();
+        this.empId = Employee.builder()
+                .id(commentDTO.getEmpId())
+                .build();
+        this.boardId = Board.builder()
+                .id(commentDTO.getBoardId())
+                .build();
     }
 }

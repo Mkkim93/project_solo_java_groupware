@@ -35,7 +35,6 @@ public class Board {
     @Column(name = "board_content")
     private String boardContent;
 
-    // @CreatedDate
     @Column(name = "board_regdate", updatable = false)
     private LocalDateTime boardRegDate;
 
@@ -56,7 +55,7 @@ public class Board {
     private Employee empId;
 
     // cascade : 게시글이 삭제될 때 댓글도 삭제, orphanRemoval : 게시글이 삭제되면 댓글도 db 에서 삭제
-    @OneToMany(mappedBy = "boardId", cascade = ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "boardId", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
     private List<CommentBoard> comments = new ArrayList<>();
 
     @PrePersist void boardRegDate() {

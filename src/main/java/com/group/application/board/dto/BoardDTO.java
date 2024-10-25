@@ -6,6 +6,8 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -25,6 +27,8 @@ public class BoardDTO {
     private String isDeleted;
     private Employee empId;
     private Integer boardId;
+    private String comContent;
+    private String comRegDate;
 
     // qna 게시판 비밀번호 사용을 위한 필드 변수 생성
     private String qBoardPass;
@@ -35,6 +39,8 @@ public class BoardDTO {
     private String fBoardType;
     private String fBoardPath;
     private String fOriginFileName;
+
+
 
     //자유 게시판 조회를 위한 dto 생성
     @QueryProjection

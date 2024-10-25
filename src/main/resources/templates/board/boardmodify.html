@@ -1,21 +1,97 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>게시글 수정 페이지</title>
+    <style>
+        body {
+            font-family: 'Noto Sans', Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+
+        button {
+            padding: 12px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .layout {
+            margin: 0 auto;
+            max-width: 600px;
+        }
+    </style>
 </head>
 <body>
-<div class="layout">
-    <h2>게시글 수정</h2>
 
-    <form th:action="@{/board/boardmodify/update/{id}(id=${boardDTO.id})}"
-          th:object="${boardDTO}" method="post">
-        <input type="hidden" th:value="*{id}" th:field="*{id}" />
-        <input type="text" name="boardTitle" th:value="*{boardTitle}" placeholder="제목" required/>
-        <textarea name="boardContent" th:text="*{boardContent}" placeholder="내용" required></textarea>
-        <button type="submit">게시글 수정</button>
-    </form>
+<div class="container">
+    <div class="layout">
+        <h2>게시글 수정</h2>
+
+        <form th:action="@{/board/boardmodify/update/{id}(id=${boardDTO.id})}"
+              th:object="${boardDTO}" method="post">
+            <input type="hidden" th:value="*{id}" th:field="*{id}" />
+            <input type="text" name="boardTitle" th:value="*{boardTitle}" placeholder="제목" required />
+            <textarea name="boardContent" th:text="*{boardContent}" placeholder="내용" required></textarea>
+            <button type="submit">게시글 수정</button>
+        </form>
     </div>
 </div>
+
 </body>
 </html>

@@ -2,6 +2,7 @@ package com.group.web.board.controller;
 
 import com.group.application.board.dto.BoardDTO;
 import com.group.application.board.service.BoardService;
+import com.group.application.board.service.CommentService;
 import com.group.application.login.dto.CustomUserDetails;
 import com.group.domain.board.entity.Board;
 import com.group.domain.hr.entity.Employee;
@@ -18,9 +19,11 @@ import org.springframework.web.bind.annotation.*;
 public class BoardController {
 
     private BoardService boardService;
+    private CommentService commentService;
 
-    public BoardController(BoardService boardService) {
+    public BoardController(BoardService boardService, CommentService commentService) {
         this.boardService = boardService;
+        this.commentService = commentService;
     }
 
     @GetMapping("/boardlist")
@@ -46,8 +49,12 @@ public class BoardController {
     }
 
     @GetMapping("/boarddetailview")
-    public String detailView(Model model, @RequestParam("id") Integer id) {
+    public String detailView(Model model, @RequestParam("id") Integer id,
+                             @RequestParam(value = "page", defaultValue = "0") int page,
+                             @RequestParam(value = "size", defaultValue = "10") int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
         model.addAttribute("boardDTO", boardService.findById(id));
+        model.addAttribute("commentDTO", commentService.findAll(id, pageRequest));
         return "/board/boarddetailview";
     }
 

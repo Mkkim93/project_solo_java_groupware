@@ -1,16 +1,198 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>자유 게시판 상세 페이지</title>
+    <style>
+        body {
+            font-family: 'Noto Sans', Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        p {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.6;
+            white-space: pre-wrap; /* 줄바꿈 유지 */
+            margin-bottom: 40px;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 14px;
+            color: #fff;
+            background-color: #007bff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .btn.delete {
+            background-color: #dc3545;
+        }
+
+        .btn.delete:hover {
+            background-color: #c82333;
+        }
+    </style>
 </head>
 <body>
-<input type="hidden" th:value="*{freeBoardDTO.id}" th:field="*{freeBoardDTO.id}" />
-<p th:text="${freeBoardDTO.id}">id</p>
-<h1 th:text="${freeBoardDTO.boardTitle}">제목입니다.</h1>
-<p th:text="${freeBoardDTO.boardContent}"></p>
-<!--<p th:text="${freeBoardDTO.empName}"></p>-->
-<a th:href="@{/board/freeboardmodify/{id}(id = ${freeBoardDTO.id})}">수정</a>
-<a th:href="@{/board/freeboarddetailview/delete/{id}(id=${freeBoardDTO.id})}">삭제</a>
+<div class="container">
+    <input type="hidden" th:value="*{freeBoardDTO.id}" th:field="*{freeBoardDTO.id}" />
+    <p th:text="${freeBoardDTO.id}" style="display: none;">id</p>
+
+    <h1 th:text="${freeBoardDTO.boardTitle}">제목입니다.</h1>
+
+    <p th:text="${freeBoardDTO.boardContent}">내용이 여기에 표시됩니다.</p>
+
+    <strong>freeBoardDTO.id:</strong> <span th:text="${freeBoardDTO.id}"></span><br/>
+    <strong>boardDTO.id:</strong> <span th:text="${boardDTO.id}"></span><br/>
+    <strong>freeBoardDTO.boardId:</strong> <span th:text="${freeBoardDTO.boardId}"></span><br/>
+    <strong>boardDTO.boardId:</strong> <span th:text="${boardDTO.boardId}"></span><br/>
+
+
+    <div class="actions">
+        <a class="btn" th:href="@{/board/freeboardmodify/{id}(id=${freeBoardDTO.id})}">수정</a>
+        <a class="btn delete" th:href="@{/board/freeboarddetailview/delete/{id}(id=${freeBoardDTO.id})}">삭제</a>
+    </div>
+</div>
+<!-- 댓글 작성 부분 -->
+<div id="comment-write">
+    <input type="number" name="empId" id="empId" placeholder="작성자">
+    <input type="hidden" name="empName" id="empName">
+    <input type="text" name="comContent" id="comContent" placeholder="내용">
+    <input type="hidden" name="comRegDate" id="comRegDate" placeholder="내용">
+
+    <button id="comment-write-btn" onclick="commentWrite()">댓글작성</button>
+</div>
+
+<!-- 댓글 출력 및 페이지네이션 부분 -->
+<div id="comment-list"></div>
+
+<div class="pagination" id="pagination"></div>
+
+<script inline="javascript">
+    // 댓글 목록 로드 함수
+    const loadComments = (page = 0) => {
+        const boardId = [[${freeBoardDTO.boardId}]];
+        $.ajax({
+            type: "GET",
+            url: "/comment/list",
+            dataType: 'json',
+            data: {
+                boardId: boardId,
+                page: page,
+                size: 10
+            },
+
+            success: function (res) {
+                renderComments(res.content);
+                renderPagination(res);
+            },
+            error: function (err) {
+                console.log("댓글 로드 실패", err);
+                alert("댓글을 로드하는 데 실패했습니다.");
+            }
+        });
+    };
+
+    // 댓글 목록 렌더링 함수
+    const renderComments = (comments) => {
+        let output = "";
+        if (comments && comments.length > 0) {
+            comments.forEach(comment => {
+                output += `<div class="comment-card">
+                    <div class="comment-header">
+                        <span>댓글번호: ${comment.id}</span>
+                        <span class="comment-date">${comment.comRegDate}</span>
+                    </div>
+                    <div class="comment-content">${comment.comContent || comment.comContent}</div>
+                    <div><strong>작성자:</strong> ${comment.empName}</div>
+                </div>`;
+            });
+        } else {
+            output += `<div class="comment-card" style="text-align: center;">댓글이 없습니다.</div>`;
+        }
+        document.getElementById('comment-list').innerHTML = output;
+    };
+
+    // 페이지네이션 렌더링 함수
+    const renderPagination = (pageData) => {
+        let paginationHTML = '';
+        if (pageData.hasPrevious) {
+            paginationHTML += `<button onclick="loadComments(${pageData.number - 1})">이전</button>`;
+        }
+        for (let i = 0; i < pageData.totalPages; i++) {
+            paginationHTML += `<button onclick="loadComments(${i})">${i + 1}</button>`;
+        }
+        if (pageData.hasNext) {
+            paginationHTML += `<button onclick="loadComments(${pageData.number + 1})">다음</button>`;
+        }
+        document.getElementById('pagination').innerHTML = paginationHTML;
+    };
+
+    // 댓글 작성 후 새로고침
+    const commentWrite = () => {
+        const boardId = [[${freeBoardDTO.boardId}]];
+        const empId = document.getElementById("empId").value;
+        const comContent = document.getElementById("comContent").value;
+        const comRegDate = document.getElementById("comRegDate").value;
+
+        $.ajax({
+            type: "POST",
+            url: "/comment/save",
+            data: {
+                "boardId": boardId,
+                "empId": empId,
+                "comContent": comContent,
+                "comRegDate": comRegDate
+            },
+            success: function (res) {
+                console.log("댓글 작성 성공", res);
+                loadComments();
+            },
+            error: function (err) {
+                console.log("댓글 작성 실패", err);
+                alert("댓글 작성에 실패했습니다.");
+            }
+        });
+    };
+
+    // 페이지 로드 시 댓글 목록 초기화
+    $(document).ready(() => {
+        loadComments();
+    });
+</script>
 </body>
 </html>

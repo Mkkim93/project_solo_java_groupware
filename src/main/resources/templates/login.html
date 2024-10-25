@@ -62,14 +62,14 @@
 <body>
 <div class="container">
     <h3 class="text-center mb-4">로그인</h3>
-    <form th:action="@{/login}" th:object="${employeeDto}" method="post">
+    <form th:action="@{/myPage.html}" th:object="${employeeDto}" method="post">
         <div class="mb-3">
             <label th:for="empEmail" class="form-label">이메일</label>
-            <input type="email" id="empEmail" th:field="*{empEmail}" class="form-control" placeholder="example@email.com" required>
+            <input autofocus type="email" id="empEmail" th:field="*{empEmail}" class="form-control" placeholder="example@email.com" required>
         </div>
         <div class="mb-3">
             <label th:for="empPass" class="form-label">비밀번호</label>
-            <input type="password" id="empPass" th:field="*{empPass}" class="form-control" placeholder="비밀번호 입력" required>
+            <input autofocus type="password" id="empPass" th:field="*{empPass}" class="form-control" placeholder="비밀번호 입력" required>
         </div>
         <button type="submit" class="btn btn-primary">로그인</button>
     </form>

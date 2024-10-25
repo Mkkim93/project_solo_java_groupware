@@ -57,6 +57,6 @@ public class JoinController {
     @PostMapping("/login")
     public String loginProcess(Model model, EmployeeDTO employeeDto) {
         model.addAttribute("employeeDto", employeeDto);
-        return "/board/boardlist";
+        return "/myPage";
     }
 }

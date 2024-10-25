@@ -93,4 +93,14 @@ class FreeBoardServiceTest {
         System.out.println("byIdQnABoard.getBoardContent() = " + byIdOnlyFreeBoard.getBoardContent());
         System.out.println("byIdQnABoard.getBoardId() = " + byIdOnlyFreeBoard.getBoardId());
     }
+
+    @Test
+    public void findByFreeBoardBoardId() {
+        Integer id = 13;
+        Integer freeBoardByBoardId = freeBoardRepository.findFreeBoardByBoardId(id);
+        System.out.println("freeBoardByBoardId = " + freeBoardByBoardId);
+
+        FreeBoardDTO byIdOnlyFreeBoard = freeBoardService.findByIdOnlyFreeBoard(id);
+        System.out.println("byIdOnlyFreeBoard.getBoardId() = " + byIdOnlyFreeBoard.getBoardId());
+    }
 }

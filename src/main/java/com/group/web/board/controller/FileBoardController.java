@@ -4,11 +4,8 @@ import com.group.application.board.dto.FileBoardDTO;
 import com.group.application.board.service.FileBoardService;
 import com.group.application.file.FileBoardStoreDTO;
 import com.group.application.file.FileStoreService;
-import com.group.application.file.UploadFile;
-import com.group.domain.board.entity.FileBoard;
 import com.group.domain.file.entity.FileStore;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
@@ -20,16 +17,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import static com.group.domain.file.entity.QFileStore.fileStore;
 
 @Slf4j
 @Controller
