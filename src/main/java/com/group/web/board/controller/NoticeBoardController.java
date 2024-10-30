@@ -1,8 +1,8 @@
 package com.group.web.board.controller;
 
-import com.group.application.board.dto.BoardDTO;
-import com.group.application.board.dto.FileBoardDTO;
 import com.group.application.board.dto.NoticeBoardDTO;
+import com.group.application.board.service.BoardService;
+import com.group.application.board.service.CommentService;
 import com.group.application.board.service.NoticeBoardService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,9 +16,14 @@ import org.springframework.web.bind.annotation.*;
 public class NoticeBoardController {
 
     private final NoticeBoardService noticeBoardService;
+    private final CommentService commentService;
+    private final BoardService boardService;
 
-    public NoticeBoardController(NoticeBoardService noticeBoardService) {
+    public NoticeBoardController(NoticeBoardService noticeBoardService, CommentService commentService,
+                                 BoardService boardService) {
         this.noticeBoardService = noticeBoardService;
+        this.commentService = commentService;
+        this.boardService = boardService;
     }
 
     @GetMapping("/noticeboardlist")
@@ -45,8 +50,14 @@ public class NoticeBoardController {
 
     @GetMapping("/noticeboarddetailview")
     public String boardDetailView(Model model,
-                                  @RequestParam("id") int id) {
+                                  @RequestParam("id") Integer id,
+                                  @RequestParam(value = "page", defaultValue = "0") int page,
+                                  @RequestParam(value = "size", defaultValue = "10") int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        NoticeBoardDTO noticeBoardDTO = noticeBoardService.findById(id);
+        model.addAttribute("commentDTO", commentService.findAll(noticeBoardDTO.getBoardId(), pageRequest));
         model.addAttribute("noticeBoardDTO", noticeBoardService.findByIdNoticeBoard(id));
+        model.addAttribute("boardDTO", boardService.findByIdOnly(noticeBoardDTO.getBoardId()));
         return "/board/noticeboarddetailview";
     }
 

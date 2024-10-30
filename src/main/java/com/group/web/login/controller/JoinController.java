@@ -3,27 +3,23 @@ package com.group.web.login.controller;
 import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.hr.service.EmployeeService;
 import com.group.application.jwt.JWTUtil;
-import com.group.application.login.dto.CustomUserDetails;
 import com.group.application.login.service.JoinService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+
 
 @Slf4j
 @Controller
 public class JoinController {
 
-    private final JoinService joinService;
-
-    private final JWTUtil jwtUtil;
     private final EmployeeService employeeService;
+    private final JoinService joinService;
+    private final JWTUtil jwtUtil;
 
 
     public JoinController(JoinService joinService,
@@ -57,6 +53,6 @@ public class JoinController {
     @PostMapping("/login")
     public String loginProcess(Model model, EmployeeDTO employeeDto) {
         model.addAttribute("employeeDto", employeeDto);
-        return "/myPage";
+        return "redirect:/myPage";
     }
 }

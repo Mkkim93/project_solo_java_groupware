@@ -2,7 +2,6 @@ package com.group.application.board.service;
 
 import com.group.application.board.dto.BoardDTO;
 import com.group.application.board.dto.NoticeBoardDTO;
-import com.group.application.board.dto.QnABoardDTO;
 import com.group.domain.board.entity.Board;
 import com.group.domain.board.entity.NoticeBoard;
 import com.group.domain.board.repository.BoardRepositoryImpl;

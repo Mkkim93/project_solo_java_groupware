@@ -1,6 +1,8 @@
 package com.group.web.board.controller;
 
 import com.group.application.board.dto.FileBoardDTO;
+import com.group.application.board.service.BoardService;
+import com.group.application.board.service.CommentService;
 import com.group.application.board.service.FileBoardService;
 import com.group.application.file.FileBoardStoreDTO;
 import com.group.application.file.FileStoreService;
@@ -30,13 +32,19 @@ import java.util.List;
 @RequestMapping("/board")
 public class FileBoardController {
 
-    private FileBoardService fileBoardService;
-    private FileStoreService fileStoreService;
+    private final FileBoardService fileBoardService;
+    private final FileStoreService fileStoreService;
+    private final CommentService commentService;
+    private final BoardService boardService;
 
     public FileBoardController(FileBoardService fileBoardService,
-                               FileStoreService fileStoreService) {
+                               FileStoreService fileStoreService,
+                               CommentService commentService,
+                               BoardService boardService) {
         this.fileBoardService = fileBoardService;
         this.fileStoreService = fileStoreService;
+        this.commentService = commentService;
+        this.boardService = boardService;
 
     }
 
@@ -54,22 +62,33 @@ public class FileBoardController {
     @GetMapping("/fileboardwrite")
     public String fileBoardWriteView(Model model, FileBoardDTO fileBoardDTO) {
         model.addAttribute("fileBoardDTO", fileBoardDTO);
+        model.addAttribute("fileStoreBoardDTO", fileStoreService.findByStoreId(fileBoardDTO.getId()));
         return "board/fileboardwrite";
     }
 
     //TODO JWT 토큰 스크립트 헤더로 처리 하면 될듯
     @PostMapping("/fileboardwrite")
     public String fileBoardWrite(@RequestParam(name = "file", required = false) List<MultipartFile> files,
-                                 @ModelAttribute FileBoardDTO fileBoardDTO) throws IOException {
+                                 @ModelAttribute FileBoardDTO fileBoardDTO, Model model) throws IOException {
         fileBoardService.saveFileBoard(fileBoardDTO, files);
+        model.addAttribute("fileStoreBoardDTO", fileStoreService.findByStoreId(fileBoardDTO.getId()));
         return "redirect:/board/fileboardlist";
     }
 
     // TODO
     @GetMapping("/fileboarddetailview")
-    public String boardDetailView(Model model, @RequestParam Integer id) {
-        model.addAttribute("fileBoardDTO", fileBoardService.findByIdFileBoard(id));
+    public String boardDetailView(Model model,
+                                  @RequestParam Integer id,
+                                  @RequestParam(value = "page", defaultValue = "0") int page,
+                                  @RequestParam(value = "size", defaultValue = "10") int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        FileBoardDTO fileBoardDTO = fileBoardService.findById(id);
+
         model.addAttribute("fileBoardStoreDTO", fileStoreService.findByStoreId(id));
+
+        model.addAttribute("fileBoardDTO", fileBoardService.findByIdFileBoard(id));
+        model.addAttribute("commentDTO", commentService.findAll(fileBoardDTO.getBoardId(), pageRequest));
+        model.addAttribute("boardDTO", boardService.findByIdOnly(fileBoardDTO.getBoardId()));
         return "/board/fileboarddetailview";
     }
 

@@ -28,7 +28,16 @@
         <form th:action="@{/board/fileboardwrite}" th:object="${fileBoardDTO}" method="post" enctype="multipart/form-data">
             <input type="text" th:field="*{boardTitle}">
             <textarea th:field="*{boardContent}"></textarea>
-            <input type="file" name="file" multiple="multiple" th:filed="*{fileName}">
+            <div class="form-group">
+                <label for="file">첨부파일</label>
+                <input type="file" class="form-control-file" id="file" name="file" multiple>
+
+                <ul th:each="fileStore : ${fileStoreBoardDTO}">
+                    <li>
+                        <p type="hidden" th:value="${fileStore.id}" th:field="${fileStore.id}" />
+                    </li>
+                </ul>
+            </div>
             <button type="submit">작성하기</button>
         </form>
     </div>

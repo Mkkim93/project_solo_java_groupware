@@ -4,7 +4,6 @@ import com.group.application.board.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-
 public interface BoardRepositoryCustom {
 
     Page<BoardDTO> findAllByBoard(Pageable pageable);
@@ -25,5 +24,5 @@ public interface BoardRepositoryCustom {
 
     NoticeBoardDTO findByIdNoticeBoard(Integer id);
 
-    QnABoardDTO findByIdQnABoard(Integer id, String qBoardPass);
+    QnABoardDTO findByIdQnABoard(Integer id, String boardPass);
 }

@@ -27,13 +27,13 @@ class QnABoardServiceTest {
     public void findById() {
         QnABoard qnABoard = qnABoardRepository.findById(1).get();
         System.out.println("qnABoard.getId() = " + qnABoard.getId());
-        System.out.println("qnABoard.getQBoardPass() = " + qnABoard.getQBoardPass());
+        System.out.println("qnABoard.getQBoardPass() = " + qnABoard.getBoardPass());
     }
 
     @Test
     public void findByOnly() {
-        Integer id = 14;
-        String qBoardPass = "";
+        Integer id = 1;
+        String qBoardPass = "1234";
         QnABoardDTO byIdOnly = qnABoardService.findByIdOnly(id, qBoardPass);
         System.out.println("byIdOnly.getId() = " + byIdOnly.getId());
         System.out.println("byIdOnly.getBoardId() = " + byIdOnly.getBoardId());
@@ -56,6 +56,15 @@ class QnABoardServiceTest {
         QnABoardDTO byIdOne = qnABoardService.findByIdOne(id);
         System.out.println("byIdOne.getId() = " + byIdOne.getId());
         System.out.println("byIdOne.getBoardId() = " + byIdOne.getBoardId());
+    }
+
+    @Test
+    void findByIdQnaBoard() {
+        Integer id = 1;
+        String boardPass = "1234";
+        QnABoardDTO byId = qnABoardService.findById(id, boardPass);
+        System.out.println("byId.getBoardId() = " + byId.getBoardId());
+        System.out.println("byId.getId() = " + byId.getId());
     }
 
 }

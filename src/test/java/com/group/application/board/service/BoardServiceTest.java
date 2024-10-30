@@ -21,9 +21,11 @@ class BoardServiceTest {
     @Test
     public void findByBoard() {
         BoardDTO boardDTO = new BoardDTO();
-        boardDTO.setId(1);
-        BoardDTO id = boardService.findById(1);
+        boardDTO.setId(13);
+        BoardDTO id = boardService.findById(boardDTO.getId());
         System.out.println(id.getBoardTitle() + " " + id.getBoardContent());
+        System.out.println("id.getId() = " + id.getId());
+        System.out.println("id.getBoardId() = " + id.getBoardId());
     }
 
     @Test

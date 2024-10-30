@@ -1,7 +1,10 @@
 package com.group.domain.hr.entity;
 
+import com.group.application.hr.dto.EmployeeDTO;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -48,17 +51,35 @@ public class Employee {
     @Column(name = "emp_joinyn")
     private String empJoinYN;
 
-    @Column(name = "emp_isadmin")
+    @Column(name = "emp_isadmin") // roleType -> 차후 컬럼 및 변수명 수정
     private String empIsAdmin;
 
-    @Column(name = "emp_no")
+    @Column(name = "emp_no") // 사원 번호
     private String empNo;
+
+    @Column(name = "emp_img") // 프로필 사진
+    private String emp_img;
+
+    @Column(name = "emp_tel") // 개인 연락처
+    private String empTel;
+
+    @Column(name = "emp_joindate") // 입사일
+    private LocalDateTime empJoinDate;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "dept_id") // 실제 db Employee 테이블에 있는 department 의 외래 키
     private Department department;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "att_id")
-    private Attendance attendance;
+    // 사원 등록 시점에 입사일 생성
+    @PrePersist void JoinDate() {
+        this.empJoinDate = LocalDateTime.now();
+    }
+
+    // 사원 정보 수정 시 dto -> entity 변환
+    public Employee entityEmployee(EmployeeDTO employeeDTO) {
+        this.id = employeeDTO.getId();
+        this.userTel = employeeDTO.getUserTel();
+        this.userEmail = employeeDTO.getUserEmail();
+        return this;
+    }
 }

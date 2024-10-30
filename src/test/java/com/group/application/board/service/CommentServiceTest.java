@@ -20,28 +20,32 @@ class CommentServiceTest {
     CommentBoardRepository commentBoardRepository;
 
     // TODO
-    /*@Test
+    @Test
     public void findAllByComment() {
-        CommentDTO commentDTO = new CommentDTO();
-        commentDTO.setId(33);
-        commentService.SaveCommentBoard(commentDTO);
-        List<CommentDTO> all = commentService.findAll(commentDTO.getBoardId());
-        for (CommentDTO dto : all) {
-            System.out.println("dto.getCBoardContent() = " + dto.getCBoardContent());
-            System.out.println("dto.getEmpId() = " + dto.getEmpId());
-        }
-    }*/
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        Integer boardId = 4;
+        String boardPass = "1234";
+        Page<CommentDTO> allQna = commentService.findAllQna(boardId, boardPass, pageRequest);
+        for (CommentDTO commentDTO : allQna) {
+            System.out.println("commentDTO.getComContent() = " + commentDTO.getComContent());
+            System.out.println("commentDTO.getBoardId() = " + commentDTO.getBoardId());
+            System.out.println("commentDTO.getBoardPass() = " + commentDTO.getBoardPass());
+            System.out.println("commentDTO.getId() = " + commentDTO.getId());
 
-    /*@Test
+        }
+    }
+
+    @Test
     public void findAllByComRepo() {
         Integer id = 125;
-        List<CommentDTO> allByCommentBoardId = commentBoardRepository.findAllByCommentBoardId(id);
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        Page<CommentDTO> allByCommentBoardId = commentBoardRepository.findAllByCommentBoardId(id, pageRequest);
         for (CommentDTO commentDTO : allByCommentBoardId) {
             System.out.println("commentDTO.getId() = " + commentDTO.getId());
             System.out.println("commentDTO.getBoardId() = " + commentDTO.getBoardId());
-            System.out.println("commentDTO.getEmpName() = " + commentDTO.getEmpName());
-            System.out.println("commentDTO = " + commentDTO.getCBoardContent());
+            System.out.println("commentDTO.getComContent() = " + commentDTO.getComContent());
         }
-    }*/
+
+    }
 
 }

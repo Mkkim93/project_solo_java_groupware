@@ -83,7 +83,7 @@
         <input type="text" id="boardTitle" th:field="*{boardTitle}" placeholder="제목" required>
         <textarea id="boardContent" th:field="*{boardContent}" placeholder="내용" required></textarea>
         <label>
-            <input class="form-check" type="checkbox" id="secretCheckBox" th:value="*{QBoardIsSecret}" th:field="*{QBoardIsSecret}">
+            <input class="form-check" type="checkbox" id="secretCheckBox" th:value="*{}" th:field="*{QBoardIsSecret}">
             비밀글 선택
         </label>
         <div class="input-group" id="passwordGroup">

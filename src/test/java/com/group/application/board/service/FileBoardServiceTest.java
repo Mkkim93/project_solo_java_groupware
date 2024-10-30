@@ -30,5 +30,13 @@ class FileBoardServiceTest {
         System.out.println("board.getBoardContent() = " + board.getBoardContent());
         System.out.println("board.getBoardViewCount() = " + board.getBoardViewCount());
     }
+
+    @Test
+    public void findByIdOnly() {
+        Integer id = 76;
+        FileBoardDTO fileBoardDTO = fileBoardService.findById(id);
+        System.out.println("fileBoardDTO.getId() = " + fileBoardDTO.getId());
+        System.out.println("fileBoardDTO.getBoardId() = " + fileBoardDTO.getBoardId());
+    }
 }
 

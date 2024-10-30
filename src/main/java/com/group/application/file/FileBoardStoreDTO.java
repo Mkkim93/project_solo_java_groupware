@@ -1,6 +1,5 @@
 package com.group.application.file;
 
-import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;

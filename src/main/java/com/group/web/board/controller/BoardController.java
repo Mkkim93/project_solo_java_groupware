@@ -3,13 +3,8 @@ package com.group.web.board.controller;
 import com.group.application.board.dto.BoardDTO;
 import com.group.application.board.service.BoardService;
 import com.group.application.board.service.CommentService;
-import com.group.application.login.dto.CustomUserDetails;
-import com.group.domain.board.entity.Board;
-import com.group.domain.hr.entity.Employee;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -86,5 +81,3 @@ public class BoardController {
         return "redirect:/board/boardlist";
     }
 }
-
-

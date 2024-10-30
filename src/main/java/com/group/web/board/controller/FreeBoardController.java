@@ -49,14 +49,15 @@ public class FreeBoardController {
     }
 
     @GetMapping("/freeboarddetailview")
-    public String boardDetailView(Model model, @RequestParam("id") Integer id,
+    public String boardDetailView(Model model,
+                                  @RequestParam("id") Integer id,
                                   @RequestParam(value = "page", defaultValue = "0") int page,
                                   @RequestParam(value = "size", defaultValue = "10") int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        model.addAttribute("boardDTO", boardService.findById(id));
-        FreeBoardDTO boardId = freeBoardService.findBoardIdByFreeBoardId(id);
+        FreeBoardDTO freeBoardDTO = freeBoardService.findById(id);
         model.addAttribute("freeBoardDTO", freeBoardService.findByIdOnlyFreeBoard(id));
-        model.addAttribute("commentDTO", commentService.findAll(boardId.getBoardId(), pageRequest));
+        model.addAttribute("boardDTO", boardService.findByIdOnly(freeBoardDTO.getBoardId()));
+        model.addAttribute("commentDTO", commentService.findAll(freeBoardDTO.getBoardId(), pageRequest));
         return "/board/freeboarddetailview";
     }
 

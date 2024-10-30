@@ -5,14 +5,10 @@ import com.group.domain.board.entity.Board;
 import com.group.domain.board.entity.CommentBoard;
 import com.group.domain.board.repository.BoardRepository;
 import com.group.domain.board.repository.CommentBoardRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,6 +37,13 @@ public class CommentService {
     // 게시판 번호별 댓글 목록 출력
     public Page<CommentDTO> findAll(Integer boardId, Pageable pageable) {
         Page<CommentDTO> commentDTOList = commentBoardRepository.findAllByCommentBoardId(boardId, pageable);
+        return commentDTOList;
+    }
+
+    // 비밀글 게시판 댓글을 위한 비즈니스로직 별도 구현
+    public Page<CommentDTO> findAllQna(Integer boardId, String boardPass, Pageable pageable) {
+        // TODO
+        Page<CommentDTO> commentDTOList = commentBoardRepository.findAllByCommentBoardIdAndPass(boardId, boardPass, pageable);
         return commentDTOList;
     }
 }

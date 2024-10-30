@@ -6,20 +6,20 @@ import com.group.domain.board.entity.Board;
 import com.group.domain.board.entity.QnABoard;
 import com.group.domain.board.repository.BoardRepositoryImpl;
 import com.group.domain.board.repository.QnABoardRepository;
+import com.group.exception.CustomException;
 import jakarta.persistence.EntityNotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @Transactional
 public class QnABoardService {
 
-    private static final Logger log = LoggerFactory.getLogger(QnABoardService.class);
     private final QnABoardRepository qnABoardRepository;
     private final BoardService boardService;
     private final BoardRepositoryImpl boardRepositoryImpl;
@@ -46,9 +46,9 @@ public class QnABoardService {
     private QnABoard getEntity(QnABoardDTO qnABoardDTO, Board boardId) {
         return QnABoard.builder()
                 .id(qnABoardDTO.getId())
-                .qBoardPass(qnABoardDTO.getQBoardPass())
+                .boardPass(qnABoardDTO.getBoardPass())
                 .boardId(boardId)
-                .qBoardIsSecret(qnABoardDTO.getQBoardIsSecret())
+                .boardSecret(qnABoardDTO.getBoardSecret())
                 .build();
     }
 
@@ -56,10 +56,10 @@ public class QnABoardService {
         return boardRepositoryImpl.findAllByQnABoard(pageable);
     }
 
-    public QnABoardDTO findByIdOnly(Integer id, String qBoardPass) {
-        QnABoardDTO qnaBoardDTO = boardRepositoryImpl.findByIdQnABoard(id, qBoardPass);
-        boardService.updateBoardViewCount(qnaBoardDTO.getBoardId());
-        return qnaBoardDTO;
+    public QnABoardDTO findByIdOnly(Integer id, String boardPass) {
+        QnABoardDTO qnABoardDTO = boardRepositoryImpl.findByIdQnABoard(id, boardPass);
+        boardService.updateBoardViewCount(qnABoardDTO.getBoardId());
+        return qnABoardDTO;
     }
 
     public void updateQnABoard(QnABoardDTO qnABoardDTO) {
@@ -68,8 +68,13 @@ public class QnABoardService {
         boardService.saveProcessAllBoard(boardDTO);
     }
 
-    public QnABoardDTO findById(Integer id, String qBoardPass) {
-        return boardRepositoryImpl.findByIdQnABoard(id, qBoardPass);
+    public QnABoardDTO findById(Integer id, String boardPass) {
+        QnABoard qnABoard = qnABoardRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("not id"));
+        if (!qnABoard.getBoardPass().equals(boardPass)) {
+            log.info("비밀번호가 다릅니다");
+            throw new CustomException("fail password!");
+        }
+        return boardRepositoryImpl.findByIdQnABoard(id, boardPass);
     }
 
     public QnABoardDTO findByIdOne(Integer id) {
@@ -81,5 +86,14 @@ public class QnABoardService {
 
     public void deleteBoard(Integer id) {
         boardService.deleteBoard(id);
+    }
+
+    public Boolean existIdAndBoardPass(Integer id, String boardPass) {
+        QnABoard qnABoard = qnABoardRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("no id"));
+        if (qnABoard.getBoardPass().equals(boardPass)) {
+            log.info("비밀번호가 다릅니다.");
+            return false;
+        }
+        return true;
     }
 }

@@ -17,6 +17,7 @@ public class CommentDTO {
     private String comContent;
     private LocalDateTime comRegDate;
     private Integer empId;
+    private String boardPass;
 
     public CommentDTO(Integer id, String comContent,
                       String empName, LocalDateTime comRegDate, Integer empId, Integer boardId) {
@@ -26,5 +27,17 @@ public class CommentDTO {
         this.comRegDate = comRegDate;
         this.empId = empId;
         this.boardId = boardId;
+    }
+
+    public CommentDTO(Integer id, String comContent,
+                      String empName, LocalDateTime comRegDate,
+                      Integer empId, Integer boardId, String boardPass) {
+        this.id = id;
+        this.comContent = comContent;
+        this.empName = empName;
+        this.comRegDate = comRegDate;
+        this.empId = empId;
+        this.boardId = boardId;
+        this.boardPass = boardPass;
     }
 }

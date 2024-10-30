@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>사원 정보 수정 페이지</title>
+</head>
+<body>
+<div class="layout">
+
+    <form th:action="@{/hr/employeemodify/update/{id}(id=${employeeDTO.id})}"
+          th:object="${employeeDTO}" method="post">
+        <table>
+            <tr>
+                <th>Name</th>
+                <td th:text="${employeeDTO.empName}"></td>
+            </tr>
+            <tr>
+                <th>Rank</th>
+                <td th:text="${employeeDTO.empRank}"></td>
+            </tr>
+            <tr>
+                <th>Reg No</th>
+                <td th:text="${employeeDTO.empRegNo}"></td>
+            </tr>
+            <tr>
+                <th>닉네임</th>
+                <td th:text="${employeeDTO.empNickName}"></td>
+            </tr>
+            <tr>
+                <th>내선 번호</th>
+                <td><input type="text" class="form-control" id="empTel" name="empTel" th:value="${employeeDTO.empTel}"></td>
+            </tr>
+            <tr>
+                <th>휴대폰 번호</th>
+                <td><input type="text" class="form-control" id="userTel" name="userTel" th:value="${employeeDTO.userTel}"></td>
+            </tr>
+            <tr>
+                <th>사내 메일 주소</th>
+                <td th:text="${employeeDTO.empEmail}"></td>
+            </tr>
+            <tr>
+                <th>개인 메일 주소</th>
+            <td><input type="text" class="form-control" id="userEmail" name="userEmail" th:value="${employeeDTO.userEmail}"></td>
+            </tr>
+            <tr>
+                <th>사내 마일리지</th>
+                <td th:text="${employeeDTO.empMileage}"></td>
+            </tr>
+            <tr>
+                <th>사원 번호</th>
+                <td th:text="${employeeDTO.empNo}"></td>
+            </tr>
+        </table>
+        <button type="submit" class="btn btn-primary">수정 완료</button>
+    </form>
+</div>
+</body>
+</html>

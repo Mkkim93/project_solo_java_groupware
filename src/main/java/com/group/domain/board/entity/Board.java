@@ -1,20 +1,13 @@
 package com.group.domain.board.entity;
 
-import com.group.application.board.dto.BoardDTO;
-import com.group.application.board.dto.FreeBoardDTO;
 import com.group.domain.hr.entity.Employee;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.data.relational.core.sql.In;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
 

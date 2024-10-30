@@ -1,6 +1,5 @@
 package com.group.domain.board.entity;
 
-import com.group.application.board.dto.FileBoardDTO;
 import com.group.domain.file.entity.FileStore;
 import jakarta.persistence.*;
 import lombok.*;

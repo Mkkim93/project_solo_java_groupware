@@ -62,6 +62,11 @@ public class BoardService {
         return boardRepositoryImpl.findByIdBoard(id);
     }
 
+    // 조회수 올리지 않고 id 만 검색
+    public BoardDTO findByIdOnly(Integer id) {
+        return boardRepository.findByIdBoard(id);
+    }
+
     public BoardDTO updateBoard(BoardDTO boardDTO) {
 
         // TODO JWT 토큰 처리 해야됨

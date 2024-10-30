@@ -95,6 +95,7 @@
 <body>
 
 <div class="container">
+    <strong>boardDTO.id:</strong> <span th:text="${boardDTO.id}"></span><br/>
     <h1 th:text="${boardDTO.boardTitle}">제목입니다.</h1>
     <p class="author" th:text="'작성자: ' + ${boardDTO.empName}">작성자 정보</p>
     <p th:text="${boardDTO.boardContent}">여기에 게시글 내용이 표시됩니다.</p>
@@ -205,11 +206,11 @@
             }
         });
     };
-
     // 페이지 로드 시 댓글 목록 초기화
     $(document).ready(() => {
         loadComments();
     });
 </script>
+
 </body>
 </html>

@@ -78,28 +78,43 @@ body {
 }
 
 /* 통계 섹션 */
-.stats {
+.dashboard {
     display: flex;
-    justify-content: space-between;
 }
 
+.stats {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.extra-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    flex: 2;
+}
+
+/* 높이 조정 */
 .stat-card {
-    background-color: #ecf0f1;
     padding: 20px;
-    border-radius: 10px;
-    width: 30%;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+}
+
+.stat-card.large {
+    height: 700px; /* 진행 중인 프로젝트 높이 조정 */
 }
 
 .progress-circle {
-    background-color: #3498db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    height: 200px;
+    width: 200px;
+    background-color: #4caf50;
     color: white;
     border-radius: 50%;
-    width: 100px;
-    height: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
 }
 
 /* 알림 섹션 */

@@ -5,22 +5,18 @@ import com.group.application.board.dto.FileBoardDTO;
 import com.group.application.file.FileStoreService;
 import com.group.domain.board.entity.Board;
 import com.group.domain.board.entity.FileBoard;
-import com.group.domain.board.repository.BoardRepository;
 import com.group.domain.board.repository.BoardRepositoryImpl;
 import com.group.domain.board.repository.FileBoardRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @Transactional

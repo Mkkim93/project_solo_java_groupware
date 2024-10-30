@@ -67,9 +67,9 @@
 <body>
 <div class="container">
     <h2>건의 게시판 리스트</h2>
-    <div th:if="${qBoardPass}">
+    <div th:if="${failPassWord}">
         <script>
-            alert([[${qBoardPass}]]);
+            alert("[[${failPassWord}]]");
         </script>
     </div>
     <table>
@@ -87,16 +87,16 @@
         <tr th:each="qnABoardDTO : ${qnABoardDTO.content}">
             <td th:text="${qnABoardDTO.id}" class="text-center"></td>
             <td class="text-center">
-                <a th:if="${qnABoardDTO.QBoardIsSecret == 'N'}"
+                <a th:if="${qnABoardDTO.boardSecret == 'N'}"
                    th:text="${qnABoardDTO.boardTitle}"
                    th:href="@{/board/qnaboarddetailview(id=${qnABoardDTO.id})}"></a>
-                <span th:if="${qnABoardDTO.QBoardIsSecret == 'Y'}">
+                <span th:if="${qnABoardDTO.boardSecret == 'Y'}">
                       <a th:onclick="|showPasswordPrompt(${qnABoardDTO.id})|">비밀글입니다</a></span>
             </td>
             <td th:text="${qnABoardDTO.empName}" class="text-center"></td>
             <td th:text="${qnABoardDTO.boardRegDate}" class="text-center"></td>
             <td th:text="${qnABoardDTO.boardViewCount}" class="text-center"></td>
-            <td th:text="${qnABoardDTO.QBoardIsSecret}" id="isSecret" class="text-center"></td>
+            <td th:text="${qnABoardDTO.boardSecret}" id="boardSecret" class="text-center"></td>
         </tr>
         </tbody>
 
@@ -120,27 +120,12 @@
 
 <script>
     function showPasswordPrompt(id) {
-        const QBoardPass = prompt("비밀번호를 입력하세요:");
-        if (QBoardPass) {
-            // 서버에 비밀번호와 함께 비동기 요청을 보냄
-            fetch(`/board/qnaboarddetailview?id=${id}&qBoardPass=${QBoardPass}`)
-                .then(response => {
-                    if (response.ok) {
-                        // 비밀번호가 맞으면 상세 페이지로 이동
-                        return response.text();  // 페이지 HTML을 가져옴
-                    } else {
-                        throw new Error("비밀번호가 틀렸습니다.");
-                    }
-                })
-                .then(html => {
-                    // 비밀번호가 맞으면 HTML 내용을 현재 페이지에 삽입
-                    document.body.innerHTML = html;
-                })
-                .catch(error => {
-                    // 비밀번호가 틀리면 에러 메시지를 알림 팝업으로 표시
-                    alert(error.message);
-                });
-        } else {
+        const boardPass = prompt("비밀번호를 입력하세요:");
+        if (boardPass) {
+            // 비밀번호와 함께 페이지로 직접 이동
+            window.location.href = `/board/qnaboarddetailview?id=${id}&boardPass=${boardPass}`;
+        }
+        else {
             alert("비밀번호가 입력되지 않았습니다.");
         }
     }

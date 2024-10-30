@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://kit.fontawesome.com/4526b6a2d0.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+<div class="dashboard">
+    <!-- 사이드바 -->
+    <div class="sidebar">
+        <div class="profile-section">
+            <form th:action="@{/hr/employeedetailview}" th:object="${employeeDTO}" method="get">
+            <h3 type="text" id="empName" name="empName" th:text="${employeeDTO.empName}"></h3>
+            <h3 type="text" id="deptName" name="deptName" th:text="${departmentDTO.deptName}"></h3>
+            <input type="hidden" th:value="${employeeDTO.id}" th:field="${employeeDTO.id}" />
+            <button type="submit">나의 정보</button>
+            </form>
+        </div>
+        <ul class="menu">
+            <li><a href="/hr/myPage"><i class="fa-solid fa-house"></i> 홈</a></li>
+            <li><a href="/board/boardlist"><i class="fa-solid fa-pen"></i> 게시판</a></li>
+            <li><a href="#"><i class="fa-regular fa-calendar"></i> 일정</a></li>
+            <li><a href="#"><i class="fa-solid fa-envelope"></i> 메일</a></li>
+            <li><a href="#"><i class="fa-solid fa-gear"></i> 설정</a></li>
+            <li><a href="#"><i class="fa-brands fa-signal-messenger"></i> 메신저</a></li>
+            <li><a href="#"><i class="fa-solid fa-cart-shopping"></i> 당근</a></li>
+            <li><a href="#"><i class="fa-solid fa-m"></i> 마일리지상점</a></li>
+            <li><a href="#"><i class="fa-solid fa-people-group"></i> 사내동호회</a></li>
+        </ul>
+    </div>
+
+    <!-- 메인 대시보드 -->
+    <div class="main-content">
+        <header class="header">
+            <h2>My Portal</h2>
+            <!--TODO-->
+            <input type="hidden" id="id" name="id" th:value="${attendanceDTO != null ? attendanceDTO.id : 0}">
+            <input type="hidden" id="attOn" name="attOn" th:value="${attendanceDTO != null ? attendanceDTO.attOn : ''}">
+            <input type="hidden" id="employee" name="employee" th:value="${attendanceDTO != null ? attendanceDTO.employee : 0}">
+
+            <button id="comment-attOn-btn" onclick="attOnLogic()">출근</button>
+            <button id="comment-attOff-btn" onclick="attOff()">퇴근</button>
+            <div class="header-right">
+                <input type="text" placeholder="통합검색">
+                <i class="bell-icon">🔔</i>
+                <i class="user-icon">👤</i>
+            </div>
+        </header>
+
+        <div class="dashboard">
+            <!-- 상단 섹션: 진행 중인 프로젝트 -->
+            <section class="stats">
+                <div class="stat-card large">
+                    <h3 class="text-center">진행 중인 프로젝트</h3>
+                    <div class="progress-circle">
+                        <span>72%</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 오른쪽 섹션: 나머지 4개의 stat-card -->
+            <section class="extra-stats">
+                <div class="stat-card">
+                    <h3 class="text-center">나의 근태 현황</h3>
+                    <canvas id="attendance-chart"></canvas>
+                </div>
+                <div class="stat-card">
+                    <h3 class="text-center">팀원별 프로젝트 진행 현황</h3>
+                    <canvas id="another-chart"></canvas>
+                </div>
+                <div class="stat-card">
+                    <h3 class="text-center">나의 일정 관리</h3>
+                    <canvas id="project-chart"></canvas>
+                </div>
+                <div class="stat-card">
+                    <h3 class="text-center">업무 진행 현황</h3>
+                    <canvas id="task-chart"></canvas>
+                </div>
+            </section>
+        </div>
+
+        <section class="notifications">
+            <div class="notification-card">
+                <h3>최근 알림</h3>
+                <ul>
+                    <li>피우: DO 마케팅 팀 업무 현황 등록됨</li>
+                    <li>우람: 공지 사항 게시</li>
+                    <li>스피카: 긴급 공사 안내 등록</li>
+                </ul>
+            </div>
+            <div class="notification-card">
+                <h3>메일함</h3>
+                <ul>
+                    <li>스피카: 긴급 공사 안내</li>
+                    <li>우람: 다우 오피스 사용 안내</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    const attOnLogic = () => {
+        const id = document.getElementById("id").value || 0;  // 기본값 설정
+        const attOn = document.getElementById("attOn").value || '';
+        const employee = document.getElementById("employee").value || 0;
+        console.log(id);
+
+        $.ajax({
+            type: "POST",
+            url: "/attendance/save",
+            data: {
+                "id": id,
+                "employee": employee,
+                "attOn": attOn
+            },
+            success: function (res) {
+                alert("열심히 일해라");
+                console.log("출근 완료", res);
+            },
+            error: function (err) {
+                console.log("출근 실패", err);
+            }
+        });
+    };
+</script>
+
+<script th:inline="javascript">
+    let attendancePerception = [[${attendanceDTO != null ? attendanceDTO.attPerception : 0}]];
+    let attendanceLeave = [[${attendanceDTO != null ? attendanceDTO.attLeave : 0}]];
+    let attendanceVacation = [[${attendanceDTO != null ? attendanceDTO.attVacation : 0}]];
+</script>
+
+<script>
+    const ctx = document.getElementById('attendance-chart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['지각', '조퇴', '휴가'], // 날짜 x축 라벨
+            datasets: [{
+                label: 'Attendance Count',
+                data: [attendancePerception, attendanceLeave, attendanceVacation], // y축 바인딩
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(75, 192, 192, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

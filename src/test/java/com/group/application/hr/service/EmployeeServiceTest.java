@@ -30,20 +30,12 @@ import static org.assertj.core.api.Assertions.*;
 @RequiredArgsConstructor
 class EmployeeServiceTest {
 
-    @Autowired
-    JoinService joinService;
+    @Autowired JoinService joinService;
+    @Autowired EmployeeService employeeService;
+    @Autowired EmployeeRepository employeeRepository;
+    @Autowired AttendanceService attendanceService;
+    @Autowired EntityManager em;
 
-    @Autowired
-    EmployeeService employeeService;
-
-    @Autowired
-    EmployeeRepository employeeRepository;
-
-    @Autowired
-    AttendanceService attendanceService;
-
-    @Autowired
-    EntityManager em;
     JPAQueryFactory queryFactory;
 
     @BeforeEach
@@ -61,21 +53,22 @@ class EmployeeServiceTest {
     }
 
     @Test
-    @DisplayName("회원 가입")
-    public void saveEmployee() {
-        EmployeeDTO empDto = new EmployeeDTO("ggg11@goolge.com", "1234", "구마적"
-        ,"0392-494", "kkk@naver.com", "돼지");
-        EmployeeDTO joinedDto = joinService.joinProcess(empDto);
-        assertThat(joinedDto.getEmpEmail()).isEqualTo(empDto.getEmpEmail());
+    @DisplayName("ID 로 회원 정보 조회")
+    public void findByIdInformation() {
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setId(1);
+        EmployeeDTO byId = employeeService.findById(employeeDTO.getId());
+        System.out.println("byId.getEmpName() = " + byId.getEmpName());
+        assertThat(byId).extracting("id").isEqualTo(1);
     }
 
     @Test
-    @DisplayName("ID 로 회원 정보 조회")
-    public void findByIdInformation() {
-        Integer id = 1;
-        Optional<Employee> byId = employeeRepository.findById(id);
-        List<Employee> findByIdEmployee = byId.stream().toList();
-        System.out.println("list = " + findByIdEmployee);
-        assertThat(id).extracting("id").isEqualTo(1);
+    void attCountTest() {
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setId(1);
+        AttendanceDTO attCount = employeeService.findByIdAttInfo(employeeDTO);
+        System.out.println("attCount.getAttLeave() = " + attCount.getAttLeave());
+        System.out.println("attCount.getAttPerception() = " + attCount.getAttPerception());
+        System.out.println("attCount.getAttVacation() = " + attCount.getAttVacation());
     }
 }

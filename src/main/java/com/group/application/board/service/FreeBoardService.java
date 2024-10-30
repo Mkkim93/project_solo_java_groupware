@@ -6,9 +6,7 @@ import com.group.domain.board.entity.Board;
 import com.group.domain.board.entity.FreeBoard;
 import com.group.domain.board.repository.BoardRepositoryImpl;
 import com.group.domain.board.repository.FreeBoardRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -50,10 +48,6 @@ public class FreeBoardService {
     public Page<FreeBoardDTO> findAllByFreeBoard(Pageable pageable) {
         return boardRepositoryImpl.findAllByFreeBoard(pageable);
     }
-
-    /*public FreeBoardDTO findByIdFreeBoard(Integer id) {
-        return boardRepositoryImpl.findByIdFreeBoard(id);
-    }*/
 
     public FreeBoardDTO findBoardIdByFreeBoardId(Integer id) {
         FreeBoardDTO freeBoardDTO = new FreeBoardDTO();

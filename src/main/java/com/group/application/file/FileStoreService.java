@@ -1,14 +1,10 @@
 package com.group.application.file;
 
-import com.group.application.board.dto.FileBoardDTO;
 import com.group.domain.board.entity.FileBoard;
 import com.group.domain.file.entity.FileStore;
 import com.group.domain.file.repository.FileStoreRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.relational.core.conversion.ObjectPath;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;

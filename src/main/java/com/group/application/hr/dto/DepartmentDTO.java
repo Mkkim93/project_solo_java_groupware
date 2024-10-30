@@ -15,20 +15,15 @@ public class DepartmentDTO {
     private String deptName;
     private String deptIsDeleted;
 
-    public DepartmentDTO(Integer id) {
-        this.id = id;
-    }
+    private Integer empId;
+    private String empName;
 
     @QueryProjection
-    public DepartmentDTO(String deptCode, String deptName) {
-        this.deptCode = deptCode;
-        this.deptName = deptName;
-        this.deptIsDeleted = getDeptIsDeleted();
-    }
-
-    public DepartmentDTO(Integer id, String deptCode, String deptName) {
+    public DepartmentDTO(Integer id, String deptCode, String deptName, Integer empId, String empName) {
         this.id = id;
         this.deptCode = deptCode;
         this.deptName = deptName;
+        this.empId = empId;
+        this.empName = empName;
     }
 }

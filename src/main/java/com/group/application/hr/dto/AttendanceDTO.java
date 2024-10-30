@@ -1,5 +1,7 @@
 package com.group.application.hr.dto;
 
+import com.group.domain.hr.entity.Attendance;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,12 +21,29 @@ public class AttendanceDTO {
     private Date attDate;
     private LocalDateTime attCreate;
 
-    /**
-     *
-     * @param id 근태 번호
-     * COMMENT : 사원 등록 시 근태번호가 자동으로 생성되도록 로직 구현
-     */
-    public AttendanceDTO(Integer id) {
-        this. id= id;
+    private String empName;
+    private Integer employee;
+
+    @QueryProjection
+    public AttendanceDTO(Integer id, LocalDateTime attOn, LocalDateTime attOff,
+                         Integer attPerception, Integer attLeave, Integer attVacation,
+                         Date attDate, LocalDateTime attCreate, String empName, Integer employee) {
+        this.id = id;
+        this.attOn = attOn;
+        this.attOff = attOff;
+        this.attPerception = attPerception;
+        this.attLeave = attLeave;
+        this.attVacation = attVacation;
+        this.attDate = attDate;
+        this.attCreate = attCreate;
+        this.empName = empName;
+        this.employee = employee;
+    }
+
+    public AttendanceDTO converterDTO(Attendance attendance) {
+        this.id = attendance.getId();
+        this.attOn = attendance.getAttOn();
+        this.attOff = attendance.getAttOff();
+        return this;
     }
 }

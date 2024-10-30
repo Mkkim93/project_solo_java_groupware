@@ -1,6 +1,7 @@
 package com.group.application.board.service;
 
 import com.group.application.board.dto.BoardDTO;
+import com.group.application.board.dto.CommentDTO;
 import com.group.application.board.dto.FreeBoardDTO;
 import com.group.domain.board.entity.Board;
 import com.group.domain.board.entity.FreeBoard;
@@ -8,6 +9,8 @@ import com.group.domain.board.repository.FreeBoardRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,6 +22,12 @@ class FreeBoardServiceTest {
 
     @Autowired
     FreeBoardRepository freeBoardRepository;
+
+    @Autowired
+    CommentService commentService;
+
+    @Autowired
+    BoardService boardService;
 
     @Test
     public void freeBoardSave() {
@@ -100,7 +109,34 @@ class FreeBoardServiceTest {
         Integer freeBoardByBoardId = freeBoardRepository.findFreeBoardByBoardId(id);
         System.out.println("freeBoardByBoardId = " + freeBoardByBoardId);
 
+        BoardDTO boardDTO = boardService.findById(id);
+        System.out.println("boardDTO.getId() = " + boardDTO.getId());
+        System.out.println("boardDTO.getBoardId() = " + boardDTO.getBoardId());
+
         FreeBoardDTO byIdOnlyFreeBoard = freeBoardService.findByIdOnlyFreeBoard(id);
         System.out.println("byIdOnlyFreeBoard.getBoardId() = " + byIdOnlyFreeBoard.getBoardId());
+        System.out.println("byIdOnlyFreeBoard.getId() = " + byIdOnlyFreeBoard.getId());
+
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        Page<CommentDTO> all = commentService.findAll(byIdOnlyFreeBoard.getBoardId(), pageRequest);
+        for (CommentDTO commentDTO : all) {
+            System.out.println("commentDTO.getId() = " + commentDTO.getId());
+            System.out.println("commentDTO.getComContent() = " + commentDTO.getComContent());
+            System.out.println("commentDTO.getComRegDate() = " + commentDTO.getComRegDate());
+            System.out.println("commentDTO.getBoardId() = " + commentDTO.getBoardId());
+        }
+    }
+
+    @Test
+    public void boardDtoFindById() {
+        Integer id = 8;
+        FreeBoardDTO byId = freeBoardService.findById(id);
+
+        System.out.println("byId.getId() = " + byId.getId());
+        System.out.println("byId.getBoardId() = " + byId.getBoardId());
+
+        BoardDTO boardDTO = boardService.findById(byId.getBoardId());
+        System.out.println("boardDTO.getId() = " + boardDTO.getId());
+        System.out.println("boardDTO.getBoardId() = " + boardDTO.getBoardId());
     }
 }

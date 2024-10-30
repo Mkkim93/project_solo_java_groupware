@@ -3,7 +3,6 @@ package com.group.domain.board.repository;
 import com.group.application.board.dto.*;
 import com.group.domain.board.entity.*;
 
-import com.group.domain.file.entity.QFileStore;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -23,7 +22,6 @@ import static com.group.domain.board.entity.QFileBoard.*;
 import static com.group.domain.board.entity.QFreeBoard.*;
 import static com.group.domain.board.entity.QNoticeBoard.*;
 import static com.group.domain.board.entity.QQnABoard.*;
-import static com.group.domain.file.entity.QFileStore.*;
 import static com.group.domain.hr.entity.QEmployee.*;
 
 @Repository
@@ -203,11 +201,11 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                         board.boardTitle,
                         board.boardContent,
                         employee.empName,
-                        qnABoard.qBoardPass,
+                        qnABoard.boardPass,
                         board.boardRegDate,
                         board.boardViewCount,
                         board.boardIsDeleted,
-                        qnABoard.qBoardIsSecret
+                        qnABoard.boardSecret
                 )).from(qnABoard)
                 .leftJoin(qnABoard.boardId, board)
                 .leftJoin(board.empId, employee)
@@ -272,7 +270,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
     }
 
     @Override
-    public QnABoardDTO findByIdQnABoard(Integer id, String qBoardPass) {
+    public QnABoardDTO findByIdQnABoard(Integer id, String boardPass) {
         return jpaQueryFactory
                 .select(new QQnABoardDTO(
                         qnABoard.id,
@@ -280,27 +278,27 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                         board.boardTitle,
                         board.boardContent,
                         employee.empName,
-                        qnABoard.qBoardPass,
+                        qnABoard.boardPass,
                         board.boardRegDate,
                         board.boardViewCount,
                         board.boardIsDeleted,
-                        qnABoard.qBoardIsSecret
+                        qnABoard.boardSecret
                 )).from(qnABoard)
                 .join(qnABoard.boardId, board)
                 .join(board.empId, employee)
                 .where(
                         qnABoard.id.eq(id),
-                        (getAllEq(qBoardPass))
+                        (getAllEq(boardPass))
                 ).fetchOne();
     }
 
-    private BooleanExpression getAllEq(String qBoardPass) {
-        if (qBoardPass == null) {
+    private BooleanExpression getAllEq(String boardPass) {
+        if (boardPass == null) {
             return null;
-        } else if (qBoardPass.trim().isEmpty()) {
-            return qnABoard.qBoardPass.isNull(); // 공백 문자열에 대해 다른 처리
+        } else if (boardPass.trim().isEmpty()) {
+            return qnABoard.boardPass.isNull(); // 공백 문자열에 대해 다른 처리
         } else {
-            return qnABoard.qBoardPass.eq(qBoardPass);
+            return qnABoard.boardPass.eq(boardPass);
         }
     }
 }
