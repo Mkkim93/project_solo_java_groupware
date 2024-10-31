@@ -48,7 +48,5 @@ public class EmployeeService {
         return employRepositoryImpl.findByEmpDepartInfo(employeeDTO.getId());
     }
 
-    public AttendanceDTO findByIdAttInfo(EmployeeDTO employeeDTO) {
-        return employRepositoryImpl.findByEmpAttInfo(employeeDTO.getId());
-    }
+
 }

@@ -3,10 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <title>사원 정보 수정 페이지</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .layout {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+            text-align: left;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .form-control:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
 <div class="layout">
-
+    <h1>사원 정보 수정</h1>
     <form th:action="@{/hr/employeemodify/update/{id}(id=${employeeDTO.id})}"
           th:object="${employeeDTO}" method="post">
         <table>
@@ -40,7 +105,7 @@
             </tr>
             <tr>
                 <th>개인 메일 주소</th>
-            <td><input type="text" class="form-control" id="userEmail" name="userEmail" th:value="${employeeDTO.userEmail}"></td>
+                <td><input type="text" class="form-control" id="userEmail" name="userEmail" th:value="${employeeDTO.userEmail}"></td>
             </tr>
             <tr>
                 <th>사내 마일리지</th>
@@ -51,7 +116,7 @@
                 <td th:text="${employeeDTO.empNo}"></td>
             </tr>
         </table>
-        <button type="submit" class="btn btn-primary">수정 완료</button>
+        <button type="submit" class="btn">수정 완료</button>
     </form>
 </div>
 </body>

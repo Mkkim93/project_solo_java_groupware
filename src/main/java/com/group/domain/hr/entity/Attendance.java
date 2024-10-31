@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import javax.swing.*;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,28 +26,32 @@ public class Attendance {
     @GeneratedValue(strategy = IDENTITY)
     private Integer id;
 
-    @Column(name = "att_on")
+    @Column(name = "att_on", updatable = true)
     private LocalDateTime attOn; // 출근 시간
 
     @Column(name = "att_off")
     private LocalDateTime attOff; // 퇴근 시간
 
     @Column(name = "att_perception")
-    private Integer attPerception; // 지각
+    private Long attPerception; // 지각
 
     @Column(name = "att_leave")
-    private Integer attLeave; // 조퇴
+    private Long attLeave; // 조퇴
 
     @Column(name = "att_vacation")
-    private Integer attVacation; // 휴가
+    private Long attVacation; // 휴가
 
     @Column(name = "att_date")
-    private Date attDate; // 월별 집계
+    private LocalDate attDate; // 월별 집계
 
     @Column(name = "att_create")
     private LocalDateTime attCreate;
 
+    @Column(name = "att_duration") // 총 근무 시간
+    private Long attDuration;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "emp_id")
     private Employee employee;
+
 }

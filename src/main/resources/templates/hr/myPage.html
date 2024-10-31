@@ -15,10 +15,10 @@
     <div class="sidebar">
         <div class="profile-section">
             <form th:action="@{/hr/employeedetailview}" th:object="${employeeDTO}" method="get">
-            <h3 type="text" id="empName" name="empName" th:text="${employeeDTO.empName}"></h3>
-            <h3 type="text" id="deptName" name="deptName" th:text="${departmentDTO.deptName}"></h3>
-            <input type="hidden" th:value="${employeeDTO.id}" th:field="${employeeDTO.id}" />
-            <button type="submit">나의 정보</button>
+                <h3 type="text" id="empName" name="empName" th:text="${employeeDTO.empName}"></h3>
+                <h3 type="text" id="deptName" name="deptName" th:text="${departmentDTO.deptName}"></h3>
+                <input type="hidden" th:value="${employeeDTO.id}" th:field="${employeeDTO.id}" />
+                <button type="submit">나의 정보</button>
             </form>
         </div>
         <ul class="menu">
@@ -38,13 +38,17 @@
     <div class="main-content">
         <header class="header">
             <h2>My Portal</h2>
-            <!--TODO-->
             <input type="hidden" id="id" name="id" th:value="${attendanceDTO != null ? attendanceDTO.id : 0}">
             <input type="hidden" id="attOn" name="attOn" th:value="${attendanceDTO != null ? attendanceDTO.attOn : ''}">
+            <input type="hidden" id="attOff" name="attOff" th:value="${attendanceDTO != null ? attendanceDTO.attOff : ''}">
+            <input type="hidden" id="attDuration" name="attDuration" th:value="${attendanceDTO != null ? attendanceDTO.attDuration : ''}">
             <input type="hidden" id="employee" name="employee" th:value="${attendanceDTO != null ? attendanceDTO.employee : 0}">
 
-            <button id="comment-attOn-btn" onclick="attOnLogic()">출근</button>
-            <button id="comment-attOff-btn" onclick="attOff()">퇴근</button>
+            <div class="attendance-buttons">
+                <button id="comment-attOn-btn" class="btn attOn" onclick="attOnLogic()">출근</button>
+                <button id="comment-attOff-btn" class="btn attOff" onclick="attOffLogic()">퇴근</button>
+            </div>
+
             <div class="header-right">
                 <input type="text" placeholder="통합검색">
                 <i class="bell-icon">🔔</i>
@@ -101,6 +105,13 @@
                 </ul>
             </div>
         </section>
+
+        <!-- 출근 및 퇴근 시간 표시 섹션 추가 -->
+        <div class="attendance-times">
+            <h3>출근 시간: <span id="checkInTime" th:text="${attendanceDTO != null ? attendanceDTO.attOn : ''}"></span></h3>
+            <h3>퇴근 시간: <span id="checkOutTime" th:text="${attendanceDTO != null ? attendanceDTO.attOff : ''}"></span></h3>
+            <h3>금일 근무 시간: <span id="durationTime" th:text="${attendanceDTO != null ? attendanceDTO.attDuration : ''}"></span></h3>
+        </div>
     </div>
 </div>
 
@@ -109,17 +120,24 @@
         const id = document.getElementById("id").value || 0;  // 기본값 설정
         const attOn = document.getElementById("attOn").value || '';
         const employee = document.getElementById("employee").value || 0;
-        console.log(id);
+        const currentTime = new Date().toLocaleTimeString(); // 현재 시간을 포맷
+
+        // 출근 시간 존재 여부 확인
+        if (attOn) {
+            alert("이미 출근하셨습니다.");
+            return; // 이미 출근한 경우 종료
+        }
 
         $.ajax({
             type: "POST",
-            url: "/attendance/save",
+            url: "/attendance/on",
             data: {
                 "id": id,
                 "employee": employee,
                 "attOn": attOn
             },
             success: function (res) {
+                document.getElementById("checkInTime").textContent = currentTime; // 출근 시간 표시
                 alert("열심히 일해라");
                 console.log("출근 완료", res);
             },
@@ -131,20 +149,59 @@
 </script>
 
 <script th:inline="javascript">
+    const attOffLogic = () => {
+        const id = document.getElementById("id").value || 0;
+        const employee = document.getElementById("employee").value || 0;
+        const attOff = document.getElementById("attOff").value || '';
+        const currentTime = new Date().toLocaleTimeString(); // 현재 시간을 포맷
+        // 퇴근 시간 존재 여부 확인
+        if (attOff) {
+            alert("이미 퇴근하셨습니다.");
+            return; // 이미 퇴근한 경우 종료
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/attendance/off",
+            data: {
+                "id": id,
+                "employee": employee,
+                "attOff": attOff
+            },
+            success: function(res) {
+                // 서버에서 반환된 attDuration 확인
+                console.log("서버 응답:", res);  // 서버 응답 확인
+
+                const totalMinutes = parseInt(res.attDuration, 10) || 0; // 'attDuration'이 문자열일 경우 변환
+                const hours = Math.floor(totalMinutes / 60); // 전체 분을 시간으로 변환
+                const minutes = totalMinutes % 60; // 나머지를 분으로 변환
+
+                // Update the display
+                document.getElementById("checkOutTime").textContent = currentTime; // 퇴근 시간 표시
+                document.getElementById("durationTime").textContent = `${hours} 시간 ${minutes} 분`; // 시간과 분 표시
+                alert("퇴근처리 되었습니다");
+                console.log(res);
+            },
+            error: function (err) {
+                console.log("퇴근 처리 실패", err);
+            }
+        });
+    };
+</script>
+
+<script th:inline="javascript">
     let attendancePerception = [[${attendanceDTO != null ? attendanceDTO.attPerception : 0}]];
     let attendanceLeave = [[${attendanceDTO != null ? attendanceDTO.attLeave : 0}]];
     let attendanceVacation = [[${attendanceDTO != null ? attendanceDTO.attVacation : 0}]];
-</script>
 
-<script>
     const ctx = document.getElementById('attendance-chart').getContext('2d');
-    const chart = new Chart(ctx, {
+    const attendanceChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['지각', '조퇴', '휴가'], // 날짜 x축 라벨
+            labels: ['지각', '반차', '휴가'],
             datasets: [{
-                label: 'Attendance Count',
-                data: [attendancePerception, attendanceLeave, attendanceVacation], // y축 바인딩
+                label: '근태 현황',
+                data: [attendancePerception, attendanceLeave, attendanceVacation],
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
@@ -167,5 +224,6 @@
         }
     });
 </script>
+
 </body>
 </html>

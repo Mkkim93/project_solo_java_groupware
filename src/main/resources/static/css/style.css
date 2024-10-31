@@ -143,3 +143,44 @@ body {
 .notification-card ul li {
     margin-bottom: 10px;
 }
+
+.attendance-buttons {
+    display: flex;
+    justify-content: center; /* 버튼을 중앙에 배치 */
+    margin: 20px 0; /* 상하 여백 추가 */
+}
+
+.btn {
+    background-color: #4CAF50; /* 기본 배경 색상 */
+    border: none;
+    color: white; /* 글자 색상 */
+    padding: 10px 20px; /* 패딩 */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px; /* 글자 크기 */
+    margin: 0 10px; /* 버튼 간 여백 */
+    cursor: pointer; /* 마우스 포인터 스타일 */
+    border-radius: 5px; /* 둥근 모서리 */
+    transition: background-color 0.3s; /* 배경 색상 전환 효과 */
+}
+
+.btn:hover {
+    background-color: #45a049; /* 마우스 오버 시 배경 색상 변경 */
+}
+
+.attOn {
+    background-color: #008CBA; /* 출근 버튼 기본 색상 */
+}
+
+.attOn:hover {
+    background-color: #007bb5; /* 출근 버튼 마우스 오버 색상 */
+}
+
+.attOff {
+    background-color: #f44336; /* 퇴근 버튼 기본 색상 */
+}
+
+.attOff:hover {
+    background-color: #e53935; /* 퇴근 버튼 마우스 오버 색상 */
+}

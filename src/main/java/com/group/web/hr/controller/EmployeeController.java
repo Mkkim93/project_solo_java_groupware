@@ -1,8 +1,10 @@
 package com.group.web.hr.controller;
 
 import com.group.application.hr.dto.EmployeeDTO;
+import com.group.application.hr.service.AttendanceService;
 import com.group.application.hr.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +17,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class EmployeeController {
 
+    @Autowired
     private final EmployeeService employeeService;
+    private final AttendanceService attendanceService;
 
     @GetMapping("/myPage")
     public String protectedResource(Model model, EmployeeDTO employeeDTO) {
@@ -23,7 +27,7 @@ public class EmployeeController {
         employeeDTO.setId(1);
         model.addAttribute("employeeDTO", employeeService.findByAll(employeeDTO));
         model.addAttribute("departmentDTO", employeeService.findByIdDepartInfo(employeeDTO));
-        model.addAttribute("attendanceDTO", employeeService.findByIdAttInfo(employeeDTO));
+        model.addAttribute("attendanceDTO", attendanceService.findByIdAttInfo(employeeDTO));
         return "/hr/myPage";
     }
 

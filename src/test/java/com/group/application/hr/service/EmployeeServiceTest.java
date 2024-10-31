@@ -62,13 +62,5 @@ class EmployeeServiceTest {
         assertThat(byId).extracting("id").isEqualTo(1);
     }
 
-    @Test
-    void attCountTest() {
-        EmployeeDTO employeeDTO = new EmployeeDTO();
-        employeeDTO.setId(1);
-        AttendanceDTO attCount = employeeService.findByIdAttInfo(employeeDTO);
-        System.out.println("attCount.getAttLeave() = " + attCount.getAttLeave());
-        System.out.println("attCount.getAttPerception() = " + attCount.getAttPerception());
-        System.out.println("attCount.getAttVacation() = " + attCount.getAttVacation());
-    }
+
 }
