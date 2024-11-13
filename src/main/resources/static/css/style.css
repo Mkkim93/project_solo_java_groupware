@@ -99,23 +99,17 @@ body {
     padding: 20px;
     background-color: #f8f8f8;
     border-radius: 8px;
+    display: flex;
+    flex-direction: column;   /* 콘텐츠를 세로로 배치 */
+    align-items: center;
+
+    text-align: center;
 }
 
 .stat-card.large {
     height: 700px; /* 진행 중인 프로젝트 높이 조정 */
 }
 
-.progress-circle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    height: 200px;
-    width: 200px;
-    background-color: #4caf50;
-    color: white;
-    border-radius: 50%;
-}
 
 /* 알림 섹션 */
 .notifications {
@@ -184,3 +178,6 @@ body {
 .attOff:hover {
     background-color: #e53935; /* 퇴근 버튼 마우스 오버 색상 */
 }
+
+
+

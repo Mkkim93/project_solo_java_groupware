@@ -8,6 +8,7 @@
     <script src="https://kit.fontawesome.com/4526b6a2d0.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="/resource/css/bootstrap.css">
 </head>
 <body>
 <div class="dashboard">
@@ -18,7 +19,7 @@
                 <h3 type="text" id="empName" name="empName" th:text="${employeeDTO.empName}"></h3>
                 <h3 type="text" id="deptName" name="deptName" th:text="${departmentDTO.deptName}"></h3>
                 <input type="hidden" th:value="${employeeDTO.id}" th:field="${employeeDTO.id}" />
-                <button type="submit">나의 정보</button>
+                <button type="submit" class="btn">나의 정보</button>
             </form>
         </div>
         <ul class="menu">
@@ -60,25 +61,22 @@
             <!-- 상단 섹션: 진행 중인 프로젝트 -->
             <section class="stats">
                 <div class="stat-card large">
-                    <h3 class="text-center">진행 중인 프로젝트</h3>
-                    <div class="progress-circle">
-                        <span>72%</span>
-                    </div>
+                    <h3 class="text-center">나의 일정 보기</h3>
                 </div>
             </section>
 
-            <!-- 오른쪽 섹션: 나머지 4개의 stat-card -->
             <section class="extra-stats">
                 <div class="stat-card">
                     <h3 class="text-center">나의 근태 현황</h3>
                     <canvas id="attendance-chart"></canvas>
+                    <button th:onclick="|location.href='@{/hr/detail}'|" class="btn btn-primary btn-create">나의 근태 상세</button>
                 </div>
                 <div class="stat-card">
                     <h3 class="text-center">팀원별 프로젝트 진행 현황</h3>
                     <canvas id="another-chart"></canvas>
                 </div>
                 <div class="stat-card">
-                    <h3 class="text-center">나의 일정 관리</h3>
+                    <h3 class="text-center">진행 중인 프로젝트 현황</h3>
                     <canvas id="project-chart"></canvas>
                 </div>
                 <div class="stat-card">
@@ -92,7 +90,7 @@
             <div class="notification-card">
                 <h3>최근 알림</h3>
                 <ul>
-                    <li>피우: DO 마케팅 팀 업무 현황 등록됨</li>
+                    <li>피우: 마케팅 팀 업무 현황 등록됨</li>
                     <li>우람: 공지 사항 게시</li>
                     <li>스피카: 긴급 공사 안내 등록</li>
                 </ul>
@@ -101,7 +99,7 @@
                 <h3>메일함</h3>
                 <ul>
                     <li>스피카: 긴급 공사 안내</li>
-                    <li>우람: 다우 오피스 사용 안내</li>
+                    <li>우람: 00 오피스 사용 안내</li>
                 </ul>
             </div>
         </section>
@@ -172,7 +170,7 @@
                 // 서버에서 반환된 attDuration 확인
                 console.log("서버 응답:", res);  // 서버 응답 확인
 
-                const totalMinutes = parseInt(res.attDuration, 10) || 0; // 'attDuration'이 문자열일 경우 변환
+                const totalMinutes = parseInt(res.attDuration, 10) || 0; // 'attDuration' 이 문자열일 경우 변환
                 const hours = Math.floor(totalMinutes / 60); // 전체 분을 시간으로 변환
                 const minutes = totalMinutes % 60; // 나머지를 분으로 변환
 
@@ -203,9 +201,9 @@
                 label: '근태 현황',
                 data: [attendancePerception, attendanceLeave, attendanceVacation],
                 backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(75, 192, 192, 0.2)'
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(75, 192, 192, 1)'
                 ],
                 borderColor: [
                     'rgba(255, 99, 132, 1)',

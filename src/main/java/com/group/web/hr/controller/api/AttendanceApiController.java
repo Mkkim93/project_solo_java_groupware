@@ -1,14 +1,23 @@
 package com.group.web.hr.controller.api;
 
 import com.group.application.hr.dto.AttendanceDTO;
+import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.hr.service.AttendanceService;
+import com.group.application.hr.service.EmployeeService;
+import com.group.domain.hr.entity.Attendance;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/attendance")
@@ -19,6 +28,7 @@ public class AttendanceApiController {
     @Autowired
     public AttendanceApiController(AttendanceService attendanceService) {
         this.attendanceService = attendanceService;
+
     }
 
     // 출근 처리 로직 ajax

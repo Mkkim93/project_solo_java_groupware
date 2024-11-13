@@ -3,13 +3,8 @@ package com.group.domain.hr.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import javax.swing.*;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
@@ -50,8 +45,16 @@ public class Attendance {
     @Column(name = "att_duration") // 총 근무 시간
     private Long attDuration;
 
+    @Column(name = "att_overduration") // 연장 근무 시간
+    private Long attOverDuration;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "emp_id")
     private Employee employee;
+
+    @PrePersist void setEmpAtt() {
+        this.attPerception = 0L;
+        // TODO 나머지 카운트로 초기값 설정할지 고민
+    }
 
 }

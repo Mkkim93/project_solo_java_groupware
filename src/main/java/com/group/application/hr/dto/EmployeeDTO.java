@@ -2,7 +2,6 @@ package com.group.application.hr.dto;
 
 import com.group.domain.hr.entity.Employee;
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;

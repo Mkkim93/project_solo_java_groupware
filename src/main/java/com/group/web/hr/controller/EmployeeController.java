@@ -4,10 +4,6 @@ import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.hr.service.AttendanceService;
 import com.group.application.hr.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class EmployeeController {
 
-    @Autowired
     private final EmployeeService employeeService;
     private final AttendanceService attendanceService;
 
