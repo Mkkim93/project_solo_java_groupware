@@ -25,4 +25,6 @@ public interface BoardRepositoryCustom {
     NoticeBoardDTO findByIdNoticeBoard(Integer id);
 
     QnABoardDTO findByIdQnABoard(Integer id, String boardPass);
+
+    QnABoardDTO findByIdQnABoardNotPass(Integer id);
 }

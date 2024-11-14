@@ -29,6 +29,8 @@
         }
         .pagination {
             margin-top: 15px;
+            text-align: center;
+            display: flex;
         }
         .btn-create {
             margin-top: 15px;
@@ -70,15 +72,18 @@
             </tbody>
         </table>
         <div class="pagination">
-            <span th:if="${boardDTO.hasPrevious()}">
+            <li th:if="${boardDTO.hasPrevious()}">
                 <a th:href="@{/board/boardlist(page=${boardDTO.number - 1})}" class="btn btn-link">이전</a>
-            </span>
-            <span th:each="i : ${#numbers.sequence(0, boardDTO.totalPages - 1)}">
+            </li>
+
+            <li th:each="i : ${#numbers.sequence(boardDTO.number - (boardDTO.number % 5),
+            boardDTO.number - (boardDTO.number % 5) + 4)}" th:if="${i < boardDTO.totalPages}">
                 <a th:href="@{/board/boardlist(page=${i})}" class="btn btn-link" th:text="${i + 1}"></a>
-            </span>
-            <span th:if="${boardDTO.hasNext()}">
+            </li>
+
+            <li th:if="${boardDTO.hasNext()}">
                 <a th:href="@{/board/boardlist(page=${boardDTO.number + 1})}" class="btn btn-link">다음</a>
-            </span>
+            </li>
         </div>
     </div>
     <button th:onclick="|location.href='@{/board/boardwrite}'|" class="btn btn-primary btn-create">글 작성</button>

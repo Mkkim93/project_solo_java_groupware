@@ -70,6 +70,9 @@ public class QnABoardService {
 
     public QnABoardDTO findById(Integer id, String boardPass) {
         QnABoard qnABoard = qnABoardRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("not id"));
+        if (qnABoard.getBoardPass().equals(" ")) {
+            return boardRepositoryImpl.findByIdQnABoardNotPass(id);
+        }
         if (!qnABoard.getBoardPass().equals(boardPass)) {
             log.info("비밀번호가 다릅니다");
             throw new CustomException("fail password!");
@@ -95,5 +98,10 @@ public class QnABoardService {
             return false;
         }
         return true;
+    }
+
+    public QnABoardDTO findByIdNotPass(Integer id) {
+        QnABoard qnABoard = qnABoardRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("no id"));
+        return boardRepositoryImpl.findByIdQnABoardNotPass(qnABoard.getId());
     }
 }

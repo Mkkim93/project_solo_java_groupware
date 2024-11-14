@@ -97,17 +97,18 @@
     </table>
 
     <div class="pagination">
-        <span th:if="${freeBoardDTO.hasPrevious()}">
+        <li th:if="${freeBoardDTO.hasPrevious()}">
             <a class="btn btn-outline-primary" th:href="@{/board/freeboardlist(page=${freeBoardDTO.number - 1})}">이전</a>
-        </span>
+        </li>
 
-        <span th:each="i : ${#numbers.sequence(0, freeBoardDTO.totalPages - 1)}">
+        <li th:each="i : ${#numbers.sequence(freeBoardDTO.number - (freeBoardDTO.number % 5),
+        freeBoardDTO.number - (freeBoardDTO.number % 5) + 4)}" th:if="${i < freeBoardDTO.totalPages}">
             <a class="btn btn-outline-secondary" th:href="@{/board/freeboardlist(page=${i})}" th:text="${i + 1}"></a>
-        </span>
+        </li>
 
-        <span th:if="${freeBoardDTO.hasNext()}">
+        <li th:if="${freeBoardDTO.hasNext()}">
             <a class="btn btn-outline-primary" th:href="@{/board/freeboardlist(page=${freeBoardDTO.number + 1})}">다음</a>
-        </span>
+        </li>
     </div>
 
     <div class="text-center">

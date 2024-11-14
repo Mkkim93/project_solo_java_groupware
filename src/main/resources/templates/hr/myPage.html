@@ -8,7 +8,14 @@
     <script src="https://kit.fontawesome.com/4526b6a2d0.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <link rel="stylesheet" href="/resource/css/bootstrap.css">
+    <!--<link rel="stylesheet" href="/resource/css/bootstrap.css">-->
+    <style>
+        .embedded-object {
+            width: 100%;
+            height: auto;
+            max-width: 400px;
+        }
+    </style>
 </head>
 <body>
 <div class="dashboard">
@@ -25,7 +32,7 @@
         <ul class="menu">
             <li><a href="/hr/myPage"><i class="fa-solid fa-house"></i> 홈</a></li>
             <li><a href="/board/boardlist"><i class="fa-solid fa-pen"></i> 게시판</a></li>
-            <li><a href="#"><i class="fa-regular fa-calendar"></i> 일정</a></li>
+            <li><a href="/todo/calendar"><i class="fa-regular fa-calendar"></i> 일정</a></li>
             <li><a href="#"><i class="fa-solid fa-envelope"></i> 메일</a></li>
             <li><a href="#"><i class="fa-solid fa-gear"></i> 설정</a></li>
             <li><a href="#"><i class="fa-brands fa-signal-messenger"></i> 메신저</a></li>
@@ -49,6 +56,11 @@
                 <button id="comment-attOn-btn" class="btn attOn" onclick="attOnLogic()">출근</button>
                 <button id="comment-attOff-btn" class="btn attOff" onclick="attOffLogic()">퇴근</button>
             </div>
+            <div class="attendance-times">
+                <h3>출근 시간: <span id="checkInTime" th:text="${attendanceDTO != null ? attendanceDTO.attOn : ''}"></span></h3>
+                <h3>퇴근 시간: <span id="checkOutTime" th:text="${attendanceDTO != null ? attendanceDTO.attOff : ''}"></span></h3>
+                <h3>금일 근무 시간: <span id="durationTime" th:text="${attendanceDTO != null ? attendanceDTO.attDuration : ''}"></span></h3>
+            </div>
 
             <div class="header-right">
                 <input type="text" placeholder="통합검색">
@@ -62,6 +74,8 @@
             <section class="stats">
                 <div class="stat-card large">
                     <h3 class="text-center">나의 일정 보기</h3>
+                    <iframe src="https://calendar.google.com/calendar/embed?src=0a8501fe802b5aed64b9e51e8e32692932f74f4566e01204160a8725579ebb84%40group.calendar.google.com&ctz=Asia%2FSeoul" style="border: 0" width="550" height="500" frameborder="0" scrolling="no"></iframe>
+                    <button th:onclick="|location.href='@{/todo/calendar}'|" class="btn">나의 일정 관리</button>
                 </div>
             </section>
 
@@ -105,11 +119,7 @@
         </section>
 
         <!-- 출근 및 퇴근 시간 표시 섹션 추가 -->
-        <div class="attendance-times">
-            <h3>출근 시간: <span id="checkInTime" th:text="${attendanceDTO != null ? attendanceDTO.attOn : ''}"></span></h3>
-            <h3>퇴근 시간: <span id="checkOutTime" th:text="${attendanceDTO != null ? attendanceDTO.attOff : ''}"></span></h3>
-            <h3>금일 근무 시간: <span id="durationTime" th:text="${attendanceDTO != null ? attendanceDTO.attDuration : ''}"></span></h3>
-        </div>
+
     </div>
 </div>
 

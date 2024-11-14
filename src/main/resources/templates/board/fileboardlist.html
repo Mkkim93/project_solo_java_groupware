@@ -87,8 +87,9 @@
                 </a>
             </li>
 
-            <li class="page-item" th:each="i : ${#numbers.sequence(0, fileBoardDTO.totalPages - 1)}">
-                <a class="page-link" th:href="@{/board/fileboardlist(page=${i})}" th:text="${i + 1}" th:classappend="${i == fileBoardDTO.number} ? 'active' : ''"></a>
+            <li class="page-item" th:each="i : ${#numbers.sequence(fileBoardDTO.number - (fileBoardDTO.number % 5),
+            fileBoardDTO.number - (fileBoardDTO.number % 5) + 4)}" th:if="${i < fileBoardDTO.totalPages}">
+                <a class="page-link" th:href="@{/board/fileboardlist(page=${i})}" th:text="${i + 1}"></a>
             </li>
 
             <li class="page-item" th:if="${fileBoardDTO.hasNext()}">

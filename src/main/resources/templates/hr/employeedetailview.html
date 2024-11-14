@@ -7,44 +7,62 @@
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .layout {
+            max-width: 700px;
+            width: 100%;
+            margin: 20px;
+            background-color: #fff;
             padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         h1 {
             text-align: center;
             color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
         }
         table {
             width: 100%;
-            margin: 20px 0;
             border-collapse: collapse;
-            background-color: #fff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
         th, td {
-            padding: 12px;
-            text-align: left;
+            padding: 12px 15px;
             border-bottom: 1px solid #ddd;
         }
         th {
-            background-color: #f2f2f2;
+            background-color: #f7f7f7;
             color: #333;
+            text-align: left;
+            font-weight: 600;
+        }
+        td {
+            color: #555;
         }
         tr:hover {
-            background-color: #f1f1f1;
-        }
-        .layout {
-            text-align: center;
-            margin: 20px 0;
+            background-color: #fafafa;
         }
         .btn {
-            display: inline-block;
-            padding: 10px 20px;
+            display: block;
+            width: 100%;
+            padding: 12px;
             font-size: 16px;
             color: #fff;
             background-color: #007bff;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
             text-decoration: none;
+            font-weight: 600;
         }
         .btn:hover {
             background-color: #0056b3;
@@ -52,51 +70,51 @@
     </style>
 </head>
 <body>
-<h1>나의 정보</h1>
-<table>
-    <tr>
-        <th>Name</th>
-        <td th:text="${employeeDTO.empName}"></td>
-    </tr>
-    <tr>
-        <th>Rank</th>
-        <td th:text="${employeeDTO.empRank}"></td>
-    </tr>
-    <tr>
-        <th>Reg No</th>
-        <td th:text="${employeeDTO.empRegNo}"></td>
-    </tr>
-    <tr>
-        <th>Nickname</th>
-        <td th:text="${employeeDTO.empNickName}"></td>
-    </tr>
-    <tr>
-        <th>Internal Phone</th>
-        <td th:text="${employeeDTO.empTel}"></td>
-    </tr>
-    <tr>
-        <th>Mobile Phone</th>
-        <td th:text="${employeeDTO.userTel}"></td>
-    </tr>
-    <tr>
-        <th>Company Email</th>
-        <td th:text="${employeeDTO.empEmail}"></td>
-    </tr>
-    <tr>
-        <th>Personal Email</th>
-        <td th:text="${employeeDTO.userEmail}"></td>
-    </tr>
-    <tr>
-        <th>Company Mileage</th>
-        <td th:text="${employeeDTO.empMileage}"></td>
-    </tr>
-    <tr>
-        <th>Employee Number</th>
-        <td th:text="${employeeDTO.empNo}"></td>
-    </tr>
-</table>
 <div class="layout">
-    <a class="btn" th:href="@{/hr/employeemodify/{id}(id=${employeeDTO.id})}">Edit</a>
+    <h1>나의 정보</h1>
+    <table>
+        <tr>
+            <th>이름</th>
+            <td th:text="${employeeDTO.empName}"></td>
+        </tr>
+        <tr>
+            <th>직급</th>
+            <td th:text="${employeeDTO.empRank}"></td>
+        </tr>
+        <tr>
+            <th>주민등록번호</th>
+            <td th:text="${employeeDTO.empRegNo}"></td>
+        </tr>
+        <tr>
+            <th>닉네임</th>
+            <td th:text="${employeeDTO.empNickName}"></td>
+        </tr>
+        <tr>
+            <th>사내 연락처</th>
+            <td th:text="${employeeDTO.empTel}"></td>
+        </tr>
+        <tr>
+            <th>개인 연락처</th>
+            <td th:text="${employeeDTO.userTel}"></td>
+        </tr>
+        <tr>
+            <th>사내 메일 주소</th>
+            <td th:text="${employeeDTO.empEmail}"></td>
+        </tr>
+        <tr>
+            <th>개인 메일 주소</th>
+            <td th:text="${employeeDTO.userEmail}"></td>
+        </tr>
+        <tr>
+            <th>사내 마일리지</th>
+            <td th:text="${employeeDTO.empMileage}"></td>
+        </tr>
+        <tr>
+            <th>사원 번호</th>
+            <td th:text="${employeeDTO.empNo}"></td>
+        </tr>
+    </table>
+    <a class="btn" th:href="@{/hr/employeemodify/{id}(id=${employeeDTO.id})}">수정</a>
 </div>
 </body>
 </html>

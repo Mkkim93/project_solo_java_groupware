@@ -74,7 +74,8 @@
             <li class="page-item" th:if="${noticeBoardDTO.hasPrevious()}">
                 <a class="page-link" th:href="@{/noticeboardlist(page=${noticeBoardDTO.number - 1})}">Previous</a>
             </li>
-            <li class="page-item" th:each="i : ${#numbers.sequence(0, noticeBoardDTO.totalPages - 1)}">
+            <li class="page-item" th:each="i : ${#numbers.sequence(noticeBoardDTO.number - (noticeBoardDTO.number % 5),
+            noticeBoardDTO.number - (noticeBoardDTO.number % 5) + 4)}" th:if="${i < noticeBoardDTO.totalPages}">
                 <a class="page-link" th:href="@{/board/noticeboardlist(page=${i})}" th:text="${i + 1}"></a>
             </li>
             <li class="page-item" th:if="${noticeBoardDTO.hasNext()}">

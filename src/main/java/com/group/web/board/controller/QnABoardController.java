@@ -55,17 +55,23 @@ public class QnABoardController {
     }
 
     @GetMapping("/qnaboarddetailview")
-    public String boardDetailView(@RequestParam("id") Integer id,
+    public String boardDetailView(@RequestParam(value = "id") Integer id,
                                   @RequestParam(value = "boardPass", required = false) String boardPass,
                                   @RequestParam(value = "page", defaultValue = "0") int page,
                                   @RequestParam(value = "size", defaultValue = "10") int size,
                                   RedirectAttributes redirectAttributes,
                                   Model model) {
+        if (boardPass == null) {
+            model.addAttribute("notPassDTO", qnABoardService.findByIdNotPass(id));
+            return "board/qnaboarddetailview";
+        }
+
         QnABoardDTO qnABoardDTO = qnABoardService.findById(id, boardPass);
         if (!qnABoardDTO.getBoardPass().equals(boardPass)) {
             redirectAttributes.addFlashAttribute("failPassWord", "failPassWord");
             return "redirect:/board/qnaboardlist";  // 게시판 목록으로 리다이렉트
         }
+
         // 댓글 관련 model & 페이징 객체
         PageRequest pageRequest = PageRequest.of(page, size);
         model.addAttribute("qnABoardDTO", qnABoardService.findByIdOnly(id, boardPass));
@@ -75,7 +81,6 @@ public class QnABoardController {
 
         // 비밀번호가 틀린 경우 TODO : NPE 로직
         return "/board/qnaboarddetailview";  // 상세 페이지를 렌더링
-
     }
 
     @GetMapping("qnaboardmodify/{id}")

@@ -301,4 +301,24 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
             return qnABoard.boardPass.eq(boardPass);
         }
     }
+
+    @Override
+    public QnABoardDTO findByIdQnABoardNotPass(Integer id) {
+        return jpaQueryFactory.select(new QQnABoardDTO(
+                qnABoard.id,
+                qnABoard.boardId.id,
+                board.boardTitle,
+                board.boardContent,
+                employee.empName,
+                qnABoard.boardPass,
+                board.boardRegDate,
+                board.boardViewCount,
+                board.boardIsDeleted,
+                qnABoard.boardSecret))
+                .from(qnABoard)
+                .join(qnABoard.boardId, board)
+                .join(board.empId, employee)
+                .where(qnABoard.id.eq(id))
+                .fetchOne();
+    }
 }
