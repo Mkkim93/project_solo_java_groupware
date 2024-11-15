@@ -1,8 +1,9 @@
 package com.group.domain.todo.entity;
 
+import com.group.application.todo.dto.TodoDTO;
 import com.group.domain.hr.entity.Employee;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -10,7 +11,8 @@ import static jakarta.persistence.FetchType.*;
 
 @Entity
 @Table(name = "todo")
-@Getter
+@Getter @Setter
+@NoArgsConstructor
 public class Todo {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,14 +27,17 @@ public class Todo {
     @Column(name = "todo_content")
     private String todoContent;
 
-    @Column(name = "todo_duedate")
-    private LocalDateTime todoDueDate;
+    @Column(name = "todo_startdate")
+    private LocalDateTime todoStartDate; // 일정 시작일
+
+    @Column(name = "todo_enddate")
+    private LocalDateTime todoEndDate; // 일정 종료일
 
     @Column(name = "todo_status")
-    private String todoStatus;
+    private String todoStatus; // 일정 상태
 
     @Column(name = "todo_create")
-    private LocalDateTime todoCreate; // ? 없어도 될거같음
+    private LocalDateTime todoCreate; // 일정 등록일
 
     @Column(name = "todo_update")
     private LocalDateTime todoUpdate;
@@ -40,4 +45,22 @@ public class Todo {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "emp_id")
     private Employee employee;
+
+    @PrePersist void createTodo() {
+        this.todoCreate = LocalDateTime.now(); // 일정을 등록한 시점
+    }
+
+    @Builder
+    public Todo(String todoType, String todoTitle,
+                String todoContent, String todoStatus, LocalDateTime todoStartDate,
+                LocalDateTime todoEndDate, Employee employee) {
+        this.todoType = todoType;
+        this.todoTitle = todoTitle;
+        this.todoContent = todoContent;
+        this.todoStatus = todoStatus;
+        this.todoStartDate = todoStartDate;
+        this.todoEndDate = todoEndDate;
+        this.employee = employee;
+
+    }
 }

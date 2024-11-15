@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang='en'>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset='utf-8' />
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
@@ -16,15 +16,56 @@
                 },
                 eventClick: function(info) {
                     alert('Event: ' + info.event.title);
-                    alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.preventDefault()); // 이벤트 클릭 시 아무 동작하지 않음
-                    alert('View: ' + info.view.type);
-
-
+                    // alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.preventDefault()); // 이벤트 클릭 시 아무 동작하지 않음
+                    // alert('View: ' + info.view.type);
+                    console.log(info.event.extendedProps);
                     // change the border color just for fun
                     info.el.style.borderColor = 'red';
                 }
             });
             calendar.render();
+
+            // 일정 추가
+            document.getElementById('addEventForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                var todoTitle = document.getElementById('todoTitle').value;
+                var todoStartDate = document.getElementById('todoStartDate').value;
+                var todoEndDate = document.getElementById('todoEndDate').value;
+                var todoContent = document.getElementById('todoContent').value;
+                var employee = document.getElementById('employee').value;
+                var eventData = {
+                    todoTitle: todoTitle,
+                    // todoType: 'calendar',
+                    todoContent: todoContent,
+                    // todoStatus: 'scheduled',
+                    todoStartDate: todoStartDate,
+                    todoEndDate: todoEndDate,
+                    employee: employee
+                };
+
+                fetch('/todo/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(eventData)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Event added:', data);
+                        calendar.addEvent({
+                            title: data.todoTitle,
+                            start: data.todoStartDate,
+                            end: data.todoEndDate,
+                            description: data.todoContent,
+                            extendedProps: {
+                                description: data.todoContent
+                            }
+                        });
+                    })
+                    .catch(error => console.log('Error adding event:', error))
+            });
         });
     </script>
 </head>
@@ -33,22 +74,24 @@
 <div id='calendar'></div>
 <div>
     <h3>일정 추가</h3>
-    <form id="addEventForm">
+    <form id="addEventForm" th:object="${todoDTO}">
 
-        <label for="eventTitle">Event Title:</label><br>
-        <input type="text" id="eventTitle" name="eventTitle" required><br><br>
+        <label for="employee">사원 번호:</label><br>
+        <input type="text" id="employee" name="employee" th:value="*{employee}" required><br><br>
 
-        <label for="eventStart">Start Date:</label><br>
+        <label for="todoTitle">일정 제목:</label><br>
+        <input type="text" id="todoTitle" name="todoTitle" th:value="*{todoTitle}" required><br><br>
 
-        <input type="datetime-local" id="eventStart" name="eventStart" required><br><br>
+        <label for="todoStartDate">시작일:</label><br>
+        <input type="datetime-local" id="todoStartDate" name="todoStartDate" th:value="*{todoStartDate}" required><br><br>
 
-        <label for="eventEnd">End Date:</label><br>
-        <input type="datetime-local" id="eventEnd" name="eventEnd" required><br><br>
+        <label for="todoEndDate">종료일:</label><br>
+        <input type="datetime-local" id="todoEndDate" name="todoEndDate" th:value="*{todoEndDate}" required><br><br>
 
-        <label for="eventDescription">Description:</label><br>
-        <textarea id="eventDescription" name="eventDescription"></textarea><br><br>
+        <label for="todoContent">일정 내용:</label><br>
+        <textarea id="todoContent" name="todoContent" th:value="*{todoContent}"></textarea><br><br>
 
-        <button type="submit">Add Event</button>
+        <button type="submit">일정 추가하기</button>
 
     </form>
 </div>
