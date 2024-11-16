@@ -8,6 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/todo")
@@ -19,7 +22,13 @@ public class TodoController {
     @GetMapping("/calendar")
     public String showCalendar(Model model, TodoDTO todoDTO) {
         todoDTO.setEmployee(1); // TODO jwt
-        model.addAttribute("todoDTO", todoService.TodoSave(todoDTO));
+        model.addAttribute("todoDTO", todoService.todoSave(todoDTO));
         return "/todo/calendar";
+    }
+
+    @GetMapping("/detail")
+    public String showCalendarDetail(@RequestParam("id") Integer id, Model model) {
+        model.addAttribute("todoDTO", todoService.findByTodoOne(id));
+        return "/todo/detail";
     }
 }

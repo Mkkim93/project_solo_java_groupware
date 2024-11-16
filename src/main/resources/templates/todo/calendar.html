@@ -1,12 +1,21 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <style>
+        .calender-style {
+            align-content: center;
+            display: flex;
+            width: 80%;
+            height: 50%;
+        }
+    </style>
     <meta charset='utf-8' />
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.15/index.global.min.js'></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
+            let popup = document.querySelector('dialog');
             var calendar = new FullCalendar.Calendar(calendarEl, {
 
                 initialView: 'dayGridMonth',
@@ -15,15 +24,34 @@
                     googleCalendarId: '0a8501fe802b5aed64b9e51e8e32692932f74f4566e01204160a8725579ebb84@group.calendar.google.com'
                 },
                 eventClick: function(info) {
-                    alert('Event: ' + info.event.title);
-                    // alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.preventDefault()); // 이벤트 클릭 시 아무 동작하지 않음
-                    // alert('View: ' + info.view.type);
-                    console.log(info.event.extendedProps);
-                    // change the border color just for fun
-                    info.el.style.borderColor = 'red';
+                    info.jsEvent.preventDefault(); // 이벤트 클릭 시 아무 동작하지 않음
+                    popup.querySelector('div').innerHTML = `
+                    <h3>${info.event.title}<h3>
+                    <div>${info.event.extendedProps.description}</div>`;
+                    popup.setAttribute('open', 'open');
                 }
             });
-            calendar.render();
+
+            fetch('/todo/list?employee=1') //TODO 파라미터 1 은 jwt 구현시 회원 정보의 id로 변경
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(todo => {
+                        calendar.addEvent({
+                            title: todo.todoTitle,
+                            start: todo.todoStartDate,
+                            end: todo.todoEndDate,
+                            description: todo.todoContent,
+                            extendedProps: {
+                                description: todo.todoContent
+                            }
+                        });
+                    });
+                    calendar.render();
+                    popup.querySelector('button').addEventListener('click', ()=> {
+                        popup.removeAttribute('open');
+                    })
+                })
+                .catch(error => console.log("Error get todo calender", error));
 
             // 일정 추가
             document.getElementById('addEventForm').addEventListener('submit', function (e) {
@@ -68,10 +96,31 @@
             });
         });
     </script>
+    <style>
+        dialog{
+            position: fixed;
+            width: 300px;
+            z-index: 100;
+            margin: 0;
+            padding: 30px;
+            background: #ffffff;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, .5);
+            border: none;
+            border-radius: 30px;
+        }
+    </style>
 </head>
-
 <body>
-<div id='calendar'></div>
+<div id='calendar' class="calender-style"></div>
+<dialog>
+    <div>제목테스트</div>
+   <button id="editButton">닫기</button>
+    <!--TODO 컨트롤러에 수정페이지(modify.html)로 이동하는 로직 구현하고 board 했던 것처럼 진행-->
+    <button class="btn" th:href="@{/todo/modify/{id}(id=${todoDTO.id})}">수정</button>
+</dialog>
 <div>
     <h3>일정 추가</h3>
     <form id="addEventForm" th:object="${todoDTO}">

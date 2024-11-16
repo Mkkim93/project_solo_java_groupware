@@ -42,7 +42,7 @@ public class Todo {
     @Column(name = "todo_update")
     private LocalDateTime todoUpdate;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne
     @JoinColumn(name = "emp_id")
     private Employee employee;
 
@@ -50,10 +50,17 @@ public class Todo {
         this.todoCreate = LocalDateTime.now(); // 일정을 등록한 시점
     }
 
+    // dto 의 id를 받아 entity id로 바인딩하고 해당 컬럼의 데이터 단건을 조회하기 위한 메서드
+    public Todo setDTOidConverter(Integer todoDtoId) {
+        this.id = todoDtoId;
+        return this;
+    }
+
     @Builder
-    public Todo(String todoType, String todoTitle,
+    public Todo(Integer id, String todoType, String todoTitle,
                 String todoContent, String todoStatus, LocalDateTime todoStartDate,
                 LocalDateTime todoEndDate, Employee employee) {
+        this.id = id;
         this.todoType = todoType;
         this.todoTitle = todoTitle;
         this.todoContent = todoContent;
@@ -61,6 +68,5 @@ public class Todo {
         this.todoStartDate = todoStartDate;
         this.todoEndDate = todoEndDate;
         this.employee = employee;
-
     }
 }
