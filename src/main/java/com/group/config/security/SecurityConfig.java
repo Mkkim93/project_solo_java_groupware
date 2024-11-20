@@ -49,17 +49,20 @@ public class SecurityConfig {
                         .configurationSource(new CorsConfigurationSource() {
                             @Override
                             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-
                                 CorsConfiguration configuration = new CorsConfiguration();
                                 configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080"));// front 서버에서 사용할 host 명
                                 configuration.setAllowedMethods(Collections.singletonList("*")); // front 에서 작업할 내용
                                 configuration.setAllowCredentials(true);
                                 configuration.setMaxAge(3600L);
-
                                 configuration.setExposedHeaders(Collections.singletonList("Authorization"));
                                 return configuration;
                             }
                         }));
+
+        // x-frame 헤더 어용
+        http
+                .headers((headers) -> headers
+                        .frameOptions((frameOptions) -> frameOptions.disable()));
 
         //csrf disable
         http
@@ -75,7 +78,6 @@ public class SecurityConfig {
 
         // TODO 경로별 인가 작업
         http
-
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/login", "/**").permitAll() // USER, ADMIN 모두 접근 가능 하도록 설정
                         .requestMatchers("/mail").hasAuthority("ADMIN") // ADMIN 만 접근 가능하도록 설정

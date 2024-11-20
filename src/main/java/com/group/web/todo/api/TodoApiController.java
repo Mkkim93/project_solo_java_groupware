@@ -28,4 +28,5 @@ public class TodoApiController {
         List<TodoDTO> todoResult = todoService.findByTodoList(todoDTO);
         return ResponseEntity.ok(todoResult);
     }
+
 }

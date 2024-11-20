@@ -16,19 +16,23 @@ import java.util.List;
 class TodoRepositoryCustomTest {
 
     @Autowired
-    TodoRepositoryCustom todoRepositoryCustom;
+    TodoQueryRepository todoRepositoryCustom;
 
     @Autowired
     TodoService todoService;
 
+    @Autowired
+    TodoRepository todoRepository;
+
     @Test
+    @DisplayName("일정 등록")
     void todoSave() {
         TodoDTO todoDTO = new TodoDTO();
         todoDTO.setEmployee(1);
         todoDTO.setTodoType("회의");
-        todoDTO.setTodoTitle("개발 회의2");
-        todoDTO.setTodoContent("회의 내용 테스트2");
-        todoDTO.setTodoStatus("o");
+        todoDTO.setTodoTitle("개발 회의");
+        todoDTO.setTodoContent("회의 내용 테스트");
+        todoDTO.setTodoStatus("진행 전");
         todoRepositoryCustom.todoSave(todoDTO);
     }
 
@@ -62,15 +66,10 @@ class TodoRepositoryCustomTest {
     }
 
     @Test
-    @DisplayName("일정 조회 (단건)")
-    void todoSearchByFindOne() {
+    void findOne() {
         TodoDTO todoDTO = new TodoDTO();
-        todoDTO.setId(1);
-        todoDTO.setEmployee(1); // todo null 나옴;;
-        TodoDTO byTodoOne = todoService.findByTodoOne(1);
-        System.out.println("byTodoOne.getId() = " + byTodoOne.getId());
-        System.out.println("byTodoOne.getEmployee() = " + byTodoOne.getEmployee());
-        System.out.println("byTodoOne.getTodoTitle() = " + byTodoOne.getTodoTitle());
-        System.out.println("byTodoOne.getTodoContent() = " + byTodoOne.getTodoContent());
+        todoDTO.setEmployee(1);
+
     }
+
 }

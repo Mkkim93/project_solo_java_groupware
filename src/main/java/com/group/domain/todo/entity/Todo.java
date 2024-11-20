@@ -7,11 +7,11 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-import static jakarta.persistence.FetchType.*;
-
 @Entity
 @Table(name = "todo")
 @Getter @Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class Todo {
 
@@ -56,17 +56,4 @@ public class Todo {
         return this;
     }
 
-    @Builder
-    public Todo(Integer id, String todoType, String todoTitle,
-                String todoContent, String todoStatus, LocalDateTime todoStartDate,
-                LocalDateTime todoEndDate, Employee employee) {
-        this.id = id;
-        this.todoType = todoType;
-        this.todoTitle = todoTitle;
-        this.todoContent = todoContent;
-        this.todoStatus = todoStatus;
-        this.todoStartDate = todoStartDate;
-        this.todoEndDate = todoEndDate;
-        this.employee = employee;
-    }
 }

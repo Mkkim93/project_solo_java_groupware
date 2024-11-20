@@ -1,14 +1,18 @@
 package com.group.application.todo.dto;
 
+import com.group.domain.hr.entity.Employee;
 import com.group.domain.todo.entity.Todo;
+import com.querydsl.core.annotations.QueryProjection;
+import lombok.Builder;
 import lombok.Data;
-import org.springframework.cglib.core.Local;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
+@NoArgsConstructor
 public class TodoDTO {
 
     private Integer id;
@@ -49,7 +53,7 @@ public class TodoDTO {
     }
 
     // 객체 엔티티 -> 객체 dto
-    public TodoDTO setObjectDTO(Todo todo) {
+    public TodoDTO toDto(Todo todo) {
         this.id = todo.getId();
         this.todoTitle = todo.getTodoTitle();
         this.todoContent = todo.getTodoContent();
@@ -61,5 +65,21 @@ public class TodoDTO {
         this.todoUpdate = todo.getTodoUpdate();
         return this;
     }
+
+    @QueryProjection
+    public TodoDTO(Integer id, String todoType, String todoTitle,
+                   String todoContent, LocalDateTime todoStartDate,
+                   LocalDateTime todoEndDate, String todoStatus,
+                   Integer employee) {
+        this.id = id;
+        this.todoType = todoType;
+        this.todoTitle = todoTitle;
+        this.todoContent = todoContent;
+        this.todoStartDate = todoStartDate;
+        this.todoEndDate = todoEndDate;
+        this.todoStatus = todoStatus;
+        this.employee = employee;
+    }
+
 }
 

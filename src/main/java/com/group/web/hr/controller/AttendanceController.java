@@ -40,7 +40,7 @@ public class AttendanceController {
         model.addAttribute("employeeDTO", employeeService.findByAll(employeeDTO));
         model.addAttribute("attendanceWeekTime", attendanceService.findByWeekOfMonthLogic(attendanceDTO));
         model.addAttribute("remainToWeekTime", attendanceService.remainingWorkHoursToWeek(attendanceDTO));
-        return "/hr/detail";
+        return "hr/detail";
     }
 
     @PostMapping("/detail")

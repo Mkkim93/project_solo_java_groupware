@@ -2,82 +2,13 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            min-height: 100vh;
-        }
-
-        .container {
-            display: flex;
-            flex: 1;
-        }
-
-        .sidebar {
-            width: 20%;
-            background-color: #f4f4f4;
-            padding: 20px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .sidebar h3 {
-            margin-top: 0;
-            font-size: 1.2em;
-        }
-
-        .content {
-            flex: 1;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .calendar-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex: 1;
-        }
-
         .calender-style {
-            width: 80%;
-            height: 80%;
-        }
-
-        form {
+            align-content: center;
             display: flex;
-            flex-direction: column;
-            gap: 10px;
-            max-width: 400px;
+            width: 80%;
+            height: 50%;
         }
-
-        form label {
-            font-weight: bold;
-        }
-
-        form input, form textarea, form button {
-            width: 100%;
-            padding: 10px;
-            font-size: 1em;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        form button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        form button:hover {
-            background-color: #0056b3;
-        }
-
-        dialog {
+        dialog{
             position: fixed;
             width: 300px;
             z-index: 100;
@@ -87,12 +18,12 @@
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, .5);
             border: none;
             border-radius: 30px;
         }
     </style>
-    <meta charset='utf-8'/>
+    <meta charset='utf-8' />
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.15/index.global.min.js'></script>
     <script>
@@ -155,7 +86,7 @@
                     employee: employee
                 };
 
-                fetch('/todo/add', {
+                fetch('/todo/update', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -172,65 +103,36 @@
                             description: data.todoContent,
                             extendedProps: {
                                 description: data.todoContent
-                            },
+                            }
                         });
-                        alert("일정이 추가되었습니다");
                     })
                     .catch(error => console.log('Error adding event:', error))
-                alert("일정 등록에 실패하였습니다");
             });
         });
     </script>
 </head>
 <body>
-<dialog>
-    <div>제목테스트</div>
-    <button id="editButton">닫기</button>
-    <!--TODO 컨트롤러에 수정페이지(update.html)로 이동하는 로직 구현하고 board 했던 것처럼 진행-->
-    <!--<a th:href="@{/todo/update/{id}(id=${todoDTO.id})}">수정</a>-->
-</dialog>
-<div class="container">
+<div>
+    <div id="calendar"></div>
+    <form id="addEventForm" class="addEventForm" th:object="${todoDTO}">
 
-    <div class="sidebar">
-        <h3>카테고리</h3>
-        <ul>
-            <li><a href="#">전체 일정</a></li>
-            <li><a href="#">내 일정</a></li>
-            <li><a href="#">팀 일정</a></li>
-            <li><a href="#">완료된 일정</a></li>
-        </ul>
-    </div>
+        <label for="employee">사원 번호:</label><br>
+        <input type="text" id="employee" name="employee" required><br><br>
 
+        <label for="todoTitle">일정 제목:</label><br>
+        <input type="text" id="todoTitle" name="todoTitle" required><br><br>
 
-    <div class="content">
+        <label for="todoStartDate">시작일:</label><br>
+        <input type="datetime-local" id="todoStartDate" name="todoStartDate"  required><br><br>
 
-        <div class="calendar-container">
-            <div id="calendar" class="calender-style"></div>
-        </div>
+        <label for="todoEndDate">종료일:</label><br>
+        <input type="datetime-local" id="todoEndDate" name="todoEndDate"  required><br><br>
 
-        <div>
-            <h3>일정 추가</h3>
-            <form id="addEventForm" th:object="${todoDTO}">
+        <label for="todoContent">일정 내용:</label><br>
+        <textarea id="todoContent" name="todoContent"></textarea><br><br>
 
-                <label for="employee">사원 번호:</label>
-                <input type="text" id="employee" name="employee" required>
-
-                <label for="todoTitle">일정 제목:</label>
-                <input type="text" id="todoTitle" name="todoTitle" required>
-
-                <label for="todoStartDate">시작일:</label>
-                <input type="datetime-local" id="todoStartDate" name="todoStartDate" required>
-
-                <label for="todoEndDate">종료일:</label>
-                <input type="datetime-local" id="todoEndDate" name="todoEndDate" required>
-
-                <label for="todoContent">일정 내용:</label>
-                <textarea id="todoContent" name="todoContent"></textarea>
-
-                <button type="submit">일정 추가하기</button>
-            </form>
-        </div>
-    </div>
+        <button type="submit">일정 수정하기</button>
+    </form>
 </div>
 </body>
 </html>

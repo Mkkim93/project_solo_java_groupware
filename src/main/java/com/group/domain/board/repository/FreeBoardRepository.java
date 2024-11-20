@@ -18,7 +18,7 @@ public interface FreeBoardRepository extends JpaRepository<FreeBoard, Integer>{
     Integer findBoardIdByFreeBoardId(@Param("id") Integer id);
 
     @Modifying
-    @Transactional // 이거 나중에 영속성 걸릴듯
+    @Transactional // TODO
     @Query("update Board b set b.boardDeleteDate = CURRENT_TIMESTAMP, b.boardIsDeleted = 'Y' where b.id = :id")
     Integer updateBoardDeleted(@Param("id") Integer id);
 

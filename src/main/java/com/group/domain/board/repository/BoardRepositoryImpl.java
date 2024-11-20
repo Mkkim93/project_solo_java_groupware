@@ -48,7 +48,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                         board.boardViewCount,
                         board.boardIsDeleted))
                 .from(board)
-               .join(board.empId, employee)
+                .innerJoin(board.empId, employee)
                 .where(board.id.eq(id))
                 .fetchOne();
     }
@@ -66,7 +66,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                         board.boardIsDeleted
                         ))
                 .from(board)
-                .join(board.empId, employee)
+                .innerJoin(board.empId, employee)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -74,7 +74,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
         JPAQuery<Long> count = jpaQueryFactory
                 .select(board.count())
                 .from(board)
-                .join(board.empId, employee);
+                .innerJoin(board.empId, employee);
 
         return PageableExecutionUtils.getPage(results, pageable, () -> count.fetchCount());
     }
@@ -93,8 +93,8 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                         board.boardViewCount,
                         board.boardIsDeleted
                 )).from(freeBoard)
-                .leftJoin(freeBoard.boardId, board)
-                .leftJoin(board.empId, employee)
+                .innerJoin(freeBoard.boardId, board)
+                .innerJoin(board.empId, employee)
                 .where(board.boardIsDeleted.eq("N"))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -103,8 +103,8 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
         JPAQuery<Long> count = jpaQueryFactory
                 .select(freeBoard.count())
                 .from(freeBoard)
-                .join(freeBoard.boardId, board)
-                .join(board.empId, employee);
+                .innerJoin(freeBoard.boardId, board)
+                .innerJoin(board.empId, employee);
 
         return PageableExecutionUtils.getPage(results, pageable, () -> count.fetchCount());
     }
@@ -122,8 +122,8 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                         board.boardViewCount,
                         board.boardIsDeleted
                 )).from(freeBoard)
-                .join(freeBoard.boardId, board)
-                .join(board.empId, employee)
+                .innerJoin(freeBoard.boardId, board)
+                .innerJoin(board.empId, employee)
                 .where(freeBoard.id.eq(id))
                 .fetchOne();
 
@@ -145,8 +145,8 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                         board.boardIsDeleted
                 ))
                 .from(noticeBoard)
-                .join(noticeBoard.boardId, board)
-                .join(board.empId, employee)
+                .innerJoin(noticeBoard.boardId, board)
+                .innerJoin(board.empId, employee)
                 .where(board.boardIsDeleted.eq("N"))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -155,8 +155,8 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
         JPAQuery<Long> count = jpaQueryFactory
                 .select(noticeBoard.count())
                 .from(noticeBoard)
-                .join(noticeBoard.boardId, board)
-                .join(board.empId, employee);
+                .innerJoin(noticeBoard.boardId, board)
+                .innerJoin(board.empId, employee);
 
         return PageableExecutionUtils.getPage(results, pageable, () -> count.fetchCount());
     }
@@ -175,8 +175,8 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                         board.boardViewCount,
                         board.boardIsDeleted
                 )).from(fileBoard)
-                .join(fileBoard.boardId, board)
-                .join(board.empId, employee)
+                .innerJoin(fileBoard.boardId, board)
+                .innerJoin(board.empId, employee)
                 .where(board.boardIsDeleted.eq("N"))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -185,8 +185,8 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
         JPAQuery<Long> count = jpaQueryFactory
                 .select(fileBoard.count())
                 .from(fileBoard)
-                .join(fileBoard.boardId, board)
-                .join(board.empId, employee);
+                .innerJoin(fileBoard.boardId, board)
+                .innerJoin(board.empId, employee);
 
         return PageableExecutionUtils.getPage(results, pageable, () -> count.fetchCount());
     }
@@ -207,8 +207,8 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                         board.boardIsDeleted,
                         qnABoard.boardSecret
                 )).from(qnABoard)
-                .leftJoin(qnABoard.boardId, board)
-                .leftJoin(board.empId, employee)
+                .innerJoin(qnABoard.boardId, board)
+                .innerJoin(board.empId, employee)
                 .where(board.boardIsDeleted.eq("N"))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -216,8 +216,8 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
 
         Long count = jpaQueryFactory.select(qnABoard.count())
                 .from(qnABoard)
-                .join(qnABoard.boardId, board)
-                .join(board.empId, employee)
+                .innerJoin(qnABoard.boardId, board)
+                .innerJoin(board.empId, employee)
                 .fetchOne();
 
         return new PageImpl<>(results, pageable, count);
@@ -244,8 +244,8 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                         board.boardViewCount,
                         board.boardIsDeleted
                 )).from(fileBoard)
-                .join(fileBoard.boardId, board)
-                .join(board.empId, employee)
+                .innerJoin(fileBoard.boardId, board)
+                .innerJoin(board.empId, employee)
                 .where(fileBoard.id.eq(id))
                 .fetchOne();
     }
@@ -263,8 +263,8 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                         board.boardViewCount,
                         board.boardIsDeleted
                 )).from(noticeBoard)
-                .join(noticeBoard.boardId, board)
-                .join(board.empId, employee)
+                .innerJoin(noticeBoard.boardId, board)
+                .innerJoin(board.empId, employee)
                 .where(noticeBoard.id.eq(id))
                 .fetchOne();
     }
@@ -284,22 +284,19 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                         board.boardIsDeleted,
                         qnABoard.boardSecret
                 )).from(qnABoard)
-                .join(qnABoard.boardId, board)
-                .join(board.empId, employee)
+                .innerJoin(qnABoard.boardId, board)
+                .innerJoin(board.empId, employee)
                 .where(
                         qnABoard.id.eq(id),
-                        (getAllEq(boardPass))
+                        (eqBoardPass(boardPass))
                 ).fetchOne();
     }
 
-    private BooleanExpression getAllEq(String boardPass) {
-        if (boardPass == null) {
+    private BooleanExpression eqBoardPass(String boardPass) {
+        if (boardPass == null || boardPass.trim().isEmpty()) {
             return null;
-        } else if (boardPass.trim().isEmpty()) {
-            return qnABoard.boardPass.isNull(); // 공백 문자열에 대해 다른 처리
-        } else {
-            return qnABoard.boardPass.eq(boardPass);
         }
+        return qnABoard.boardPass.eq(boardPass);
     }
 
     @Override
@@ -316,8 +313,8 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                 board.boardIsDeleted,
                 qnABoard.boardSecret))
                 .from(qnABoard)
-                .join(qnABoard.boardId, board)
-                .join(board.empId, employee)
+                .innerJoin(qnABoard.boardId, board)
+                .innerJoin(board.empId, employee)
                 .where(qnABoard.id.eq(id))
                 .fetchOne();
     }

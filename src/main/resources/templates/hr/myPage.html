@@ -8,6 +8,9 @@
     <script src="https://kit.fontawesome.com/4526b6a2d0.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.15/index.global.min.js'></script>
+    <script src="https://apis.google.com/js/api.js"></script>
     <!--<link rel="stylesheet" href="/resource/css/bootstrap.css">-->
     <style>
         .embedded-object {
@@ -34,11 +37,11 @@
             <li><a href="/board/boardlist"><i class="fa-solid fa-pen"></i> 게시판</a></li>
             <li><a href="/todo/calendar"><i class="fa-regular fa-calendar"></i> 일정</a></li>
             <li><a href="#"><i class="fa-solid fa-envelope"></i> 메일</a></li>
-            <li><a href="#"><i class="fa-solid fa-gear"></i> 설정</a></li>
             <li><a href="#"><i class="fa-brands fa-signal-messenger"></i> 메신저</a></li>
             <li><a href="#"><i class="fa-solid fa-cart-shopping"></i> 당근</a></li>
             <li><a href="#"><i class="fa-solid fa-m"></i> 마일리지상점</a></li>
             <li><a href="#"><i class="fa-solid fa-people-group"></i> 사내동호회</a></li>
+            <li><a href="#"><i class="fa-solid fa-gear"></i> 설정</a></li>
         </ul>
     </div>
 
@@ -74,7 +77,7 @@
             <section class="stats">
                 <div class="stat-card large">
                     <h3 class="text-center">나의 일정 보기</h3>
-                    <iframe src="https://calendar.google.com/calendar/embed?src=0a8501fe802b5aed64b9e51e8e32692932f74f4566e01204160a8725579ebb84%40group.calendar.google.com&ctz=Asia%2FSeoul" style="border: 0" width="550" height="500" frameborder="0" scrolling="no"></iframe>
+                    <iframe type="text/html" src="/todo/readonly" width="700" height="650" border="none"></iframe>
                     <button th:onclick="|location.href='@{/todo/calendar}'|" class="btn">나의 일정 관리</button>
                 </div>
             </section>
