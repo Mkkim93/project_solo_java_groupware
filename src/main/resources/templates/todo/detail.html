@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+        }
+
+        .sidebar {
+            width: 20%;
+            background-color: #f4f4f4;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar h3 {
+            margin-top: 0;
+            font-size: 1.2em;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .calendar-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+        }
+
+        .calender-style {
+            width: 80%;
+            height: 80%;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 400px;
+        }
+
+        form label {
+            font-weight: bold;
+        }
+
+        form input, form textarea, form button {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        form button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #0056b3;
+        }
+
+        dialog {
+            position: fixed;
+            width: 300px;
+            z-index: 100;
+            margin: 0;
+            padding: 30px;
+            background: #ffffff;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+            border: none;
+            border-radius: 30px;
+        }
+    </style>
+    <meta charset='utf-8'/>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.15/index.global.min.js'></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            let popup = document.querySelector('dialog');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                googleCalendarApiKey: 'AIzaSyCKJnnpdvFJ084yB6JQC1H6xKJDkx7uPjg',
+                events: {
+                    googleCalendarId: '0a8501fe802b5aed64b9e51e8e32692932f74f4566e01204160a8725579ebb84@group.calendar.google.com'
+                },
+                eventClick: function(info) {
+                    info.jsEvent.preventDefault(); // 기본 동작 방지
+
+                    const popup = document.querySelector('dialog'); // 다이얼로그 선택
+                    const dataIdElement = document.getElementById('data-id'); // ID 요소 선택
+
+                    // info.event.id 값 확인 및 할당
+                    if (info.event.id) {
+                        dataIdElement.textContent = info.event.id.trim(); // 공백 제거
+                    } else {
+                        console.error("Event ID is undefined or null");
+                        dataIdElement.textContent = ""; // 기본값 설정
+                    }
+
+                    // 이벤트 클릭 시 아무 동작하지 않음
+                    popup.querySelector('div').innerHTML = `
+                    <h3>${info.event.title}<h3>
+                    <div>${info.event.extendedProps.description}</div>`;
+
+                    popup.setAttribute('open', 'open');
+                }
+            });
+
+            fetch('/todo/list?employee=1') //TODO 파라미터 1 은 jwt 구현시 회원 정보의 id로 변경
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(todo => {
+                        calendar.addEvent({
+                            id: todo.id,
+                            title: todo.todoTitle,
+                            start: todo.todoStartDate,
+                            end: todo.todoEndDate,
+                            description: todo.todoContent,
+                            extendedProps: {
+                                description: todo.todoContent
+                            }
+                        });
+                    });
+                    calendar.render();
+                    popup.querySelector('button').addEventListener('click', ()=> {
+                        popup.removeAttribute('open');
+                    })
+                })
+                .catch(error => console.log("Error get todo calender", error));
+
+            // 일정 추가
+            document.getElementById('addEventForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                var id = document.getElementById('data-id').value;
+                var todoTitle = document.getElementById('todoTitle').value;
+                var todoStartDate = document.getElementById('todoStartDate').value;
+                var todoEndDate = document.getElementById('todoEndDate').value;
+                var todoContent = document.getElementById('todoContent').value;
+                var employee = document.getElementById('employee').value;
+                var eventData = {
+                    id: id,
+                    todoTitle: todoTitle,
+                    // todoType: 'calendar',
+                    todoContent: todoContent,
+                    // todoStatus: 'scheduled',
+                    todoStartDate: todoStartDate,
+                    todoEndDate: todoEndDate,
+                    employee: employee
+                };
+
+                fetch('/todo/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(eventData)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Event added:', data);
+                        calendar.addEvent({
+                            id: data.id,
+                            title: data.todoTitle,
+                            start: data.todoStartDate,
+                            end: data.todoEndDate,
+                            description: data.todoContent,
+                            extendedProps: {
+                                description: data.todoContent
+                            },
+                        });
+                        alert("일정이 추가되었습니다");
+                    })
+                    .catch(error => {
+                        console.log('Error adding event:', error)
+                        alert("일정 등록에 실패하였습니다");
+                    })
+            });
+        });
+    </script>
+</head>
+<body>
+<dialog>
+    <p id="data-id"></p>
+    <div>제목테스트</div>
+    <button id="closeButton">닫기</button>
+    <button id="editButton">수정</button>
+</dialog>
+<div class="container">
+    <div class="sidebar">
+        <h3>카테고리</h3>
+        <ul>
+            <li><a href="#">전체 일정</a></li>
+            <li><a href="#">내 일정</a></li>
+            <li><a href="#">팀 일정</a></li>
+            <li><a href="#">완료된 일정</a></li>
+        </ul>
+    </div>
+
+
+    <div class="content">
+
+        <div class="calendar-container">
+            <div id="calendar" class="calender-style"></div>
+        </div>
+
+        <div>
+            <h3>일정 추가</h3>
+            <form id="addEventForm" th:object="${todoDTO}">
+
+                <label for="id">일정번호</label>
+                <input type="hidden" id="id" name="todoId">
+
+                <label for="employee">사원 번호:</label>
+                <input type="text" id="employee" name="employee" required>
+
+                <label for="todoTitle">일정 제목:</label>
+                <input type="text" id="todoTitle" name="todoTitle" required>
+
+                <label for="todoStartDate">시작일:</label>
+                <input type="datetime-local" id="todoStartDate" name="todoStartDate" required>
+
+                <label for="todoEndDate">종료일:</label>
+                <input type="datetime-local" id="todoEndDate" name="todoEndDate" required>
+
+                <label for="todoContent">일정 내용:</label>
+                <textarea id="todoContent" name="todoContent"></textarea>
+
+                <button type="submit">일정 추가하기</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+        document.getElementById('editButton').addEventListener('click', function () {
+            var todoId = document.getElementById('data-id').textContent.trim();
+            console.log(todoId);
+            window.location.href = '/todo/modify/' + encodeURIComponent(todoId); // URL로 전달
+        });
+</script>
+</body>
+</html>

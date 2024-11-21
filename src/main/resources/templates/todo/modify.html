@@ -95,6 +95,7 @@
     <meta charset='utf-8'/>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.15/index.global.min.js'></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
@@ -108,9 +109,18 @@
                 },
                 eventClick: function(info) {
                     info.jsEvent.preventDefault(); // 이벤트 클릭 시 아무 동작하지 않음
+
+                    // dialog에 데이터 채우기
+                    document.getElementById('todoTitle').value = info.event.title;
+                    document.getElementById('todoStartDate').value = info.event.start.toISOString().slice(0, 16); // 날짜 형식 맞추기
+                    document.getElementById('todoEndDate').value = info.event.end.toISOString().slice(0, 16);
+                    document.getElementById('todoContent').value = info.event.extendedProps.description;
+                    document.getElementById('employee').value = "1"; // 예시로 사원 번호 1로 설정
+
                     popup.querySelector('div').innerHTML = `
-                    <h3>${info.event.title}<h3>
-                    <div>${info.event.extendedProps.description}</div>`;
+                    <h3>일정 수정</h3>
+                    <div>${info.event.title}</div>
+                `;
                     popup.setAttribute('open', 'open');
                 }
             });
@@ -130,11 +140,46 @@
                         });
                     });
                     calendar.render();
-                    popup.querySelector('button').addEventListener('click', ()=> {
-                        popup.removeAttribute('open');
-                    })
+
                 })
                 .catch(error => console.log("Error get todo calender", error));
+
+            popup.querySelector('button').addEventListener('click', ()=> {
+                popup.removeAttribute('open');
+            })
+
+            document.getElementById('editButton').addEventListener('click', function () {
+                const todoTitle = document.getElementById('todoTitle').value;
+                const todoContent = document.getElementById('todoContent').value;
+                const todoStartDate= document.getElementById('todoStartDate').value;
+                const todoEndDate = document.getElementById('todoEndDate').value;
+                const employee = document.getElementById('employee').value;
+
+                const updatedEventData = {
+                    todoTitle: todoTitle,
+                    todoContent: todoContent,
+                    todoStartDate: todoStartDate,
+                    todoEndDate: todoEndDate,
+                    employee: employee
+                };
+                fetch('/todo/update/{id}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(updatedEventData)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Event updated:', data);
+                        popup.removeAttribute('open');
+                        alert("일정이 수정 되었습니다.");
+                    })
+                    .catch(error => {
+                        console.log('error message!', error);
+                        alert("일정 수정에 실패하였습니다.")
+                    });
+            });
 
             // 일정 추가
             document.getElementById('addEventForm').addEventListener('submit', function (e) {
@@ -185,12 +230,10 @@
 <body>
 <dialog>
     <div>제목테스트</div>
-    <button id="editButton">닫기</button>
-    <!--TODO 컨트롤러에 수정페이지(update.html)로 이동하는 로직 구현하고 board 했던 것처럼 진행-->
-    <!--<a th:href="@{/todo/update/{id}(id=${todoDTO.id})}">수정</a>-->
+    <button id="closeButton">닫기</button>
+    <button id="editButton">수정</button>
 </dialog>
 <div class="container">
-
     <div class="sidebar">
         <h3>카테고리</h3>
         <ul>
@@ -208,27 +251,20 @@
             <div id="calendar" class="calender-style"></div>
         </div>
 
-        <div>
-            <h3>일정 추가</h3>
-            <form id="addEventForm" th:object="${todoDTO}">
+        <div class="container">
+            <div class="layout">
+                <h2>일정 수정</h2>
 
-                <label for="employee">사원 번호:</label>
-                <input type="text" id="employee" name="employee" required>
-
-                <label for="todoTitle">일정 제목:</label>
-                <input type="text" id="todoTitle" name="todoTitle" required>
-
-                <label for="todoStartDate">시작일:</label>
-                <input type="datetime-local" id="todoStartDate" name="todoStartDate" required>
-
-                <label for="todoEndDate">종료일:</label>
-                <input type="datetime-local" id="todoEndDate" name="todoEndDate" required>
-
-                <label for="todoContent">일정 내용:</label>
-                <textarea id="todoContent" name="todoContent"></textarea>
-
-                <button type="submit">일정 추가하기</button>
-            </form>
+                <form th:action="@{/todo/modify/update/{id}(id=${todoDTO.id})}"
+                      th:object="${todoDTO}" method="post">
+                    <input type="hidden" th:value="*{id}" th:field="*{id}" />
+                    일정 제목: <input type="text" name="todoTitle" th:text="*{todoTitle}" placeholder="제목" required />
+                    일정 내용: <textarea name="todoContent" th:text="*{todoContent}" placeholder="내용" required></textarea>
+                    <input type="datetime-local" name="todoStartDate" th:text="*{todoStartDate}">
+                    <input type="datetime-local" name="todoEndDate" th:text="*{todoEndDate}">
+                    <button type="submit">일정 수정</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>

@@ -5,7 +5,6 @@ import com.group.domain.todo.entity.Todo;
 import com.group.domain.todo.repository.TodoRepository;
 import com.group.domain.todo.repository.TodoQueryRepository;
 import com.group.domain.todo.repository.TodoRepositoryImpl;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -40,9 +39,21 @@ public class TodoService {
     }
 
     // 일정 조회 (회원 id 에 대한 리스트)
+    public void updateTodo(TodoDTO todoDTO) {
+        Todo todo = new Todo();
+        Todo todoResult = todo.setEntity(todoDTO);
+        todoRepository.save(todoResult);
+    }
 
     // TODO
-    public void updateTodo(TodoDTO todoDTO) {
-        todoRepositoryImpl.updateTodo(todoDTO);
+    public TodoDTO findByTodoId(Integer id) {
+        TodoDTO todoDTO = new TodoDTO();
+        Todo todo = todoRepository.getTodoById(id);
+        return todoDTO.setDTO(todo);
+    }
+
+    public Integer findById(TodoDTO todoDTO) {
+        Todo todo = todoRepository.findById(todoDTO.getId()).get();
+        return todo.getId();
     }
 }

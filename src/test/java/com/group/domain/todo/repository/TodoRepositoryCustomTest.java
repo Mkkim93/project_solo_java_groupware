@@ -66,9 +66,11 @@ class TodoRepositoryCustomTest {
     }
 
     @Test
-    void findOne() {
+    void findById() {
         TodoDTO todoDTO = new TodoDTO();
         todoDTO.setEmployee(1);
+        TodoDTO byTodoId = todoService.findByTodoId(5);
+        System.out.println("byTodoId = " + byTodoId);
 
     }
 

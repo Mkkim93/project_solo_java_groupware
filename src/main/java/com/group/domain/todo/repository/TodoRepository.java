@@ -10,4 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface TodoRepository extends JpaRepository<Todo, Integer> {
+
+    Todo getTodoById(Integer id);
 }

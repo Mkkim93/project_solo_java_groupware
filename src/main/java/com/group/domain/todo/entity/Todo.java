@@ -36,7 +36,7 @@ public class Todo {
     @Column(name = "todo_status")
     private String todoStatus; // 일정 상태
 
-    @Column(name = "todo_create")
+    @Column(name = "todo_create", updatable = false)
     private LocalDateTime todoCreate; // 일정 등록일
 
     @Column(name = "todo_update")
@@ -53,6 +53,19 @@ public class Todo {
     // dto 의 id를 받아 entity id로 바인딩하고 해당 컬럼의 데이터 단건을 조회하기 위한 메서드
     public Todo setDTOidConverter(Integer todoDtoId) {
         this.id = todoDtoId;
+        return this;
+    }
+
+    public Todo setEntity(TodoDTO todoDTO) {
+        this.id = todoDTO.getId();
+        this.todoTitle = todoDTO.getTodoTitle();
+        this.todoContent = todoDTO.getTodoContent();
+        this.todoStartDate = todoDTO.getTodoStartDate();
+        this.todoEndDate = todoDTO.getTodoEndDate();
+        this.todoUpdate = todoDTO.getTodoUpdate();
+        this.employee = Employee.builder()
+                .id(todoDTO.getEmployee())
+                .build();
         return this;
     }
 

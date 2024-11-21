@@ -70,51 +70,8 @@
                     })
                 })
                 .catch(error => console.log("Error get todo calender", error));
-
-            // 일정 추가
-            /*document.getElementById('addEventForm').addEventListener('submit', function (e) {
-                e.preventDefault();
-
-                var todoTitle = document.getElementById('todoTitle').value;
-                var todoStartDate = document.getElementById('todoStartDate').value;
-                var todoEndDate = document.getElementById('todoEndDate').value;
-                var todoContent = document.getElementById('todoContent').value;
-                var employee = document.getElementById('employee').value;
-                var eventData = {
-                    todoTitle: todoTitle,
-                    // todoType: 'calendar',
-                    todoContent: todoContent,
-                    // todoStatus: 'scheduled',
-                    todoStartDate: todoStartDate,
-                    todoEndDate: todoEndDate,
-                    employee: employee
-                };
-
-                fetch('/todo/add', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(eventData)
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Event added:', data);
-                        calendar.addEvent({
-                            title: data.todoTitle,
-                            start: data.todoStartDate,
-                            end: data.todoEndDate,
-                            description: data.todoContent,
-                            extendedProps: {
-                                description: data.todoContent
-                            }
-                        });
-                    })
-                    .catch(error => console.log('Error adding event:', error))
-            });*/
         });
     </script>
-
 </head>
 <body>
 <dialog>

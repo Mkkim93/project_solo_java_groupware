@@ -72,4 +72,13 @@ class TodoServiceTest {
 
     }
 
+    @Test
+    @DisplayName("일정 id 조회")
+    void findById() {
+        TodoDTO todoDTO = new TodoDTO();
+        todoDTO.setId(1);
+        Integer byId = todoService.findById(todoDTO);
+        System.out.println("byId = " + byId);
+    }
+
 }
