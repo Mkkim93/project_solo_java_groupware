@@ -82,12 +82,18 @@
 <div class="container">
     <div class="layout">
         <h2>게시글 수정</h2>
-        <form th:action="@{/board/boardmodify/update/{id}(id=${boardDTO.id})}"
-              th:object="${boardDTO}" method="post">
+        <form th:action="@{/board/boardmodify/update/{id}(id=${boardDTO.id})}" th:object="${boardDTO}" method="post">
+
             <input type="hidden" th:value="*{id}" th:field="*{id}" />
-            <input type="text" name="boardTitle" th:value="*{boardTitle}" placeholder="제목" required />
-            <textarea name="boardContent" th:text="*{boardContent}" placeholder="내용" required></textarea>
+
+            <label for="boardTitle"></label>
+            <input type="text" id="boardTitle" name="boardTitle" th:value="*{boardTitle}" placeholder="제목" required />
+
+            <label for="boardContent"></label>
+            <textarea id="boardContent" name="boardContent" th:text="*{boardContent}" placeholder="내용" required></textarea>
+
             <button type="submit">게시글 수정</button>
+
         </form>
     </div>
 </div>

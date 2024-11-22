@@ -50,14 +50,9 @@ public class Todo {
         this.todoCreate = LocalDateTime.now(); // 일정을 등록한 시점
     }
 
-    // dto 의 id를 받아 entity id로 바인딩하고 해당 컬럼의 데이터 단건을 조회하기 위한 메서드
-    public Todo setDTOidConverter(Integer todoDtoId) {
-        this.id = todoDtoId;
-        return this;
-    }
-
     public Todo setEntity(TodoDTO todoDTO) {
         this.id = todoDTO.getId();
+        this.todoType = todoDTO.getTodoType();
         this.todoTitle = todoDTO.getTodoTitle();
         this.todoContent = todoDTO.getTodoContent();
         this.todoStartDate = todoDTO.getTodoStartDate();

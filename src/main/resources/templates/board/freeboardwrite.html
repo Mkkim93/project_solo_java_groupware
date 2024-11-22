@@ -73,11 +73,17 @@
 <div class="layout">
     <h2>자유게시판 글 등록</h2>
     <form th:action="@{/board/freeboardwrite}" th:object="${freeBoardDTO}" method="post">
-        <input type="text" id="boardTitle" th:field="*{boardTitle}" placeholder="제목" required>
-        <div class="required">* 필수 입력 사항입니다.</div>
-        <textarea id="boardContent" th:field="*{boardContent}" placeholder="내용" required></textarea>
-        <div class="required">* 필수 입력 사항입니다.</div>
+
+        <label for="boardTitle"></label>
+        <input type="text" id="boardTitle" th:field="*{boardTitle}" placeholder="게시글 제목을 입력하세요" required>
+        <div class="required">필수 입력 사항입니다.</div>
+
+        <label for="boardContent"></label>
+        <textarea id="boardContent" th:field="*{boardContent}" placeholder="내용을 입력하세요" required></textarea>
+        <div class="required">필수 입력 사항입니다.</div>
+
         <button type="submit">작성하기</button>
+
     </form>
 </div>
 </body>

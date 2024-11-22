@@ -45,7 +45,6 @@ public class TodoService {
         todoRepository.save(todoResult);
     }
 
-    // TODO
     public TodoDTO findByTodoId(Integer id) {
         TodoDTO todoDTO = new TodoDTO();
         Todo todo = todoRepository.getTodoById(id);

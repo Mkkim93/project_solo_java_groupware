@@ -30,23 +30,16 @@ public class AttendanceController {
                          @RequestParam(value = "size", defaultValue = "11") Integer size){
         PageRequest pageRequest = PageRequest.of(page, size);
 
-        LocalDate localDate = LocalDate.of(2024, 11, 12); // 임시 설정
-        attendanceDTO.setAttDate(localDate);
+        attendanceDTO.setAttDate(LocalDate.now());
         attendanceDTO.setEmployee(1); // TODO 임시 사원 ID 부여 나중에 jwt 토큰 처리
 
+        // 임시 id test
         employeeDTO.setId(attendanceDTO.getEmployee()); // TODO jwt Token
-        model.addAttribute("attendanceDTO", attendanceService.findAllByEmpAttInfo(attendanceDTO, attendanceDTO.getAttDate(), pageRequest));
-        model.addAttribute("attendanceWorkTime", attendanceService.findByMonthDurationSum(attendanceDTO));
-        model.addAttribute("employeeDTO", employeeService.findByAll(employeeDTO));
-        model.addAttribute("attendanceWeekTime", attendanceService.findByWeekOfMonthLogic(attendanceDTO));
-        model.addAttribute("remainToWeekTime", attendanceService.remainingWorkHoursToWeek(attendanceDTO));
-        return "hr/detail";
-    }
 
-    @PostMapping("/detail")
-    public String attDetailView(EmployeeDTO employeeDTO) {
-        employeeDTO.setId(1);
-        employeeService.findByAll(employeeDTO);
+        model.addAttribute("weekWorkTime", attendanceService.findByWeekOfMonthLogic(attendanceDTO));
+        model.addAttribute("remainWorkTime", attendanceService.remainingWorkHoursToWeek(attendanceDTO));
+        model.addAttribute("monthWorkTime", attendanceService.findByMonthDurationSum(attendanceDTO));
+        model.addAttribute("employeeDTO", employeeService.findByAll(employeeDTO));
         return "hr/detail";
     }
 }

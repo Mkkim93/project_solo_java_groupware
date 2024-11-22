@@ -93,11 +93,15 @@
             </tr>
             <tr>
                 <th>사내 연락처</th>
-                <td><input type="text" class="form-control" id="empTel" name="empTel" th:value="${employeeDTO.empTel}"></td>
+                <td>
+                    <input type="text" class="form-control" id="empTel" name="empTel" th:value="${employeeDTO.empTel}">
+                </td>
             </tr>
             <tr>
                 <th>개인 연락처</th>
-                <td><input type="text" class="form-control" id="userTel" name="userTel" th:value="${employeeDTO.userTel}"></td>
+                <td>
+                    <input type="text" class="form-control" id="userTel" name="userTel" th:value="${employeeDTO.userTel}">
+                </td>
             </tr>
             <tr>
                 <th>사내 메일 주소</th>
@@ -105,7 +109,9 @@
             </tr>
             <tr>
                 <th>개인 메일 주소</th>
-                <td><input type="text" class="form-control" id="userEmail" name="userEmail" th:value="${employeeDTO.userEmail}"></td>
+                <td>
+                    <input type="text" class="form-control" id="userEmail" name="userEmail" th:value="${employeeDTO.userEmail}">
+                </td>
             </tr>
             <tr>
                 <th>사내 마일리지</th>
@@ -116,7 +122,9 @@
                 <td th:text="${employeeDTO.empNo}"></td>
             </tr>
         </table>
+
         <button type="submit" class="btn">수정 완료</button>
+
     </form>
 </div>
 </body>

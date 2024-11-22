@@ -130,8 +130,9 @@
     <h2 class="text-center mb-4">근태 현황</h2>
     <div>
         <table class="table table-header table-striped">
-            <thead>
-
+            <thead th:object="${employeeDTO}">
+            <input type="hidden" th:value="*{id}">
+            <p th:text="*{empName}">님의 근태 현황</p>
             </thead>
             <tbody>
 
@@ -143,44 +144,30 @@
         <h2>월간 근무 현황</h2>
 
         <button>연장근무신청</button>
+
         <button>목록 다운로드</button>
     </div>
 
     <div class="summary">
         <div>
             <h3>이번주 누적</h3>
-            <p>
-            <!--<span th:if="${attendanceWeekTime.attDuration < 1 ? 0 : attendanceWeekTime.attDuration}"></span>시간1-->
-                <span th:text="${#numbers.formatDecimal(attendanceWeekTime.attDuration / 60, 2, 0)}"></span>시간
-                <span th:text="${attendanceWeekTime.attDuration} % 60"></span>분
-            </p>
+            <p th:text="${weekWorkTime.attDuration}"></p>
         </div>
         <div>
             <h3>이번주 연장 근무 시간</h3>
-            <p>
-                <span th:text="${#numbers.formatDecimal(attendanceWeekTime.attOverDuration / 60, 2, 0)}"></span>시간
-                <span th:text="${attendanceWeekTime.attOverDuration} % 60"></span>분
-            </p>
+            <p th:text="${weekWorkTime.attOverDuration}"></p>
         </div>
         <div>
             <h3>이번주 잔여 근무 시간</h3>
-            <p>
-                <span th:text="${remainToWeekTime}"></span>시간
-            </p>
+            <p th:text="${remainWorkTime}"></p>
         </div>
         <div>
             <h3>이번달 정규 근무 시간</h3>
-            <p>
-                <span th:text="${#numbers.formatDecimal(attendanceWorkTime.attDuration / 60, 2, 0)}"></span>시간
-                <span th:text="${attendanceWorkTime.attDuration} % 60"></span>분
-            </p>
+            <p th:text="${monthWorkTime.attDuration}"></p>
         </div>
         <div>
             <h3>이번달 연장 근무 시간</h3>
-            <p>
-                <span th:text="${#numbers.formatDecimal(attendanceWorkTime.attOverDuration / 60, 2, 0)}"></span>시간
-                <span th:text="${attendanceWorkTime.attOverDuration} % 60"></span>분
-            </p>
+            <p th:text="${monthWorkTime.attOverDuration}"></p>
         </div>
     </div>
 

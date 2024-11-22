@@ -135,12 +135,14 @@
                     data.forEach(todo => {
                         calendar.addEvent({
                             id: todo.id,
+                            todoType: todo.todoType,
                             title: todo.todoTitle,
                             start: todo.todoStartDate,
                             end: todo.todoEndDate,
                             description: todo.todoContent,
                             extendedProps: {
-                                description: todo.todoContent
+                                description: todo.todoContent,
+                                destination: todo.todoType
                             }
                         });
                     });
@@ -155,6 +157,7 @@
             document.getElementById('addEventForm').addEventListener('submit', function (e) {
                 e.preventDefault();
                 var id = document.getElementById('data-id').value;
+                var todoType = document.getElementById('todoType').value;
                 var todoTitle = document.getElementById('todoTitle').value;
                 var todoStartDate = document.getElementById('todoStartDate').value;
                 var todoEndDate = document.getElementById('todoEndDate').value;
@@ -163,7 +166,7 @@
                 var eventData = {
                     id: id,
                     todoTitle: todoTitle,
-                    // todoType: 'calendar',
+                    todoType: todoType,
                     todoContent: todoContent,
                     // todoStatus: 'scheduled',
                     todoStartDate: todoStartDate,
@@ -183,6 +186,7 @@
                         console.log('Event added:', data);
                         calendar.addEvent({
                             id: data.id,
+                            todoType: data.todoType,
                             title: data.todoTitle,
                             start: data.todoStartDate,
                             end: data.todoEndDate,
@@ -229,9 +233,14 @@
         <div>
             <h3>일정 추가</h3>
             <form id="addEventForm" th:object="${todoDTO}">
-
-                <label for="id">일정번호</label>
                 <input type="hidden" id="id" name="todoId">
+
+                <label for="todoType">일정 종류</label>
+                <select name="todoType" id="todoType">
+                    <option value="meeting">회의</option>
+                    <option value="trip">출장</option>
+                    <option value="vacation">휴가</option>
+                </select>
 
                 <label for="employee">사원 번호:</label>
                 <input type="text" id="employee" name="employee" required>

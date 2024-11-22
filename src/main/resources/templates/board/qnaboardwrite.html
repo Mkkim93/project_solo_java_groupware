@@ -80,16 +80,24 @@
 <div class="layout">
     <h2>건의게시판 글 등록</h2>
     <form th:action="@{/board/qnaboardwrite}" th:object="${qnABoardDTO}" method="post">
+
+        <label for="boardTitle"></label>
         <input type="text" id="boardTitle" th:field="*{boardTitle}" placeholder="제목" required>
+
+        <label for="boardContent"></label>
         <textarea id="boardContent" th:field="*{boardContent}" placeholder="내용" required></textarea>
+
         <label>
-            <input class="form-check" type="checkbox" id="secretCheckBox" th:value="*{}" th:field="*{QBoardIsSecret}">
             비밀글 선택
+            <input class="form-check" type="checkbox" id="secretCheckBox" th:value="*{boardPass}" th:field="*{boardSecret}">
         </label>
+
         <div class="input-group" id="passwordGroup">
-            <input type="password" id="QBoardPass" th:field="*{QBoardPass}" placeholder="비밀번호">
+            <input type="password" id="QBoardPass" th:field="*{boardPass}" placeholder="비밀번호">
         </div>
+
         <button type="submit">작성하기</button>
+
     </form>
 </div>
 

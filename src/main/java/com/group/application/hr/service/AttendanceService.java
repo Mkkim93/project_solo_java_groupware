@@ -160,7 +160,8 @@ public class AttendanceService {
         Integer month = attendanceDTO.getAttDate().getMonthValue();
         Integer year = attendanceDTO.getAttDate().getYear();
         // TODO 사원의 월 근무시간 총합
-        return attendanceRepository.getAttendanceByOfMonthDuration(attendanceDTO.getEmployee(), year, month);
+        return attendanceRepository.getAttendanceByOfMonthDuration(
+                attendanceDTO.getEmployee(), year, month);
     }
 
     // 주말을 제외한 남은 근무 시간 계산 로직

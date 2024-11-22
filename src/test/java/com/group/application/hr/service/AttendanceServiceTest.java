@@ -60,11 +60,17 @@ class AttendanceServiceTest {
     void findById() {
         AttendanceDTO attendanceDTO = new AttendanceDTO();
         attendanceDTO.setId(1);
-        Attendance attendance = attendanceRepository.findById(attendanceDTO.getId()).get();
+        Attendance attendance = attendanceRepository.findById(attendanceDTO.getEmployee()).get();
         // attendanceService.attOn(attendanceDTO);
         System.out.println("attendance.getId() = " + attendance.getId());
         System.out.println("attendance.getEmployee() = " + attendance.getEmployee());
         System.out.println("attendance.getAttOn() = " + attendance.getAttOn());
+    }
+
+    @Test
+    @DisplayName("사원 정보로 근태 정보 ID 확인")
+    void findByIdGetEmployeeAttId() {
+
     }
 
     @Test
@@ -143,4 +149,43 @@ class AttendanceServiceTest {
         System.out.println("attendanceByOfWeekInfo.getAttLeave() = " + attendanceByOfWeekInfo.getAttLeave());
     }
 
+    @Test
+    @DisplayName("임시 테스트 근태 상세 현황 오류 원인 찾기")
+    void attendanceMonthServiceLogic() {
+        AttendanceDTO attendanceDTO = new AttendanceDTO();
+        attendanceDTO.setEmployee(1);
+        attendanceDTO.setAttDate(LocalDate.now());
+        AttendanceDTO byWeekWorkTime = attendanceService.findByWeekOfMonthLogic(attendanceDTO);
+        System.out.println("byWeekWorkTime.getAttDate() = " + byWeekWorkTime.getAttDate());
+        System.out.println("byWeekWorkTime.getEmployee() = " + byWeekWorkTime.getEmployee());
+        System.out.println("byWeekWorkTime.getId() = " + byWeekWorkTime.getId());
+    }
+
+    @Test
+    @DisplayName("이번달 근무 시간 총합")
+    void findByMonthWorkTimeSum() {
+        AttendanceDTO attendanceDTO = new AttendanceDTO();
+        attendanceDTO.setEmployee(1);
+        attendanceDTO.setAttDate(LocalDate.now());
+        AttendanceDTO byMonthDurationSum = attendanceService.findByMonthDurationSum(attendanceDTO);
+        System.out.println("byMonthDurationSum.getAttDuration() = " + byMonthDurationSum.getAttDuration());
+    }
+
+    @Test
+    @DisplayName("이번주 잔여 근무 시간 합계")
+    void findByWeekWorkTimeRemain() {
+        AttendanceDTO attendanceDTO = new AttendanceDTO();
+        attendanceDTO.setEmployee(1);
+        attendanceDTO.setAttDate(LocalDate.now());
+        attendanceService.remainingWorkHoursToWeek(attendanceDTO);
+    }
+
+    @Test
+    @DisplayName("이번주 누적 근무시간 and 연장 근무 시간")
+    void findByWeekWorkTimeDurationAndOverDuration() {
+        AttendanceDTO attendanceDTO = new AttendanceDTO();
+        attendanceDTO.setEmployee(1);
+        attendanceDTO.setAttDate(LocalDate.now());
+        attendanceService.findByWeekOfMonthLogic(attendanceDTO);
+    }
 }

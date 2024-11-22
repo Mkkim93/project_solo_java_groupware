@@ -43,13 +43,17 @@ public class TodoController {
     public String todoUpdateWriting(@PathVariable("id") Integer id,
                                     @ModelAttribute TodoDTO todoDTO) {
         TodoDTO todoTemp = todoService.findByTodoId(id);
+        todoTemp.setEmployee(1); // TODO jwt
+
+        todoTemp.setTodoType(todoDTO.getTodoType());
         todoTemp.setTodoTitle(todoDTO.getTodoTitle());
         todoTemp.setTodoContent(todoDTO.getTodoContent());
         todoTemp.setTodoStartDate(todoDTO.getTodoStartDate());
         todoTemp.setTodoEndDate(todoDTO.getTodoEndDate());
         todoTemp.setTodoUpdate(LocalDateTime.now());
-        todoTemp.setEmployee(1);
+
         todoService.updateTodo(todoTemp);
+
         return "redirect:/todo/detail";
     }
 }

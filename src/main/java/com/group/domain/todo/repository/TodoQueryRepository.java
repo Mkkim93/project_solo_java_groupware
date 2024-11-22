@@ -16,7 +16,6 @@ public class TodoQueryRepository {
 
     private final EntityManager em;
 
-
     public TodoDTO todoSave(TodoDTO todoDTO) {
         Integer employee = todoDTO.getEmployee();
         Employee setEmpId = new Employee();

@@ -10,8 +10,12 @@
     <form th:action="@{/board/qnaboardmodify/update/{id}(id=${qnABoardDTO.id})}"
           th:object="${qnABoardDTO}" method="post">
         <input type="hidden" th:value="*{id}" />
-        <input type="text" name="boardTitle" th:field="*{boardTitle}" placeholder="제목" required/>
-        <textarea name="boardContent" th:field="*{boardContent}" placeholder="내용" required></textarea>
+
+        <label for="boardTitle"></label>
+        <input type="text" id="boardTitle" name="boardTitle" th:field="*{boardTitle}" placeholder="제목" required/>
+
+        <label for="boardContent"></label>
+        <textarea id="boardContent" name="boardContent" th:field="*{boardContent}" placeholder="내용" required></textarea>
 
         <button type="submit">게시글 수정</button>
     </form>

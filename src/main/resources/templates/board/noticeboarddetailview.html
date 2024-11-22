@@ -81,10 +81,13 @@
 <!-- 댓글 작성 부분 -->
 <div id="comment-write">
     <input type="number" name="empId" id="empId" placeholder="작성자">
+
     <input type="hidden" name="empName" id="empName">
+
+    <label for="comContent"></label>
     <input type="text" name="comContent" id="comContent" placeholder="내용">
+
     <input type="hidden" name="comRegDate" id="comRegDate" placeholder="내용">
-    <!--<input type="hidden" id="id" th:value="${boardDTO.id}" />-->
 
     <button id="comment-write-btn" onclick="commentWrite()">댓글작성</button>
 </div>

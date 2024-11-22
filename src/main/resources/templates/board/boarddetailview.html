@@ -107,9 +107,14 @@
 
 <!-- 댓글 작성 부분 -->
 <div id="comment-write">
+    <label for="empId">회원 id 가 들어갈 부분</label> <!--jwt 구현 후, 제거-->
     <input type="number" name="empId" id="empId" placeholder="작성자">
+
     <input type="hidden" name="empName" id="empName">
-    <input type="text" name="comContent" id="comContent" placeholder="내용">
+
+    <label>댓글 내용</label>
+    <input type="text" name="comContent" id="comContent" placeholder="내용을 입력하세요">
+
     <input type="hidden" name="comRegDate" id="comRegDate" placeholder="내용">
 
     <button id="comment-write-btn" onclick="commentWrite()">댓글작성</button>

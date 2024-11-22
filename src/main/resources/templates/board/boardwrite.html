@@ -72,9 +72,15 @@
 <div class="layout">
     <h2>게시글 등록</h2>
     <form th:action="@{/board/boardwrite}" th:object="${boardDTO}" method="post">
-        <input type="text" th:field="*{boardTitle}" placeholder="제목" required>
-        <textarea th:field="*{boardContent}" placeholder="내용" required></textarea>
+
+        <label for="boardTitle"></label>
+        <input type="text" id="boardTitle" th:field="*{boardTitle}" placeholder="제목" required>
+
+        <label for="boardContent"></label>
+        <textarea id="boardContent" th:field="*{boardContent}" placeholder="내용" required></textarea>
+
         <button type="submit">작성</button>
+
     </form>
 </div>
 </body>
