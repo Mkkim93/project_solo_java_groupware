@@ -27,8 +27,8 @@
         <div class="profile-section">
             <form th:action="@{/hr/employeedetailview}" th:object="${employeeDTO}" method="get">
                 <h3 type="text" id="empName" name="empName" th:text="${employeeDTO.empName}"></h3>
+                <h3 type="text" id="empRank" name="empRank" th:text="${employeeDTO.empRank}"></h3>
                 <h3 type="text" id="deptName" name="deptName" th:text="${departmentDTO.deptName}"></h3>
-                <input type="hidden" th:value="${employeeDTO.id}" th:field="${employeeDTO.id}" />
                 <button type="submit" class="btn">나의 정보</button>
             </form>
         </div>

@@ -1,10 +1,13 @@
 package com.group.domain.hr.entity;
 
 import com.group.application.hr.dto.EmployeeDTO;
+import com.group.domain.mail.entity.MailBox;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -70,16 +73,16 @@ public class Employee {
     @JoinColumn(name = "dept_id") // 실제 db Employee 테이블에 있는 department 의 외래 키
     private Department department;
 
+    // MailBox 엔티티와의 다대다 관계 설정 (수신한 메일)
+    @ManyToMany(mappedBy = "receiverEmployees", fetch = FetchType.LAZY)
+    private List<MailBox> receivedMailBoxes = new ArrayList<>();
+
+    // MailBox 엔티티와의 일대다 관계 설정 (보낸 메일)
+    @OneToMany(mappedBy = "senderEmployee", fetch = FetchType.LAZY)
+    private List<MailBox> sentMailBoxes = new ArrayList<>();
+
     // 사원 등록 시점에 입사일 생성
     @PrePersist void JoinDate() {
         this.empJoinDate = LocalDateTime.now();
-    }
-
-    // 사원 정보 수정 시 dto -> entity 변환
-    public Employee entityEmployee(EmployeeDTO employeeDTO) {
-        this.id = employeeDTO.getId();
-        this.userTel = employeeDTO.getUserTel();
-        this.userEmail = employeeDTO.getUserEmail();
-        return this;
     }
 }
