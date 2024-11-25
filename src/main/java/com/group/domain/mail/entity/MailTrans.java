@@ -20,7 +20,7 @@ public class MailTrans {
     /*
         메일의 송/수신 타입 지정 (ENUM : RECEIVE, SEND)
      */
-    @Enumerated(value = STRING)
+    @Enumerated(STRING)
     @Column(name = "transaction_type")
     private TransType transactionType;
 

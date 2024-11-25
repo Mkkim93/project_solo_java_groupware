@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>받은 메일함</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h2 class="text-center mb-4">받은 메일함</h2>
+    <div>
+        <table class="table table-header table-striped">
+            <thead>
+            <tr>
+                <th class="text-center">보낸 사람</th>
+                <th class="text-center">제목</th>
+                <th class="text-center">보낸 날짜</th>
+                <th class="text-center">보낸 사람 ID(PK)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- List<MailBoxDTO>를 mailBoxList로 처리 -->
+            <tr th:each="mailBoxDTO : ${mailBoxList}">
+                <td th:text="${mailBoxDTO.senderName}" class="text-center"></td>
+                <td th:text="${mailBoxDTO.mailTitle}" class="text-center"></td>
+                <!--<td th:text="${mailBoxDTO.mailContent}" class="text-center"></td>-->
+                <td th:text="${mailBoxDTO.senderDate}" class="text-center"></td>
+                <td th:text="${mailBoxDTO.senderEmployeeId}" class="text-center"></td> <!--임시 테스트용-->
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const selectAllCheckbox = document.getElementById("selectAll");
+        const individualCheckboxes = document.querySelectorAll(".mailCheckbox");
+
+        // 전체 선택/해제 체크박스 동작
+        selectAllCheckbox.addEventListener("change", function () {
+            const isChecked = selectAllCheckbox.checked;
+            individualCheckboxes.forEach(checkbox => {
+                checkbox.checked = isChecked;
+            });
+        });
+
+        // 개별 체크박스 상태 변경 시, 전체 선택 상태 업데이트
+        individualCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener("change", function () {
+                if (!checkbox.checked) {
+                    selectAllCheckbox.checked = false;
+                } else {
+                    // 모든 체크박스가 선택된 경우 "전체 선택"도 체크
+                    const allChecked = Array.from(individualCheckboxes).every(cb => cb.checked);
+                    selectAllCheckbox.checked = allChecked;
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

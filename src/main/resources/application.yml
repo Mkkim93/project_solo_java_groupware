@@ -1,4 +1,15 @@
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: "king0031443@gmail.com"
+    password: "@@102828aa"
+    properties:
+      mail:
+        smtp:
+          auth:true
+        starttls:
+          enable:true
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
@@ -22,3 +33,5 @@ logging:
   level:
     org.hibernate.SQL: debug
     # org.hibernate.orm.jdbc.bind: trace
+
+

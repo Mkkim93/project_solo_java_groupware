@@ -27,6 +27,6 @@ public class MailFile {
     @Column(name = "filesize")
     private Long fileSize;
 
-    @ManyToMany(fetch = LAZY, mappedBy = "mailFile")
+    @ManyToMany(fetch = LAZY, mappedBy = "mailFiles")
     private List<MailBox> mailBox = new ArrayList<>();
 }

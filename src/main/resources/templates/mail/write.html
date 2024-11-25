@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Email Form</title>
+</head>
+<body>
+<h1>Send Email</h1>
+<!--<form th:action="@{/email/send}" method="post">-->
+    <div>
+        <label for="to">보내는 메일 주소:</label>
+        <input type="email" id="to" name="to" required>
+    </div>
+    <div>
+        <label for="subject">메일 제목:</label>
+        <input type="text" id="subject" name="subject" required>
+    </div>
+    <div>
+        <label for="message">내용:</label>
+        <textarea id="message" name="message" rows="5" required></textarea>
+    </div>
+    <button type="submit">Send Email</button>
+
+</body>
+</html>

@@ -30,6 +30,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
 	implementation "org.springframework.boot:spring-boot-starter-security"
+
+	// JavaMailSender test
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
 	implementation 'io.jsonwebtoken:jjwt:0.12.3'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
@@ -48,6 +52,8 @@ dependencies {
 	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+
 
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
