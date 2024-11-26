@@ -55,7 +55,7 @@ class MailServiceTest {
     @Test
     @DisplayName("step 1 : MailBox 에 메일 작성")
     void writeMailBox() {
-        MailBoxDTO mailBoxDTO = new MailBoxDTO("메일 제목7", "메일 내용7", 1);
+        MailBoxDTO mailBoxDTO = new MailBoxDTO("메일 제목12", "메일 내용12", 1, "alsrb362@daum.net");
         MailBoxDTO result = mailService.mailWrite(mailBoxDTO);
         assertThat(mailBoxDTO).isEqualTo(result);
     }
@@ -71,4 +71,5 @@ class MailServiceTest {
     void writeMailTrans() {
         //TODO
     }
+
 }

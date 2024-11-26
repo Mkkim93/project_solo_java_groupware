@@ -15,6 +15,4 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
     @Query("select e from Employee e where e.empEmail = :empEmail")
     Employee findByEmpEmail(@Param("empEmail") String empEmail);
 
-
-
 }

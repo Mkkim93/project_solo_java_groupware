@@ -44,7 +44,7 @@ public class MailBox {
     @JoinColumn(name = "sender_emp_id")
     private Employee senderEmployee;
 
-    @ManyToMany(fetch = EAGER)
+    @ManyToMany(fetch = LAZY)
     @JoinTable(
             name = "mailrecvstore",
             joinColumns = @JoinColumn(name = "mailbox_id"),
@@ -60,8 +60,11 @@ public class MailBox {
     )
     private List<MailFile> mailFiles = new ArrayList<>();
 
-    @PrePersist void createDate() {
+    @PrePersist void createMail() {
         this.mailDate = LocalDateTime.now();
+        if (this.mailStatus == null) {
+            this.mailStatus = MailStatus.UNREAD;
+        }
     }
 
     @Builder

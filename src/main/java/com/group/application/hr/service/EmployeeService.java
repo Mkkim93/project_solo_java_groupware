@@ -9,6 +9,9 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * TODO EntityNotFoundException 처리 (컨트롤러 어드바이저에서 진행 ?)
+ */
 @Service
 public class EmployeeService {
 
@@ -48,6 +51,5 @@ public class EmployeeService {
     public DepartmentDTO findByIdDepartInfo(EmployeeDTO employeeDTO) {
         return employRepositoryImpl.findByEmpDepartInfo(employeeDTO.getId());
     }
-
 
 }

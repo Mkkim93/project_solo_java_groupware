@@ -19,11 +19,27 @@ public class MailBoxDTO {
     private Integer senderEmployeeId;
 
     private String senderName;
+    /*private String senderEmail;*/
+    private String receiverEmail;
 
-    public MailBoxDTO(String mailTitle, String mailContent, Integer senderEmployeeId, String senderName, LocalDateTime senderDate) {
+
+    public MailBoxDTO(String mailTitle, String mailContent,
+                      Integer senderEmployeeId, String senderName,LocalDateTime senderDate) {
         this.mailTitle = mailTitle;
         this.mailContent = mailContent;
         this.senderEmployeeId = senderEmployeeId;
+        this.senderName = senderName;
+        this.senderDate = senderDate;
+    }
+
+    @QueryProjection
+    public MailBoxDTO(Integer id, Integer senderEmployeeId,
+                      String mailTitle, String mailContent, String senderName, LocalDateTime senderDate) {
+        this.id = id;
+        this.senderEmployeeId = senderEmployeeId;
+
+        this.mailTitle = mailTitle;
+        this.mailContent = mailContent;
         this.senderName = senderName;
         this.senderDate = senderDate;
     }
@@ -34,10 +50,11 @@ public class MailBoxDTO {
      * @param mailContent
      * @param senderEmployeeId
      */
-    public MailBoxDTO(String mailTitle, String mailContent, Integer senderEmployeeId) {
+    public MailBoxDTO(String mailTitle, String mailContent, Integer senderEmployeeId, String receiverEmail) {
         this.mailTitle = mailTitle;
         this.mailContent = mailContent;
         this.senderEmployeeId = senderEmployeeId;
+        this.receiverEmail = receiverEmail;
     }
 
     public MailBoxDTO toDTO(MailBox mailBox) {

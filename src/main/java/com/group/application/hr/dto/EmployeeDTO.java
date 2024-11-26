@@ -69,4 +69,11 @@ public class EmployeeDTO {
         this.empTel = employee.getEmpTel();
         return this;
     }
+
+    public EmployeeDTO setDTO(Employee employee) {
+        this.id = employee.getId();
+        this.empEmail = employee.getEmpEmail();
+        return this;
+    }
+
 }
