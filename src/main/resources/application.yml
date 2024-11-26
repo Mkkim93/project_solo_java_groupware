@@ -2,8 +2,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: "king0031443@gmail.com"
-    password: "@@102828aa"
+    username:
+    password: 
     properties:
       mail:
         smtp:
@@ -16,8 +16,8 @@ spring:
 
   datasource:
     url: jdbc:mysql://localhost:3306/group_test
-    username: test
-    password: java
+    username: 
+    password: 
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
