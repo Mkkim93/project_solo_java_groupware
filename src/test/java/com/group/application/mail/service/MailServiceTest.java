@@ -72,4 +72,12 @@ class MailServiceTest {
         //TODO
     }
 
+    @Test
+    @DisplayName("메일 상세 페이지 조회 시 id 값 (service)")
+    void mailDetailId() {
+        Integer id = 9;
+        MailBoxDTO byId = mailService.findByMailDetail(id);
+        System.out.println("byId.getId() = " + byId.getId());
+    }
+
 }

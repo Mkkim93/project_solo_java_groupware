@@ -9,4 +9,6 @@ import java.util.List;
 public interface MailRepositoryCustom {
 
     MailBoxDTO findByAll(MailBoxDTO mailBoxDTO);
+
+    MailBoxDTO findByOne(Integer id);
 }

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>메일 상세 페이지</title>
+</head>
+<body>
+<div class="container">
+    <strong>mailBoxDTO.id:</strong> <span th:text="${mailBoxDTO.id}"></span><br/>
+    <h1 th:text="${mailBoxDTO.mailTitle}">제목입니다.</h1>
+    <p class="author" th:text="'보내는 사람: ' + ${mailBoxDTO.senderName}">작성자 정보</p>
+    <p th:text="${mailBoxDTO.mailContent}">여기에 게시글 내용이 표시됩니다.</p>
+    <div class="actions">
+        <!--<a class="btn" th:href="@{/board/boardmodify/{id}(id = ${boardDTO.id})}">수정</a>
+        <a class="btn delete" th:href="@{/board/boarddetailview/delete/{id}(id=${boardDTO.id})}">삭제</a>-->
+    </div>
+</div>
+</body>
+</html>

@@ -7,6 +7,7 @@ import com.group.domain.hr.repository.EmployeeRepository;
 import com.group.domain.mail.entity.MailBox;
 import com.group.domain.mail.repository.MailRepository;
 import com.group.domain.mail.repository.MailRepositoryImpl;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,11 +30,11 @@ public class MailService {
         List<Object[]> receivedMails = mailRepository.findReceivedMails(employeeDTO.getId());
        return receivedMails.stream()
                 .map(receivedMail -> new MailBoxDTO( // parameter 순서 맞춰서 바인딩
-                        (String) receivedMail [0], // 메일 제목
+                        (Integer) receivedMail [0], // 메일 ID
                         (String) receivedMail [1], // 메일 내용
                         (Integer) receivedMail[2], // 보낸 사람 ID
                         (String) receivedMail [3],
-                        ((Timestamp) receivedMail[4]).toLocalDateTime() // sql 의 TimeStamp 타입과 자바의 LocalDate 매핑
+                        ((Timestamp) receivedMail[4]).toLocalDateTime() // sql 의 TimeStamp 타입과 자바의 LocalDateTime 매핑(캐스팅)
                 ))
                 .toList();
     }
@@ -80,6 +81,13 @@ public class MailService {
         return mailRepositoryImpl.findByAll(mailBoxDTO);
     }
 
+    /**
+     * 메일 상세 페이지
+     */
+    public MailBoxDTO findByMailDetail(Integer id) {
+        MailBox mailbox = mailRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("no id"));
+        return mailRepositoryImpl.findByOne(mailbox.getId());
+    }
 
 
     public void toMeSaveMail(MailBoxDTO mailBoxDTO) {

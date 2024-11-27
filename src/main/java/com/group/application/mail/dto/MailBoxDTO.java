@@ -23,10 +23,10 @@ public class MailBoxDTO {
     private String receiverEmail;
 
 
-    public MailBoxDTO(String mailTitle, String mailContent,
+    public MailBoxDTO(Integer id, String mailTitle,
                       Integer senderEmployeeId, String senderName,LocalDateTime senderDate) {
+        this.id = id;
         this.mailTitle = mailTitle;
-        this.mailContent = mailContent;
         this.senderEmployeeId = senderEmployeeId;
         this.senderName = senderName;
         this.senderDate = senderDate;

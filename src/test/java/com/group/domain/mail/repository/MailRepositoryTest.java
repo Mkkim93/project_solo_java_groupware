@@ -40,7 +40,8 @@ class MailRepositoryTest {
     void findAllWriter() {
         MailBoxDTO mailBoxDTO = new MailBoxDTO();
         mailBoxDTO.setSenderEmployeeId(1);
-        mailRepositoryImpl.findByAll(mailBoxDTO);
+        MailBoxDTO byAll = mailRepositoryImpl.findByAll(mailBoxDTO);
+        System.out.println("byAll = " + byAll.getId());
     }
 
     @Test
@@ -59,5 +60,17 @@ class MailRepositoryTest {
         Employee byEmpEmail = employeeRepository.findByEmpEmail(mailBoxDTO.getReceiverEmail());
         System.out.println(byEmpEmail.getEmpEmail());
     }
+
+    @Test
+    @DisplayName("메일 상세 페이지 조회 시 id 값 (repository)")
+    void mailDetailId() {
+        Integer id = 9;
+        MailBoxDTO byOne = mailRepositoryImpl.findByOne(id);
+        System.out.println("byOne = " + byOne.getId());
+        System.out.println("byOne.getMailTitle() = " + byOne.getMailTitle());
+        System.out.println("byOne.getMailContent() = " + byOne.getMailContent());
+    }
+
+
 
 }

@@ -12,8 +12,8 @@ import java.util.List;
 @Transactional
 public interface MailRepository extends JpaRepository<MailBox, Integer> {
 
-    @Query(value = "SELECT mb.mail_title AS mailTitle, " +
-            "mb.mail_content AS mailContent, " +
+    @Query(value = "SELECT mb.id AS id, " +
+            "mb.mail_title AS mailTitle, " +
             "mb.sender_emp_id AS senderEmpId, " +
             "e.emp_name AS senderName, " +
             "mb.mail_date AS senderDate " +

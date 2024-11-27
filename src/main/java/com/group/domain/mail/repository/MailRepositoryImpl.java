@@ -38,4 +38,15 @@ public class MailRepositoryImpl extends QuerydslRepositorySupport implements Mai
                 .where(mailBox.senderEmployee.id.eq(mailBoxDTO.getSenderEmployeeId()))
                 .fetchFirst();
     }
+
+    @Override
+    public MailBoxDTO findByOne(Integer id) {
+
+        return jpaQueryFactory.select(new QMailBoxDTO(
+                mailBox.id, mailBox.senderEmployee.id,
+                mailBox.mailTitle, mailBox.mailContent, employee.empName, mailBox.mailDate))
+                .from(mailBox)
+                .join(mailBox.senderEmployee, employee)
+                .where(mailBox.id.eq(id)).fetchOne();
+    }
 }

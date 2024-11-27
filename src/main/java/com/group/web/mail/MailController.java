@@ -8,10 +8,7 @@ import com.group.domain.mail.entity.MailBox;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,8 +29,8 @@ public class MailController {
     }
 
     @GetMapping("/write")
-    public String writeMail(Model model, MailBoxDTO mailBoxDTO) {
-        model.addAttribute("mailBoxDTO", mailService.findByAllDTO(mailBoxDTO));
+    public String writeMail(Model model) {
+        model.addAttribute("mailBoxDTO", new MailBoxDTO());
         return "/mail/write";
     }
 
@@ -45,7 +42,7 @@ public class MailController {
 
     @GetMapping("/tome")
     public String toMeWriteMail(Model model, MailBoxDTO mailBoxDTO) {
-        model.addAttribute("mailBoxDTO", mailService.findByAllDTO(mailBoxDTO));
+        model.addAttribute("mailBoxDTO", new MailBoxDTO());
         mailBoxDTO.setSenderEmployeeId(1); // TODO jwt
         String myEmpMail = mailService.findByEmpMail(mailBoxDTO.getSenderEmployeeId());
         model.addAttribute("empMail", myEmpMail);
@@ -59,5 +56,11 @@ public class MailController {
         model.addAttribute("empMail", myEmpMail);
         model.addAttribute("mailBoxDTO", mailService.mailWrite(mailBoxDTO));
         return "redirect:/mail/list";
+    }
+
+    @GetMapping("/detail")
+    public String detail(Model model, @RequestParam("id") Integer id) {
+        model.addAttribute("mailBoxDTO", mailService.findByMailDetail(id));
+        return "/mail/detail";
     }
 }
