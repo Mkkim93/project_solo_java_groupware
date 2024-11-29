@@ -22,7 +22,7 @@ public class QCommentBoard extends EntityPathBase<CommentBoard> {
 
     public static final QCommentBoard commentBoard = new QCommentBoard("commentBoard");
 
-    public final QBoard boardId;
+    public final QBoard board;
 
     public final StringPath comContent = createString("comContent");
 
@@ -30,7 +30,7 @@ public class QCommentBoard extends EntityPathBase<CommentBoard> {
 
     public final DateTimePath<java.time.LocalDateTime> comUpdate = createDateTime("comUpdate", java.time.LocalDateTime.class);
 
-    public final com.group.domain.hr.entity.QEmployee empId;
+    public final com.group.domain.hr.entity.QEmployee employee;
 
     public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
@@ -52,8 +52,8 @@ public class QCommentBoard extends EntityPathBase<CommentBoard> {
 
     public QCommentBoard(Class<? extends CommentBoard> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.boardId = inits.isInitialized("boardId") ? new QBoard(forProperty("boardId"), inits.get("boardId")) : null;
-        this.empId = inits.isInitialized("empId") ? new com.group.domain.hr.entity.QEmployee(forProperty("empId"), inits.get("empId")) : null;
+        this.board = inits.isInitialized("board") ? new QBoard(forProperty("board"), inits.get("board")) : null;
+        this.employee = inits.isInitialized("employee") ? new com.group.domain.hr.entity.QEmployee(forProperty("employee"), inits.get("employee")) : null;
     }
 
 }

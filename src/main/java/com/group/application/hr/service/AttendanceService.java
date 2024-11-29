@@ -7,6 +7,7 @@ import com.group.domain.hr.entity.Employee;
 import com.group.domain.hr.repository.AttendanceRepository;
 import com.group.domain.hr.repository.EmployRepositoryImpl;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,9 +37,9 @@ public class AttendanceService {
 
     @Autowired
     public AttendanceService(AttendanceRepository attendanceRepository,
-                             EmployRepositoryImpl employRepository) {
+                             EmployRepositoryImpl employRepositoryImpl) {
         this.attendanceRepository = attendanceRepository;
-        this.employRepositoryImpl = employRepository;
+        this.employRepositoryImpl = employRepositoryImpl;
     }
 
     public AttendanceDTO findByIdAttInfo(EmployeeDTO employeeDTO) {
@@ -46,21 +47,21 @@ public class AttendanceService {
     }
 
     // 출근 시간 로직
-    public AttendanceDTO attOn(AttendanceDTO attendanceDTO) {
+    public AttendanceDTO workIn(AttendanceDTO attendanceDTO) {
 
         LocalDate today = LocalDate.now(); // 오늘 날짜를 가져온다
         LocalDateTime startOfToday = today.atStartOfDay(); // 오늘의 시작 시간(00:00:00) 을 설정
         LocalDateTime endOfToday = today.atTime(LocalTime.MAX); // 오늘의 종료 시간(23:59:59)을 설정
 
         // employee id 를 기준으로 기존 출근 기록 조회 (오늘의 시작시간 between 종료시간 사이 기록 조회)
-        Optional<Attendance> existingAttendance = attendanceRepository.findByEmployeeIdAndAttOnBetween(
+        Optional<Attendance> existAtt = attendanceRepository.findByEmployeeIdAndAttOnBetween(
                 attendanceDTO.getEmployee(), startOfToday, endOfToday
         );
 
         Attendance attendance;
-        if (existingAttendance.isPresent()) { // Optional 객체의 값이 있으면 true, 없으면 false
+        if (existAtt.isPresent()) { // Optional 객체의 값이 있으면 true, 없으면 false
             // TODO 뷰에서 출근기록이 있으면 alert("이미 출근 상태입니다") 또는 버튼 display:none; 으로 바꿀지 고민
-            attendance = existingAttendance.get();
+            attendance = existAtt.get();
             attendance.setAttOn(LocalDateTime.now());
         } else { // 값이 없으면 저장
             attendance = Attendance.builder()
@@ -72,16 +73,16 @@ public class AttendanceService {
                     .build();
         }
 
-        Attendance savedAttendance = attendanceRepository.save(attendance);
+        Attendance savedAtt = attendanceRepository.save(attendance);
 
         if (attendance.getAttOn().isAfter(checkedTime)) { // 출근 시간 ex) 09시 00분 보다 늦으면 지각 count 증가
             attendanceRepository.updatePerceptionCount(attendance.getId());
         }
-        return attendanceDTO.converterDTO(savedAttendance);
+        return attendanceDTO.toDto(savedAtt);
     }
 
     // 퇴근 시간 로직
-    public AttendanceDTO attOff(AttendanceDTO attendanceDTO) {
+    public AttendanceDTO workOut(AttendanceDTO attendanceDTO) {
 
         LocalDate today = LocalDate.now();
         LocalDateTime startOfToday = today.atStartOfDay();
@@ -100,10 +101,10 @@ public class AttendanceService {
             attendance.setEmployee(Employee.builder()
                             .id(attendanceDTO.getEmployee())
                     .build());
-            Attendance save = attendanceRepository.save(attendance);
-            savedDurationTime(save);
+            Attendance savedAtt = attendanceRepository.save(attendance);
+            savedDurationTime(savedAtt);
             log.info("existingAttendance.getId={}", attendance.getId());
-            return attendanceDTO.converterDTO(save);
+            return attendanceDTO.toDto(savedAtt);
         }
     }
 

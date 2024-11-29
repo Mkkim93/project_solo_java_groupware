@@ -21,11 +21,11 @@ public class NoticeBoard {
 
     @ManyToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = "board_id")
-    private Board boardId;
+    private Board board;
 
     @Builder
-    public NoticeBoard(Board boardId, Integer id) {
+    public NoticeBoard(Board board, Integer id) {
         this.id = id;
-        this.boardId = boardId;
+        this.board = board;
     }
 }

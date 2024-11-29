@@ -20,6 +20,7 @@ public class QnABoardDTO {
     private String boardSecret;
     private String boardPass;
     private Integer boardId;
+    private Integer employee;
 
     @QueryProjection
     public QnABoardDTO(Integer id,
@@ -42,10 +43,5 @@ public class QnABoardDTO {
         this.boardViewCount = boardViewCount;
         this.isDeleted = isDeleted;
         this.boardSecret = boardSecret;
-    }
-
-    public QnABoardDTO(Integer id, String boardPass) {
-        this.id = id;
-        this.boardPass = boardPass;
     }
 }

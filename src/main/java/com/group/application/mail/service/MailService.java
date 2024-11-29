@@ -22,12 +22,9 @@ public class MailService {
     private final EmployeeRepository employeeRepository;
     private final MailRepositoryImpl mailRepositoryImpl;
 
-    public List<MailBoxDTO> findAllSendMailBox(EmployeeDTO employeeDTO) {
+    public List<MailBoxDTO> findAllBySendMail(EmployeeDTO dto) {
+        List<Object[]> receivedMails = mailRepository.findReceivedMails(dto.getId());
 
-        // TODO jwt 구현 시 변경
-        employeeDTO.setId(1);
-
-        List<Object[]> receivedMails = mailRepository.findReceivedMails(employeeDTO.getId());
        return receivedMails.stream()
                 .map(receivedMail -> new MailBoxDTO( // parameter 순서 맞춰서 바인딩
                         (Integer) receivedMail [0], // 메일 ID
@@ -39,7 +36,7 @@ public class MailService {
                 .toList();
     }
 
-    public MailBoxDTO mailWrite(MailBoxDTO mailBoxDTO) {
+    public MailBoxDTO write(MailBoxDTO mailBoxDTO) {
 
         // step1 : mailBox 에 데이터 저장
         MailBox mailBoxEntity = MailBox.builder()
@@ -54,8 +51,8 @@ public class MailService {
         MailBox result = mailRepository.save(mailBoxEntity);
 
         // step2 : mailrecvstore 에 데이터 저장
-        Integer empId = findByEmpMailToId(mailBoxDTO.getReceiverEmail());
-        mailRepository.insertMailRecvStore(result.getId(), empId);
+        Integer empId = findByEmpId(mailBoxDTO.getReceiverEmail());
+        mailRepository.saveReceiveStore(result.getId(), empId);
 
         return mailBoxDTO.toDTO(result);
     }
@@ -65,32 +62,23 @@ public class MailService {
         id 를 mailrecvstore 에 해당 mailbox pk 와 저장
         email 을 리턴하는 것이 아니라 email 로 조회한 회원의 pk 를 리턴
      */
-    public Integer findByEmpMailToId(String empMail) {
+    public Integer findByEmpId(String empMail) {
         return employeeRepository.findByEmpEmail(empMail).getId();
     }
 
     public String findByEmpMail(Integer empId) {
-        Employee employee = employeeRepository.findById(empId).get();
+        Employee employee = employeeRepository.findById(empId).get(); // TODO EXP
         EmployeeDTO employeeDTO = new EmployeeDTO();
-        employeeDTO.setDTO(employee);
+        employeeDTO.toDto(employee);
         return employeeDTO.getEmpEmail();
-    }
-
-    public MailBoxDTO findByAllDTO(MailBoxDTO mailBoxDTO) {
-        mailBoxDTO.setSenderEmployeeId(1); // TODO jwt 구현시 수정 현재 로그인된 id bind
-        return mailRepositoryImpl.findByAll(mailBoxDTO);
     }
 
     /**
      * 메일 상세 페이지
      */
-    public MailBoxDTO findByMailDetail(Integer id) {
-        MailBox mailbox = mailRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("no id"));
+    public MailBoxDTO detail(Integer id) {
+        MailBox mailbox = mailRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("no id"));
         return mailRepositoryImpl.findByOne(mailbox.getId());
-    }
-
-
-    public void toMeSaveMail(MailBoxDTO mailBoxDTO) {
-        // TODO
     }
 }

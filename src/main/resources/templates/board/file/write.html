@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>파일 게시글 작성폼</title>
+    <title>write</title>
 </head>
 <style>
     .layout {
@@ -25,7 +25,7 @@
 </style>
 <body>
     <div class="layout">
-        <form th:action="@{/board/fileboardwrite}" th:object="${fileBoardDTO}" method="post" enctype="multipart/form-data">
+        <form th:action="@{/board/file/write}" th:object="${fileBoardDto}" method="post" enctype="multipart/form-data">
 
             <label for="boardTitle"></label>
             <input type="text" id="boardTitle" th:field="*{boardTitle}">
@@ -37,7 +37,7 @@
                 <label for="file">첨부파일</label>
                 <input type="file" class="form-control-file" id="file" name="file" multiple>
 
-                <ul th:each="fileStore : ${fileStoreBoardDTO}">
+                <ul th:each="fileStore : ${fileStoreDto}">
                     <li>
                         <p type="hidden" th:value="${fileStore.id}" th:field="${fileStore.id}" />
                     </li>

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>자유 게시판 상세 페이지</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <title>detail</title>
     <style>
         body {
             font-family: 'Noto Sans', Arial, sans-serif;
@@ -69,31 +69,30 @@
     </style>
 </head>
 <body>
+
 <div class="container">
-    <input type="hidden" th:value="*{freeBoardDTO.id}" th:field="*{freeBoardDTO.id}" />
-    <p th:text="${freeBoardDTO.id}" style="display: none;">id</p>
+    <input type="hidden" th:value="${qnaBoardDto.id}" />
 
-    <h1 th:text="${freeBoardDTO.boardTitle}">제목입니다.</h1>
-
-    <p th:text="${freeBoardDTO.boardContent}">내용이 여기에 표시됩니다.</p>
-
-    <strong>freeBoardDTO.id:</strong> <span th:text="${freeBoardDTO.id}"></span><br/>
-    <strong>boardDTO.id:</strong> <span th:text="${boardDTO.id}"></span><br/>
-    <strong>freeBoardDTO.boardId:</strong> <span th:text="${freeBoardDTO.boardId}"></span><br/>
-    <strong>boardDTO.boardId:</strong> <span th:text="${boardDTO.boardId}"></span><br/>
+    <h1 th:text="${qnaBoardDto.boardTitle}">제목입니다.</h1>
+    <p th:text="${qnaBoardDto.boardContent}">내용이 여기에 표시됩니다.</p><br/>
+    <strong>boardDTO.id: </strong><span th:text="${boardDto.id}"></span><br/>
+    <strong>qnABoardDTO.id: </strong><span th:text="${qnaBoardDto.id}"></span><br/>
+    <strong>qnABoardDTO.boardPass: </strong><span th:text="${qnaBoardDto.boardPass}"></span><br/>
+    <strong>qnABoardDTO.empName: </strong><span th:text="${qnaBoardDto.empName}"></span><br/>
+    <strong>qnABoardDTO.boardId: </strong><span th:text="${qnaBoardDto.boardId}"></span><br/>
 
     <div class="actions">
-        <a class="btn" th:href="@{/board/freeboardmodify/{id}(id=${freeBoardDTO.id})}">수정</a>
-        <a class="btn delete" th:href="@{/board/freeboarddetailview/delete/{id}(id=${freeBoardDTO.id})}">삭제</a>
+        <a class="btn" th:href="@{/board/qna/modify/{id}(id=${qnaBoardDto.id})}">수정</a>
+        <a class="btn delete" th:href="@{/board/qna/detail/delete/{id}(id=${qnaBoardDto.id})}">삭제</a>
     </div>
 </div>
+
 <!-- 댓글 작성 부분 -->
 <div id="comment-write">
     <input type="number" name="empId" id="empId" placeholder="작성자">
     <input type="hidden" name="empName" id="empName">
     <input type="text" name="comContent" id="comContent" placeholder="내용">
     <input type="hidden" name="comRegDate" id="comRegDate" placeholder="내용">
-    <!--<input type="hidden" id="id" th:value="${boardDTO.id}" />-->
 
     <button id="comment-write-btn" onclick="commentWrite()">댓글작성</button>
 </div>
@@ -106,13 +105,17 @@
 <script inline="javascript">
     // 댓글 목록 로드 함수
     const loadComments = (page = 0) => {
-        const boardId = [[${boardDTO.id}]];
+        const boardId = [[${boardDto.id}]];
+        /*const boardPass = [[${qnABoardDTO.boardPass}]];*/
+        console.log(boardId)
+        /*console.log(boardPass)*/
         $.ajax({
             type: "GET",
             url: "/comment/list",
             dataType: 'json',
             data: {
                 boardId: boardId,
+                /*boardPass: boardPass,*/
                 page: page,
                 size: 10
             },
@@ -165,7 +168,7 @@
 
     // 댓글 작성 후 새로고침
     const commentWrite = () => {
-        const boardId = [[${boardDTO.id}]];
+        const boardId = [[${boardDto.id}]];
         const empId = document.getElementById("empId").value;
         const comContent = document.getElementById("comContent").value;
         const comRegDate = document.getElementById("comRegDate").value;

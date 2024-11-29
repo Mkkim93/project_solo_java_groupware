@@ -28,13 +28,13 @@
             </thead>
             <tbody>
             <!-- List<MailBoxDTO>를 mailBoxList로 처리 -->
-            <tr th:each="mailBoxDTO : ${mailBoxList}">
-                <input type="hidden" th:value="${mailBoxDTO.id}" class="text-center"></input>
-                <td th:text="${mailBoxDTO.senderName}" class="text-center"></td>
-                <td> <a th:text="${mailBoxDTO.mailTitle}" th:href="@{/mail/detail(id=${mailBoxDTO.id})}" class="text-center"></a></td>
+            <tr th:each="list : ${mailBoxList}">
+                <input type="hidden" th:value="${list.id}" class="text-center"></input>
+                <td th:text="${list.senderName}" class="text-center"></td>
+                <td> <a th:text="${list.mailTitle}" th:href="@{/mail/detail(id=${list.id})}" class="text-center"></a></td>
                 <!--<td th:text="${mailBoxDTO.mailContent}" class="text-center"></td>-->
-                <td th:text="${mailBoxDTO.senderDate}" class="text-center"></td>
-                <td th:text="${mailBoxDTO.senderEmployeeId}" class="text-center"></td> <!--임시 테스트용-->
+                <td th:text="${list.senderDate}" class="text-center"></td>
+                <td th:text="${list.senderEmployeeId}" class="text-center"></td> <!--임시 테스트용-->
             </tr>
             </tbody>
         </table>

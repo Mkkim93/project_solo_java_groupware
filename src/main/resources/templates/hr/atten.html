@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>근태현황</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f3f3f3;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h2 {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .summary {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .summary div {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #e9f4ff;
+            flex: 1;
+            margin: 0 5px;
+        }
+
+        .summary div h3 {
+            margin: 5px 0;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .summary div p {
+            display: inline;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .weeks {
+            margin-top: 20px;
+        }
+
+        .week {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .week-header {
+            background: #f7f7f7;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .week-content {
+            display: none;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-top: 1px solid #ddd;
+        }
+
+        .day-header span {
+            flex: 1;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .status-bar {
+            margin-top: 10px;
+            background: #e0e0e0;
+            height: 20px;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .status-bar .progress {
+            position: absolute;
+            left: 0;
+            height: 100%;
+            border-radius: 10px;
+            background-color: #4caf50;
+            width: 70%;
+            text-align: center;
+            color: white;
+            line-height: 20px;
+            font-size: 12px;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 class="text-center mb-4">근태 현황</h2>
+    <div>
+        <table class="table table-header table-striped">
+            <thead th:object="${employeeDTO}">
+            <input type="hidden" th:value="*{id}">
+            <p th:text="*{empName}">님의 근태 현황</p>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+
+        <div class="container">
+            <div class="header">
+                <h2>월간 근무 현황</h2>
+
+                <button>연장근무신청</button>
+
+                <button>목록 다운로드</button>
+            </div>
+
+            <div class="summary">
+                <div>
+                    <h3>이번주 누적</h3>
+                    <p th:text="${weekWorkTime.attDuration}"></p>
+                </div>
+                <div>
+                    <h3>이번주 연장 근무 시간</h3>
+                    <p th:text="${weekWorkTime.attOverDuration}"></p>
+                </div>
+                <div>
+                    <h3>이번주 잔여 근무 시간</h3>
+                    <p th:text="${remainWorkTime}"></p>
+                </div>
+                <div>
+                    <h3>이번달 정규 근무 시간</h3>
+                    <p th:text="${monthWorkTime.attDuration}"></p>
+                </div>
+                <div>
+                    <h3>이번달 연장 근무 시간</h3>
+                    <p th:text="${monthWorkTime.attOverDuration}"></p>
+                </div>
+            </div>
+
+            <div class="weeks">
+                <div class="week">
+                    <div class="week-header">1 주차</div>
+                    <div class="week-content">
+                        <div class="day-header">
+                            <span>일자</span>
+                            <span>야근 횟수</span>
+                            <span>지각 횟수</span>
+                            <span>반차 사용 횟수</span>
+                            <span>휴가 사용 횟수</span>
+                        </div>
+                        <div class="day-header">
+                            <span>24 월</span>
+                            <span>TODO</span>
+                            <span>TODO</span>
+                            <span>TODO</span>
+                            <span>TODO</span>
+                        </div>
+                        <div class="status-bar">
+                            <div class="progress" style="width: 10%;">근무시간</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Repeat week structure as needed -->
+                <div class="week">
+                    <div class="week-header">2 주차</div>
+                    <div class="week-content">
+                        <div class="day-header">
+                            <span>일자</span>
+                            <span>야근 횟수</span>
+                            <span>지각 횟수</span>
+                            <span>반차 사용 횟수</span>
+                            <span>휴가 사용 횟수</span>
+                        </div>
+                        <div class="day-header">
+                            <span>24 월</span>
+                            <span>TODO</span>
+                            <span>TODO</span>
+                            <span>TODO</span>
+                            <span>TODO</span>
+                        </div>
+                        <div class="status-bar">
+                            <div class="progress" style="width: 50%;">근무시간</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="week">
+                    <div class="week-header">3 주차</div>
+                    <div class="week-content">
+                        <div class="day-header">
+                            <span>일자</span>
+                            <span>야근 횟수</span>
+                            <span>지각 횟수</span>
+                            <span>반차 사용 횟수</span>
+                            <span>휴가 사용 횟수</span>
+                        </div>
+                        <div class="day-header">
+                            <span>24 월</span>
+                            <span>24 월</span>
+                            <span>TODO</span>
+                            <span>TODO</span>
+                            <span>TODO</span>
+                            <span>TODO</span>
+                        </div>
+                        <div class="status-bar">
+                            <div class="progress" style="width: 20%;">근무시간</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="week">
+                    <div class="week-header">4 주차</div>
+                    <div class="week-content">
+                        <div class="day-header">
+                            <span>일자</span>
+                            <span>야근 횟수</span>
+                            <span>지각 횟수</span>
+                            <span>반차 사용 횟수</span>
+                            <span>휴가 사용 횟수</span>
+                        </div>
+                        <div class="day-header">
+                            <span>24 월</span>
+                            <span>24 월</span>
+                            <span>TODO</span>
+                            <span>TODO</span>
+                            <span>TODO</span>
+                            <span>TODO</span>
+                        </div>
+                        <div class="status-bar">
+                            <div class="progress" style="width: 60%;">근무시간</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="week">
+                    <div class="week-header">5 주차</div>
+                    <div class="week-content">
+                        <div class="day-header">
+                            <span>일자</span>
+                            <span>야근 횟수</span>
+                            <span>지각 횟수</span>
+                            <span>반차 사용 횟수</span>
+                            <span>휴가 사용 횟수</span>
+                        </div>
+                        <div class="day-header">
+                            <span>24 월</span>
+                            <span>TODO</span>
+                            <span>TODO</span>
+                            <span>TODO</span>
+                            <span>TODO</span>
+                        </div>
+                        <div class="status-bar">
+                            <div class="progress" style="width: 50%;">근무시간</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            document.querySelectorAll('.week-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    content.style.display = content.style.display === 'none' ? 'block' : 'none';
+                });
+            });
+        </script>
+</body>
+</html>

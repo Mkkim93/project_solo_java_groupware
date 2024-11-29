@@ -4,6 +4,7 @@ import com.group.application.board.dto.NoticeBoardDTO;
 import com.group.application.board.service.BoardService;
 import com.group.application.board.service.CommentService;
 import com.group.application.board.service.NoticeBoardService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -12,76 +13,71 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/board")
+@RequestMapping("/board/notice")
+@RequiredArgsConstructor
 public class NoticeBoardController {
 
     private final NoticeBoardService noticeBoardService;
     private final CommentService commentService;
     private final BoardService boardService;
 
-    public NoticeBoardController(NoticeBoardService noticeBoardService, CommentService commentService,
-                                 BoardService boardService) {
-        this.noticeBoardService = noticeBoardService;
-        this.commentService = commentService;
-        this.boardService = boardService;
-    }
-
-    @GetMapping("/noticeboardlist")
-    public String boardListView(Model model,
-                            @RequestParam(value = "page", defaultValue = "0") int page,
-                            @RequestParam(value = "size", defaultValue = "5") int size) {
+    @GetMapping("/list")
+    public String view(@RequestParam(value = "page", defaultValue = "0") int page,
+                       @RequestParam(value = "size", defaultValue = "5") int size,
+                       Model model) {
         Pageable pageRequest = PageRequest.of(page, size);
-        Page<NoticeBoardDTO> noticeBoardDTO = noticeBoardService.findAllByNoticeBoard(pageRequest);
-        model.addAttribute("noticeBoardDTO", noticeBoardDTO);
-        return "/board/noticeboardlist";
+        Page<NoticeBoardDTO> noticeBoardDto = noticeBoardService.findAll(pageRequest);
+        model.addAttribute("noticeBoardList", noticeBoardDto);
+        return "/board/notice/list";
     }
 
-    @GetMapping("/noticeboardwrite")
-    public String boardWriteForm(Model model, NoticeBoardDTO noticeBoardDTO) {
-        model.addAttribute("noticeBoardDTO", noticeBoardDTO);
-        return "/board/noticeboardwrite";
-    }
-
-    @PostMapping("/noticeboardwrite")
-    public String boardWriting(NoticeBoardDTO noticeBoardDTO) {
-        noticeBoardService.saveNoticeBoard(noticeBoardDTO);
-        return "redirect:/board/noticeboardlist";
-    }
-
-    @GetMapping("/noticeboarddetailview")
-    public String boardDetailView(Model model,
-                                  @RequestParam("id") Integer id,
-                                  @RequestParam(value = "page", defaultValue = "0") int page,
-                                  @RequestParam(value = "size", defaultValue = "10") int size) {
+    @GetMapping("/detail")
+    public String detail(@RequestParam("id") Integer id,
+                         @RequestParam(value = "page", defaultValue = "0") int page,
+                         @RequestParam(value = "size", defaultValue = "10") int size,
+                         Model model) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        NoticeBoardDTO noticeBoardDTO = noticeBoardService.findById(id);
-        model.addAttribute("commentDTO", commentService.findAll(noticeBoardDTO.getBoardId(), pageRequest));
-        model.addAttribute("noticeBoardDTO", noticeBoardService.findByIdNoticeBoard(id));
-        model.addAttribute("boardDTO", boardService.findByIdOnly(noticeBoardDTO.getBoardId()));
-        return "/board/noticeboarddetailview";
+        NoticeBoardDTO noticeboarddto = noticeBoardService.findByOnlyId(id);
+        model.addAttribute("commentDto", commentService.findAll(noticeboarddto.getBoardId(), pageRequest));
+        model.addAttribute("noticeBoardDto", noticeBoardService.findByOne(id));
+        model.addAttribute("boardDto", boardService.findByOnlyId(noticeboarddto.getBoardId()));
+        return "/board/notice/detail";
     }
 
-    @GetMapping("/noticeboardmodify/{id}")
-    public String boardModifyView(Model model,
-                                  @PathVariable("id") Integer id) {
-        model.addAttribute("noticeBoardDTO", noticeBoardService.findById(id));
-        return "/board/noticeboardmodify";
+    @GetMapping("/write")
+    public String write(NoticeBoardDTO noticeBoardDto, Model model) {
+        model.addAttribute("noticeBoardDto", noticeBoardDto);
+        return "/board/notice/write";
     }
 
-    @PostMapping("/noticeboardmodify/update/{id}")
-    public String boardWritingForm(@PathVariable("id") Integer id,
-                                   @ModelAttribute NoticeBoardDTO noticeBoardDTO) {
-        NoticeBoardDTO noticeBoardTemp = noticeBoardService.findById(id);
-        noticeBoardTemp.setBoardTitle(noticeBoardDTO.getBoardTitle());
+    @PostMapping("/write")
+    public String writeProc(NoticeBoardDTO noticeBoardDto) {
+        noticeBoardDto.setEmployee(1); // TODO 임시 ID
+        noticeBoardService.save(noticeBoardDto);
+        return "redirect:/board/notice/list";
+    }
+
+    @GetMapping("/modify/{id}")
+    public String modify(@PathVariable("id") Integer id, Model model) {
+        model.addAttribute("noticeBoardDto", noticeBoardService.findByOnlyId(id));
+        return "/board/notice/modify";
+    }
+
+    @PostMapping("/modify/update/{id}")
+    public String modifyProc(@PathVariable("id") Integer id,
+                             @ModelAttribute NoticeBoardDTO noticeBoardDto) {
+        NoticeBoardDTO noticeBoardTemp = noticeBoardService.findByOnlyId(id);
+        noticeBoardTemp.setBoardTitle(noticeBoardDto.getBoardTitle());
         noticeBoardTemp.setBoardContent(noticeBoardTemp.getBoardContent());
-        noticeBoardService.updateNoticeBoard(noticeBoardTemp);
-        return "redirect:/board/noticeboardlist";
+        noticeBoardTemp.setEmployee(1); // TODO 임시 ID
+        noticeBoardService.update(noticeBoardTemp);
+        return "redirect:/board/notice/list";
     }
 
-    @GetMapping("/noticeboarddetailview/delete/{id}")
-    public String deleteBoard(@PathVariable("id") Integer id) {
-        NoticeBoardDTO noticeBoardDTO = noticeBoardService.findById(id);
-        noticeBoardService.deleteBoard(noticeBoardDTO.getBoardId());
-        return "redirect:/board/noticeboardlist";
+    @GetMapping("/detail/delete/{id}")
+    public String delete(@PathVariable("id") Integer id) {
+        NoticeBoardDTO noticeBoardDto = noticeBoardService.findByOnlyId(id);
+        noticeBoardService.delete(noticeBoardDto.getBoardId());
+        return "redirect:/board/notice/list";
     }
 }

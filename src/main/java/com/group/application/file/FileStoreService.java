@@ -21,7 +21,6 @@ public class FileStoreService {
 
     @Value("${file.dir}")
     private String fileDir;
-
     private FileStoreRepository fileStoreRepository;
 
     public FileStoreService(FileStoreRepository fileStoreRepository) {
@@ -32,7 +31,16 @@ public class FileStoreService {
         return fileDir + filename;
     }
 
-    public List<FileStore> fileStoreSave(FileBoard fileBoard, List<MultipartFile> files) throws IOException {
+    public FileStore findById(Integer id) {
+        return fileStoreRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("not id"));
+    }
+
+    public List<FileBoardStoreDTO> findByStoreId(Integer id) {
+        return fileStoreRepository.findByFileBoardStoreId(id);
+    }
+
+    public List<FileStore> save(FileBoard fileBoard, List<MultipartFile> files) throws IOException {
         List<FileStore> fileStores = new ArrayList<>();
 
         for (MultipartFile file : files) {
@@ -58,15 +66,6 @@ public class FileStoreService {
             fileStores.add(fileStore);
             fileStoreRepository.save(fileStore);
         }
-
         return fileStores;
-    }
-
-    public List<FileBoardStoreDTO> findByStoreId(Integer id) {
-        return fileStoreRepository.findByFileBoardStoreId(id);
-    }
-
-    public FileStore findByIdOnly(Integer id) {
-        return fileStoreRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("not id"));
     }
 }

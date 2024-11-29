@@ -6,7 +6,6 @@ import com.group.domain.hr.entity.Employee;
 import com.group.domain.mail.entity.MailBox;
 import com.group.domain.mail.repository.MailRepositoryImpl;
 import jakarta.persistence.EntityManager;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +42,7 @@ class MailServiceTest {
     void testFindSendMail() {
         EmployeeDTO employeeDTO = new EmployeeDTO();
         employeeDTO.setId(6);
-        List<MailBoxDTO> result = mailService.findAllSendMailBox(employeeDTO);
+        List<MailBoxDTO> result = mailService.findAllBySendMail(employeeDTO);
         for (MailBoxDTO mailBoxDTO : result) {
             System.out.println("mailBoxDTO.getSenderEmployeeId() = " + mailBoxDTO.getSenderEmployeeId());
             System.out.println("mailBoxDTO.getMailTitle() = " + mailBoxDTO.getMailTitle());
@@ -56,7 +55,7 @@ class MailServiceTest {
     @DisplayName("step 1 : MailBox 에 메일 작성")
     void writeMailBox() {
         MailBoxDTO mailBoxDTO = new MailBoxDTO("메일 제목12", "메일 내용12", 1, "alsrb362@daum.net");
-        MailBoxDTO result = mailService.mailWrite(mailBoxDTO);
+        MailBoxDTO result = mailService.write(mailBoxDTO);
         assertThat(mailBoxDTO).isEqualTo(result);
     }
 
@@ -76,7 +75,7 @@ class MailServiceTest {
     @DisplayName("메일 상세 페이지 조회 시 id 값 (service)")
     void mailDetailId() {
         Integer id = 9;
-        MailBoxDTO byId = mailService.findByMailDetail(id);
+        MailBoxDTO byId = mailService.detail(id);
         System.out.println("byId.getId() = " + byId.getId());
     }
 

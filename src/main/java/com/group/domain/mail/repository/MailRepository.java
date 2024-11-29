@@ -26,5 +26,5 @@ public interface MailRepository extends JpaRepository<MailBox, Integer> {
 
     @Modifying
     @Query(value = "INSERT INTO mailrecvstore (mailbox_id, emp_id) VALUES (:mailboxId, :empId)", nativeQuery = true)
-    void insertMailRecvStore(@Param("mailboxId") Integer mailboxId, @Param("empId") Integer empId);
+    void saveReceiveStore(@Param("mailboxId") Integer mailboxId, @Param("empId") Integer empId);
 }

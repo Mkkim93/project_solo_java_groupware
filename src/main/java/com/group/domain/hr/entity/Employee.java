@@ -8,9 +8,11 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.IDENTITY;
+import static jakarta.persistence.GenerationType.UUID;
 
 @Entity
 @Table(name = "employee")
@@ -54,20 +56,23 @@ public class Employee {
     @Column(name = "emp_joinyn")
     private String empJoinYN;
 
-    @Column(name = "emp_isadmin") // roleType -> 차후 컬럼 및 변수명 수정
-    private String empIsAdmin;
+    @Column(name = "role_type") // roleType -> 차후 컬럼 및 변수명 수정
+    private String roleType;
 
     @Column(name = "emp_no") // 사원 번호
     private String empNo;
 
     @Column(name = "emp_img") // 프로필 사진
-    private String emp_img;
+    private String empImg;
 
     @Column(name = "emp_tel") // 개인 연락처
     private String empTel;
 
     @Column(name = "emp_joindate") // 입사일
     private LocalDateTime empJoinDate;
+
+    @Column(name = "emp_uuid", length = 36) // 본인계정의 데이터 조회시 사용되는 컬럼
+    private String empUUID;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "dept_id") // 실제 db Employee 테이블에 있는 department 의 외래 키
@@ -81,9 +86,10 @@ public class Employee {
     @OneToMany(mappedBy = "senderEmployee", fetch = FetchType.LAZY)
     private List<MailBox> sentMailBoxes = new ArrayList<>();
 
-    // 사원 등록 시점에 입사일 생성
-    @PrePersist void JoinDate() {
+    // 사원 등록 시점에 생성되는 데이터
+    // 현재 날짜, 사원으 uuid (pk 대신 검증하기 위한 조건 데이터)
+    @PrePersist void createInfo() {
         this.empJoinDate = LocalDateTime.now();
+        this.empUUID = java.util.UUID.randomUUID().toString();
     }
-
 }

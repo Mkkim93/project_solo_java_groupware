@@ -45,24 +45,23 @@ public class Board {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "emp_id")
-    private Employee empId;
+    private Employee employee;
 
     // cascade : 게시글이 삭제될 때 댓글도 삭제, orphanRemoval : 게시글이 삭제되면 댓글도 db 에서 삭제
-    @OneToMany(mappedBy = "boardId", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
+    @OneToMany(mappedBy = "board", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = false)
     private List<CommentBoard> comments = new ArrayList<>();
 
     @PrePersist void boardRegDate() {
         this.boardIsDeleted = "N";
         this.boardViewCount = 0;
-        // this.boardRegDate = LocalDateTime.now();
     }
 
     @Builder
-    public Board (String boardTitle, String boardContent, Employee empId, Integer id, LocalDateTime boardRegDate) {
+    public Board(String boardTitle, String boardContent, Employee employee, Integer id, LocalDateTime boardRegDate) {
         this.id = id;
         this.boardTitle = boardTitle;
         this.boardContent = boardContent;
-        this.empId = empId;
+        this.employee = employee;
         this.boardRegDate = boardRegDate;
     }
 }

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>공지게시판 글 등록</title>
+    <title>write</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -29,7 +29,7 @@
         .layout input,
         .layout textarea {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             margin-top: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -46,7 +46,7 @@
 
         .layout button {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             background-color: #007bff;
             color: #fff;
             border: none;
@@ -54,14 +54,13 @@
             font-size: 16px;
             cursor: pointer;
             transition: background-color 0.3s;
-            margin-top: 20px;
         }
 
         .layout button:hover {
             background-color: #0056b3;
         }
 
-        .required {
+        .layout .required {
             color: red;
             font-size: 14px;
             margin-top: -5px;
@@ -71,18 +70,16 @@
 </head>
 <body>
 <div class="layout">
-    <h2>공지게시판 글 등록</h2>
-    <form th:action="@{/board/noticeboardwrite}" th:object="${noticeBoardDTO}" method="post">
+    <h2>게시글 등록</h2>
+    <form th:action="@{/board/all/write}" th:object="${boardDto}" method="post">
 
         <label for="boardTitle"></label>
-        <input type="text" id="boardTitle" th:field="*{boardTitle}" placeholder="제목을 입력하세요" required>
-        <div class="required">* 필수 입력 사항입니다.</div>
+        <input type="text" id="boardTitle" th:field="*{boardTitle}" placeholder="제목" required>
 
         <label for="boardContent"></label>
-        <textarea id="boardContent" th:field="*{boardContent}" placeholder="내용을 입력하세요" required></textarea>
-        <div class="required">* 필수 입력 사항입니다.</div>
+        <textarea id="boardContent" th:field="*{boardContent}" placeholder="내용" required></textarea>
 
-        <button type="submit">작성하기</button>
+        <button type="submit">작성</button>
 
     </form>
 </div>

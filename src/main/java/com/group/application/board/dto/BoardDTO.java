@@ -1,7 +1,6 @@
 package com.group.application.board.dto;
 
 import com.group.domain.board.entity.Board;
-import com.group.domain.hr.entity.Employee;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
 
@@ -23,7 +22,7 @@ public class BoardDTO {
     private LocalDateTime boardDeleteDate;
     private Integer boardViewCount;
     private String isDeleted;
-    private Employee empId;
+    private Integer employee;
     private Integer boardId;
     private String comContent;
     private String comRegDate;
@@ -56,53 +55,45 @@ public class BoardDTO {
         this.boardPass = boardPass;
     }
 
-    @Builder
-    public void updateFromDto(String boardTitle, String boardContent, Employee empId) {
-        this.boardTitle = boardTitle;
-        this.boardContent = boardContent;
-        this.empId = empId;
-    }
-
     // 게시판 공용 사용을 위한 dto 생성
     public BoardDTO(String boardTitle, String boardContent) {
         this.boardTitle = boardTitle;
         this.boardContent = boardContent;
     }
 
-    public void setAuthor(String empName) {
-        this.empName = empName;
-    }
-
-    // TODO
-    public void fileConverterBoard(FileBoardDTO fileBoardDTO) {
-        this.id = fileBoardDTO.getBoardId();
-        this.boardTitle = fileBoardDTO.getBoardTitle();
-        this.boardContent = fileBoardDTO.getBoardContent();
-    }
-
-    public void freeConverterBoard(FreeBoardDTO freeBoardDTO) {
-        this.id = freeBoardDTO.getBoardId();
-        this.boardTitle = freeBoardDTO.getBoardTitle();
-        this.boardContent = freeBoardDTO.getBoardContent();
-    }
-
-    public void noticeConverterBoard(NoticeBoardDTO noticeBoardDTO) {
-        this.id = noticeBoardDTO.getBoardId();
-        this.boardTitle = noticeBoardDTO.getBoardTitle();
-        this.boardContent = noticeBoardDTO.getBoardContent();
-    }
-
-    public void qnaConverterBoard(QnABoardDTO qnABoardDTO) {
-        this.id = qnABoardDTO.getBoardId();
-        this.boardTitle = qnABoardDTO.getBoardTitle();
-        this.boardContent = qnABoardDTO.getBoardContent();
-        this.boardPass = qnABoardDTO.getBoardPass();
-    }
-
-    public BoardDTO fromDTO(Board board) {
-        this.id = board.getId();
-        this.boardTitle = board.getBoardTitle();
-        this.boardContent = board.getBoardContent();
+    public BoardDTO toDto(Board e) {
+        this.id = e.getId();
+        this.boardTitle = e.getBoardTitle();
+        this.boardContent = e.getBoardContent();
         return this;
+    }
+
+    public void convertToFileBoardDto(FileBoardDTO dto) {
+        this.id = dto.getBoardId();
+        this.boardTitle = dto.getBoardTitle();
+        this.boardContent = dto.getBoardContent();
+        this.employee = dto.getEmployee();
+    }
+
+    public void convertToFreeBoardDto(FreeBoardDTO dto) {
+        this.id = dto.getBoardId();
+        this.boardTitle = dto.getBoardTitle();
+        this.boardContent = dto.getBoardContent();
+        this.employee = dto.getEmployee();
+    }
+
+    public void convertToNoticeBoardDto(NoticeBoardDTO dto) {
+        this.id = dto.getBoardId();
+        this.boardTitle = dto.getBoardTitle();
+        this.boardContent = dto.getBoardContent();
+        this.employee = dto.getEmployee();
+    }
+
+    public void convertToQnaBoardDto(QnABoardDTO dto) {
+        this.id = dto.getBoardId();
+        this.boardTitle = dto.getBoardTitle();
+        this.boardContent = dto.getBoardContent();
+        this.boardPass = dto.getBoardPass();
+        this.employee = dto.getEmployee();
     }
 }

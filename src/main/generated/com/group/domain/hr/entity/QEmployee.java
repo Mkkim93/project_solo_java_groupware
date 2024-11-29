@@ -24,11 +24,9 @@ public class QEmployee extends EntityPathBase<Employee> {
 
     public final QDepartment department;
 
-    public final StringPath emp_img = createString("emp_img");
-
     public final StringPath empEmail = createString("empEmail");
 
-    public final StringPath empIsAdmin = createString("empIsAdmin");
+    public final StringPath empImg = createString("empImg");
 
     public final DateTimePath<java.time.LocalDateTime> empJoinDate = createDateTime("empJoinDate", java.time.LocalDateTime.class);
 
@@ -50,9 +48,13 @@ public class QEmployee extends EntityPathBase<Employee> {
 
     public final StringPath empTel = createString("empTel");
 
+    public final StringPath empUUID = createString("empUUID");
+
     public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
     public final ListPath<com.group.domain.mail.entity.MailBox, com.group.domain.mail.entity.QMailBox> receivedMailBoxes = this.<com.group.domain.mail.entity.MailBox, com.group.domain.mail.entity.QMailBox>createList("receivedMailBoxes", com.group.domain.mail.entity.MailBox.class, com.group.domain.mail.entity.QMailBox.class, PathInits.DIRECT2);
+
+    public final StringPath roleType = createString("roleType");
 
     public final ListPath<com.group.domain.mail.entity.MailBox, com.group.domain.mail.entity.QMailBox> sentMailBoxes = this.<com.group.domain.mail.entity.MailBox, com.group.domain.mail.entity.QMailBox>createList("sentMailBoxes", com.group.domain.mail.entity.MailBox.class, com.group.domain.mail.entity.QMailBox.class, PathInits.DIRECT2);
 

@@ -4,108 +4,99 @@ import com.group.application.board.dto.QnABoardDTO;
 import com.group.application.board.service.BoardService;
 import com.group.application.board.service.CommentService;
 import com.group.application.board.service.QnABoardService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.IllegalFormatCodePointException;
-
 @Controller
-@RequestMapping("/board")
+@RequestMapping("/board/qna")
+@RequiredArgsConstructor
 public class QnABoardController {
 
     private final QnABoardService qnABoardService;
     private final CommentService commentService;
     private final BoardService boardService;
 
-    public QnABoardController(QnABoardService qnABoardService,
-                              CommentService commentService,
-                              BoardService boardService) {
-        this.qnABoardService = qnABoardService;
-        this.commentService = commentService;
-        this.boardService = boardService;
-    }
-
-    @GetMapping("/qnaboardlist")
-    public String boardView(Model model,
-                            @RequestParam(value = "page", defaultValue = "0") int page,
-                            @RequestParam(value = "size", defaultValue = "5") int size) {
+    @GetMapping("/list")
+    public String view(@RequestParam(value = "page", defaultValue = "0") int page,
+                       @RequestParam(value = "size", defaultValue = "5") int size,
+                       Model model) {
         Pageable pageRequest = PageRequest.of(page, size);
-        Page<QnABoardDTO> qnABoardDTO = qnABoardService.findAllByQnABoard(pageRequest);
-        model.addAttribute("qnABoardDTO", qnABoardDTO);
-        return "/board/qnaboardlist";
+        Page<QnABoardDTO> qnaBoardDto = qnABoardService.findAll(pageRequest);
+        model.addAttribute("qnaBoardList", qnaBoardDto);
+        return "/board/qna/list";
     }
 
-    @GetMapping("/qnaboardwrite")
-    public String boardWriteForm(Model model, QnABoardDTO qnABoardDTO) {
-        model.addAttribute("qnABoardDTO", qnABoardDTO);
-        return "/board/qnaboardwrite";
-    }
-
-    @PostMapping("/qnaboardwrite")
-    public String boardWriting(QnABoardDTO qnABoardDTO) {
-        qnABoardService.saveQnABoard(qnABoardDTO);
-        return "redirect:/board/qnaboardlist";
-    }
-
-    @GetMapping("/qnaboarddetailview")
-    public String boardDetailView(@RequestParam(value = "id") Integer id,
-                                  @RequestParam(value = "boardPass", required = false) String boardPass,
-                                  @RequestParam(value = "page", defaultValue = "0") int page,
-                                  @RequestParam(value = "size", defaultValue = "10") int size,
-                                  RedirectAttributes redirectAttributes,
-                                  Model model) {
+    @GetMapping("/detail")
+    public String detail(@RequestParam(value = "id") Integer id,
+                         @RequestParam(value = "boardPass", required = false) String boardPass,
+                         @RequestParam(value = "page", defaultValue = "0") int page,
+                         @RequestParam(value = "size", defaultValue = "10") int size,
+                         RedirectAttributes redirectAttributes, Model model) {
         if (boardPass == null) {
-            model.addAttribute("notPassDTO", qnABoardService.findByIdNotPass(id));
-            return "board/qnaboarddetailview";
+            model.addAttribute("notBoardDto", qnABoardService.findByIdNotPass(id));
+            return "/board/qna/detail";
         }
 
-        QnABoardDTO qnABoardDTO = qnABoardService.findById(id, boardPass);
-        if (!qnABoardDTO.getBoardPass().equals(boardPass)) {
+        QnABoardDTO qnaBoardDto = qnABoardService.findById(id, boardPass);
+        if (!qnaBoardDto.getBoardPass().equals(boardPass)) {
             redirectAttributes.addFlashAttribute("failPassWord", "failPassWord");
-            return "redirect:/board/qnaboardlist";  // 게시판 목록으로 리다이렉트
+            return "redirect:/board/qna/list";  // 게시판 목록으로 리다이렉트
         }
 
         // 댓글 관련 model & 페이징 객체
         PageRequest pageRequest = PageRequest.of(page, size);
-        model.addAttribute("qnABoardDTO", qnABoardService.findByIdOnly(id, boardPass));
-        model.addAttribute("boardDTO", boardService.findByIdOnly(qnABoardDTO.getBoardId()));
-        model.addAttribute("commentDTO", commentService.findAll(qnABoardDTO.getBoardId(), pageRequest));
+        model.addAttribute("qnaBoardDto", qnABoardService.findByOne(id, boardPass));
+        model.addAttribute("boardDto", boardService.findByOnlyId(qnaBoardDto.getBoardId()));
+        model.addAttribute("commentDto", commentService.findAll(qnaBoardDto.getBoardId(), pageRequest));
         // 비밀번호가 맞는 경우 상세 페이지를 모델에 추가하여 반환
 
         // 비밀번호가 틀린 경우 TODO : NPE 로직
-        return "/board/qnaboarddetailview";  // 상세 페이지를 렌더링
+        return "/board/qna/detail";  // 상세 페이지를 렌더링
     }
 
-    @GetMapping("qnaboardmodify/{id}")
-    public String boardModifyView(Model model,
-                                  @PathVariable("id") Integer id,
-                                  @RequestParam(value = "boardPass", required = false) String boardPass) {
-        model.addAttribute("qnABoardDTO", qnABoardService.findById(id, boardPass));
-        return "/board/qnaboardmodify";
+    @GetMapping("/write")
+    public String write(QnABoardDTO qnaBoardDto, Model model) {
+        model.addAttribute("qnaBoardDto", qnaBoardDto);
+        return "/board/qna/write";
     }
 
-    @PostMapping("/qnaboardmodify/update/{id}")
-    public String boardModifyWriting(@PathVariable("id") Integer id,
-                                     @RequestParam(value = "boardPass", required = false) String boardPass,
-                                     @ModelAttribute QnABoardDTO qnABoardDTO) {
-        QnABoardDTO qnABoardTemp = qnABoardService.findById(id, boardPass);
-        qnABoardTemp.setBoardTitle(qnABoardDTO.getBoardTitle());
-        qnABoardTemp.setBoardContent(qnABoardDTO.getBoardContent());
-        qnABoardService.updateQnABoard(qnABoardTemp);
-        return "redirect:/board/qnaboardlist";
+    @PostMapping("/write")
+    public String writeProc(QnABoardDTO qnaBoardDto) {
+        qnaBoardDto.setEmployee(1); // TODO 임시 ID
+        qnABoardService.save(qnaBoardDto);
+        return "redirect:/board/qna/list";
     }
 
-    @GetMapping("/qnaboarddetailview/delete/{id}")
-    public String deleteBoard(@PathVariable("id") Integer id) {
-        QnABoardDTO qnaBoardDTO = qnABoardService.findByIdOne(id);
-        qnABoardService.deleteBoard(qnaBoardDTO.getBoardId());
-        return "redirect:/board/qnaboardlist";
+    @GetMapping("modify/{id}")
+    public String modify(@PathVariable("id") Integer id,
+                         @RequestParam(value = "boardPass", required = false) String boardPass,
+                         Model model) {
+        model.addAttribute("qnaBoardDto", qnABoardService.findById(id, boardPass));
+        return "/board/qna/modify";
+    }
+
+    @PostMapping("/modify/update/{id}")
+    public String modifyProc(@PathVariable("id") Integer id,
+                             @RequestParam(value = "boardPass", required = false) String boardPass,
+                             @ModelAttribute QnABoardDTO qnaBoardDto) {
+        QnABoardDTO qnaBoardTemp = qnABoardService.findById(id, boardPass);
+        qnaBoardTemp.setBoardTitle(qnaBoardDto.getBoardTitle());
+        qnaBoardTemp.setBoardContent(qnaBoardDto.getBoardContent());
+        qnaBoardTemp.setEmployee(1); // TODO 임시 ID
+        qnABoardService.update(qnaBoardTemp);
+        return "redirect:/board/qna/list";
+    }
+
+    @GetMapping("/detail/delete/{id}")
+    public String delete(@PathVariable("id") Integer id) {
+        QnABoardDTO qnaboarddto = qnABoardService.findByOnlyId(id);
+        qnABoardService.delete(qnaboarddto.getBoardId());
+        return "redirect:/board/qna/list";
     }
 }

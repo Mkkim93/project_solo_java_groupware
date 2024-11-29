@@ -21,10 +21,11 @@ public class FreeBoardDTO {
     private String isDeleted;
     private String boardContent;
     private Integer boardId;
-    private Employee empId;
+    private Integer employee;
 
     @QueryProjection
-    public FreeBoardDTO(Integer id, Integer boardId, String boardTitle, String empName, String boardContent,
+    public FreeBoardDTO(Integer id, Integer boardId, String boardTitle,
+                        String empName, String boardContent,
                         LocalDateTime boardRegDate, Integer boardViewCount,
                         String isDeleted) {
         this.id = id;
@@ -35,15 +36,5 @@ public class FreeBoardDTO {
         this.boardRegDate = boardRegDate;
         this.boardViewCount = boardViewCount;
         this.isDeleted = isDeleted;
-    }
-
-    public FreeBoardDTO fromFreeBoardDTO(Board board) {
-        this.boardId = board.getId();
-        return this;
-    }
-
-    public FreeBoardDTO setDto(FreeBoard freeBoard) {
-        this.id = freeBoard.getBoardId().getId();
-        return this;
     }
 }

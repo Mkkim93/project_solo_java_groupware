@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>공지글 수정 페이지</title>
+    <title>modify</title>
 </head>
 <body>
 <div class="layout">
     <h2>공지 수정</h2>
 
-    <form th:action="@{/board/noticeboardmodify/update/{id}(id=${noticeBoardDTO.id})}"
-          th:object="${noticeBoardDTO}" method="post">
+    <form th:action="@{/board/modify/update/{id}(id=${noticeBoardDto.id})}"
+          th:object="${noticeBoardDto}" method="post">
 
         <input type="hidden" th:field="*{id}" />
 

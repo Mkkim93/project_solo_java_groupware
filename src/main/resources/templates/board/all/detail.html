@@ -3,96 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>detail</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <title>건의 게시판 상세 페이지</title>
     <style>
         body {
-            font-family: 'Noto Sans', Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            background-color: #f5f5f5;
         }
-
         .container {
             max-width: 800px;
             margin: 50px auto;
             padding: 20px;
-            background-color: #ffffff;
+            background-color: #fff;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
         }
-
         h1 {
-            font-size: 28px;
-            font-weight: bold;
+            font-size: 24px;
             color: #333;
             margin-bottom: 20px;
-            text-align: center;
         }
-
         p {
             font-size: 16px;
-            color: #555;
             line-height: 1.6;
-            white-space: pre-wrap; /* 줄바꿈 유지 */
-            margin-bottom: 40px;
+            color: #666;
+            margin-bottom: 20px;
         }
-
+        .author {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 30px;
+            text-align: right;
+        }
         .actions {
             display: flex;
             justify-content: flex-end;
-            gap: 15px;
+            gap: 10px;
         }
-
         .btn {
-            display: inline-block;
             padding: 10px 20px;
             font-size: 14px;
-            color: #fff;
             background-color: #007bff;
-            text-decoration: none;
+            color: #fff;
+            border: none;
             border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
             transition: background-color 0.3s ease;
         }
-
         .btn:hover {
             background-color: #0056b3;
         }
-
         .btn.delete {
             background-color: #dc3545;
         }
-
         .btn.delete:hover {
             background-color: #c82333;
+        }
+        .pagination {
+            margin-top: 20px;
+        }
+        .pagination button {
+            margin: 0 5px;
+        }
+        /* 댓글 카드 스타일 */
+        .comment-card {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .comment-content {
+            font-size: 14px;
+            color: #333;
+        }
+        .comment-date {
+            font-size: 12px;
+            color: #999;
+            text-align: right;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <input type="hidden" th:value="${qnABoardDTO.id}" />
-
-    <h1 th:text="${qnABoardDTO.boardTitle}">제목입니다.</h1>
-    <p th:text="${qnABoardDTO.boardContent}">내용이 여기에 표시됩니다.</p><br/>
-    <strong>boardDTO.id: </strong><span th:text="${boardDTO.id}"></span><br/>
-    <strong>qnABoardDTO.id: </strong><span th:text="${qnABoardDTO.id}"></span><br/>
-    <strong>qnABoardDTO.boardPass: </strong><span th:text="${qnABoardDTO.boardPass}"></span><br/>
-    <strong>qnABoardDTO.empName: </strong><span th:text="${qnABoardDTO.empName}"></span><br/>
-    <strong>qnABoardDTO.boardId: </strong><span th:text="${qnABoardDTO.boardId}"></span><br/>
-    <!--<strong>qnABoardDTO.boardId: </strong><span th:text="${commentDTO.content.forEach(boardPass)}"></span><br/>-->
-
+    <strong>boardDTO.id:</strong> <span th:text="${boardDto.id}"></span><br/>
+    <h1 th:text="${boardDto.boardTitle}">제목입니다.</h1>
+    <p class="author" th:text="'작성자: ' + ${boardDto.empName}">작성자 정보</p>
+    <p th:text="${boardDto.boardContent}">여기에 게시글 내용이 표시됩니다.</p>
     <div class="actions">
-        <a class="btn" th:href="@{/board/qnaboardmodify/{id}(id=${qnABoardDTO.id})}">수정</a>
-        <a class="btn delete" th:href="@{/board/qnaboarddetailview/delete/{id}(id=${qnABoardDTO.id})}">삭제</a>
+        <a class="btn" th:href="@{/board/all/modify/{id}(id = ${boardDto.id})}">수정</a>
+        <a class="btn delete" th:href="@{/board/all/detail/delete/{id}(id=${boardDto.id})}">삭제</a>
     </div>
 </div>
 
 <!-- 댓글 작성 부분 -->
 <div id="comment-write">
+    <label for="empId">회원 id 가 들어갈 부분</label> <!--jwt 구현 후, 제거-->
     <input type="number" name="empId" id="empId" placeholder="작성자">
+
     <input type="hidden" name="empName" id="empName">
-    <input type="text" name="comContent" id="comContent" placeholder="내용">
+
+    <label>댓글 내용</label>
+    <input type="text" name="comContent" id="comContent" placeholder="내용을 입력하세요">
+
     <input type="hidden" name="comRegDate" id="comRegDate" placeholder="내용">
 
     <button id="comment-write-btn" onclick="commentWrite()">댓글작성</button>
@@ -106,17 +128,13 @@
 <script inline="javascript">
     // 댓글 목록 로드 함수
     const loadComments = (page = 0) => {
-        const boardId = [[${boardDTO.id}]];
-        /*const boardPass = [[${qnABoardDTO.boardPass}]];*/
-        console.log(boardId)
-        /*console.log(boardPass)*/
+        const boardId = [[${boardDto.id}]];
         $.ajax({
             type: "GET",
             url: "/comment/list",
             dataType: 'json',
             data: {
                 boardId: boardId,
-                /*boardPass: boardPass,*/
                 page: page,
                 size: 10
             },
@@ -142,7 +160,7 @@
                         <span>댓글번호: ${comment.id}</span>
                         <span class="comment-date">${comment.comRegDate}</span>
                     </div>
-                    <div class="comment-content">${comment.comContent}</div>
+                    <div class="comment-content">${comment.comContent || comment.comContent}</div>
                     <div><strong>작성자:</strong> ${comment.empName}</div>
                 </div>`;
             });
@@ -169,15 +187,10 @@
 
     // 댓글 작성 후 새로고침
     const commentWrite = () => {
-        const boardId = [[${boardDTO.id}]];
+        const boardId = [[${boardDto.id}]];
         const empId = document.getElementById("empId").value;
         const comContent = document.getElementById("comContent").value;
         const comRegDate = document.getElementById("comRegDate").value;
-
-        console.log(boardId);
-        console.log(empId);
-        console.log(comContent);
-        console.log(comRegDate);
 
         $.ajax({
             type: "POST",
@@ -198,11 +211,11 @@
             }
         });
     };
-
     // 페이지 로드 시 댓글 목록 초기화
     $(document).ready(() => {
         loadComments();
     });
 </script>
+
 </body>
 </html>

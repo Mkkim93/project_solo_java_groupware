@@ -18,6 +18,7 @@ public class NoticeBoardDTO {
     private Integer boardViewCount;
     private String isDeleted;
     private Integer boardId;
+    private Integer employee;
 
     @QueryProjection
     public NoticeBoardDTO(Integer id,

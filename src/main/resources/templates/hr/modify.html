@@ -72,7 +72,7 @@
 <body>
 <div class="layout">
     <h1>사원 정보 수정</h1>
-    <form th:action="@{/hr/employeemodify/update/{id}(id=${employeeDTO.id})}"
+    <form th:action="@{/hr/modify/update/{id}(id=${employeeDTO.id})}"
           th:object="${employeeDTO}" method="post">
         <table>
             <tr>

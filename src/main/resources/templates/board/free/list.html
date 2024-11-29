@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>자유 게시판</title>
+    <title>free board</title>
     <!-- Bootstrap CSS CDN -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -83,36 +83,36 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="freeBoardDTO : ${freeBoardDTO.content}">
-            <td th:text="${freeBoardDTO.id}" class="text-center"></td>
+        <tr th:each="list : ${freeBoardList.content}">
+            <td th:text="${list.id}" class="text-center"></td>
             <td class="text-center">
-                <a th:text="${freeBoardDTO.boardTitle}"
-                   th:href="@{/board/freeboarddetailview(id=${freeBoardDTO.id})}"></a>
+                <a th:text="${list.boardTitle}"
+                   th:href="@{/board/free/detail(id=${list.id})}"></a>
             </td>
-            <td th:text="${freeBoardDTO.empName}" class="text-center"></td>
-            <td th:text="${freeBoardDTO.boardRegDate}" class="text-center"></td>
-            <td th:text="${freeBoardDTO.boardViewCount}" class="text-center"></td>
+            <td th:text="${list.empName}" class="text-center"></td>
+            <td th:text="${list.boardRegDate}" class="text-center"></td>
+            <td th:text="${list.boardViewCount}" class="text-center"></td>
         </tr>
         </tbody>
     </table>
 
     <div class="pagination">
-        <li th:if="${freeBoardDTO.hasPrevious()}">
-            <a class="btn btn-outline-primary" th:href="@{/board/freeboardlist(page=${freeBoardDTO.number - 1})}">이전</a>
+        <li th:if="${freeBoardList.hasPrevious()}">
+            <a class="btn btn-outline-primary" th:href="@{/board/free/list(page=${freeBoardList.number - 1})}">이전</a>
         </li>
 
-        <li th:each="i : ${#numbers.sequence(freeBoardDTO.number - (freeBoardDTO.number % 5),
-        freeBoardDTO.number - (freeBoardDTO.number % 5) + 4)}" th:if="${i < freeBoardDTO.totalPages}">
-            <a class="btn btn-outline-secondary" th:href="@{/board/freeboardlist(page=${i})}" th:text="${i + 1}"></a>
+        <li th:each="i : ${#numbers.sequence(freeBoardList.number - (freeBoardList.number % 5),
+        freeBoardList.number - (freeBoardList.number % 5) + 4)}" th:if="${i < freeBoardList.totalPages}">
+            <a class="btn btn-outline-secondary" th:href="@{/board/free/list(page=${i})}" th:text="${i + 1}"></a>
         </li>
 
-        <li th:if="${freeBoardDTO.hasNext()}">
-            <a class="btn btn-outline-primary" th:href="@{/board/freeboardlist(page=${freeBoardDTO.number + 1})}">다음</a>
+        <li th:if="${freeBoardList.hasNext()}">
+            <a class="btn btn-outline-primary" th:href="@{/board/free/list(page=${freeBoardList.number + 1})}">다음</a>
         </li>
     </div>
 
     <div class="text-center">
-        <button class="btn btn-primary" th:onclick="|location.href='@{/board/freeboardwrite}'|">글 작성</button>
+        <button class="btn btn-primary" th:onclick="|location.href='@{/board/free/write}'|">글 작성</button>
     </div>
 </div>
 

@@ -8,7 +8,7 @@ import com.group.domain.board.entity.FileBoard;
 import com.group.domain.board.repository.BoardRepositoryImpl;
 import com.group.domain.board.repository.FileBoardRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,73 +20,62 @@ import java.util.List;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class FileBoardService {
 
-    private final FileBoardRepository fileBoardRepository;
     private final BoardService boardService;
     private final BoardRepositoryImpl boardRepositoryImpl;
     private final FileStoreService fileStoreService;
+    private final FileBoardRepository fileBoardRepository;
 
-    @Autowired
-    public FileBoardService(FileBoardRepository fileBoardRepository,
-                            BoardService boardService,
-                            BoardRepositoryImpl boardRepositoryImpl,
-                            FileStoreService fileStoreService
-    ) {
-        this.fileBoardRepository = fileBoardRepository;
-        this.boardService = boardService;
-        this.boardRepositoryImpl = boardRepositoryImpl;
-        this.fileStoreService = fileStoreService;
-    }
-
-    // TODO 파일 저장 로직 별도 메서드로 구분 해야될 듯
-    // 파일 게시판 등록
-    public void saveFileBoard(FileBoardDTO fileBoardDTO, List<MultipartFile> file) throws IOException {
-
-        BoardDTO boardDTO = new BoardDTO();
-        boardDTO.fileConverterBoard(fileBoardDTO);
-        Board boardId = boardService.saveProcessAllBoard(boardDTO);
-
-        FileBoard fileBoard = getEntitySave(fileBoardDTO.getId(), boardId);
-        fileBoardRepository.save(fileBoard);
-
-        FileBoard fileBoardId = fileBoardRepository.findById(fileBoard.getId())
-                .orElseThrow(() -> new EntityNotFoundException("NO ID"));
-
-            fileStoreService.fileStoreSave(fileBoardId, file);
-    }
-
-    // dto -> entity
-    private FileBoard getEntitySave(Integer id, Board boardId) {
-        return FileBoard.builder()
-                .id(id)
-                .boardId(boardId)
-                .build();
-    }
-
-    public Page<FileBoardDTO> findAllByFileBoard(Pageable pageable) {
+    public Page<FileBoardDTO> findByAll(Pageable pageable) {
         return boardRepositoryImpl.findAllByFileBoard(pageable);
     }
 
-    public FileBoardDTO findByIdFileBoard(Integer id) {
-        FileBoardDTO fileBoardDTO = boardRepositoryImpl.findByIdFileBoard(id);
-        boardService.updateBoardViewCount(fileBoardDTO.getBoardId());
-        return fileBoardDTO;
-    }
-
-    public void updateFileBoard(FileBoardDTO fileBoardDTO) {
-        BoardDTO boardDTO = new BoardDTO();
-        boardDTO.setBoardTitle(fileBoardDTO.getBoardTitle());
-        boardDTO.setBoardContent(fileBoardDTO.getBoardContent());
-        boardDTO.fileConverterBoard(fileBoardDTO);
-        boardService.saveProcessAllBoard(boardDTO);
+    public FileBoardDTO findByOne(Integer id) {
+        FileBoardDTO dto = boardRepositoryImpl.findByOneFileBoard(id);
+        boardService.plusViewCount(dto.getBoardId());
+        return dto;
     }
 
     public FileBoardDTO findById(Integer id) {
-        return boardRepositoryImpl.findByIdFileBoard(id);
+        return boardRepositoryImpl.findByOneFileBoard(id);
     }
 
-    public void deleteBoard(Integer id) {
-        boardService.deleteBoard(id);
+    public void save(FileBoardDTO dto, List<MultipartFile> file) throws IOException {
+
+        // TODO 파일 저장 로직 별도 메서드로 구분 해야될 듯
+
+        BoardDTO boardDTO = new BoardDTO();
+        boardDTO.convertToFileBoardDto(dto);
+        Board board = boardService.saveAll(boardDTO);
+
+        FileBoard fileBoard = toEntity(dto.getId(), board);
+        fileBoardRepository.save(fileBoard);
+
+        FileBoard fileBoardId = fileBoardRepository.findById(fileBoard.getId())
+                .orElseThrow(() -> new EntityNotFoundException("no id"));
+
+            fileStoreService.save(fileBoardId, file);
+    }
+
+    public void update(FileBoardDTO dto) {
+        BoardDTO boardDTO = new BoardDTO();
+        boardDTO.setBoardTitle(dto.getBoardTitle());
+        boardDTO.setBoardContent(dto.getBoardContent());
+        boardDTO.convertToFileBoardDto(dto);
+        boardService.saveAll(boardDTO);
+    }
+
+    public void delete(Integer id) {
+        boardService.delete(id);
+    }
+
+    // dto -> entity
+    private FileBoard toEntity(Integer id, Board board) {
+        return FileBoard.builder()
+                .id(id)
+                .board(board)
+                .build();
     }
 }

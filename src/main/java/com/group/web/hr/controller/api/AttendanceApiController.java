@@ -5,6 +5,7 @@ import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.hr.service.AttendanceService;
 import com.group.application.hr.service.EmployeeService;
 import com.group.domain.hr.entity.Attendance;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,29 +21,24 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/attendance")
+@RequestMapping("/att")
+@RequiredArgsConstructor
 public class AttendanceApiController {
 
     private final AttendanceService attendanceService;
 
-    @Autowired
-    public AttendanceApiController(AttendanceService attendanceService) {
-        this.attendanceService = attendanceService;
-
-    }
-
     // 출근 처리 로직 ajax
-    @PostMapping("/on")
-    public ResponseEntity on(@ModelAttribute AttendanceDTO attendanceDTO) {
+    @PostMapping("/in")
+    public ResponseEntity workIn(@ModelAttribute AttendanceDTO attendanceDTO) {
         attendanceDTO.setEmployee(1);
-        AttendanceDTO attendanceDTOResult = attendanceService.attOn(attendanceDTO);
+        AttendanceDTO attendanceDTOResult = attendanceService.workIn(attendanceDTO);
         return new ResponseEntity<>(attendanceDTOResult, HttpStatus.OK);
     }
 
-    @PostMapping("/off")
-    public ResponseEntity off(@ModelAttribute AttendanceDTO attendanceDTO) {
+    @PostMapping("/out")
+    public ResponseEntity workOut(@ModelAttribute AttendanceDTO attendanceDTO) {
         attendanceDTO.setEmployee(1);
-        AttendanceDTO attendanceDTOResult = attendanceService.attOff(attendanceDTO);
+        AttendanceDTO attendanceDTOResult = attendanceService.workOut(attendanceDTO);
         return new ResponseEntity<>(attendanceDTOResult, HttpStatus.OK);
     }
 }

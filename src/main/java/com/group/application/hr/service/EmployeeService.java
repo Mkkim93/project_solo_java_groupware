@@ -6,50 +6,43 @@ import com.group.domain.hr.entity.Employee;
 import com.group.domain.hr.repository.EmployRepositoryImpl;
 import com.group.domain.hr.repository.EmployeeRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
  * TODO EntityNotFoundException 처리 (컨트롤러 어드바이저에서 진행 ?)
  */
 @Service
+@RequiredArgsConstructor
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final EmployRepositoryImpl employRepositoryImpl;
 
-    @Autowired
-    public EmployeeService(EmployeeRepository employeeRepository,
-                           EmployRepositoryImpl employRepositoryImpl) {
-        this.employeeRepository = employeeRepository;
-        this.employRepositoryImpl = employRepositoryImpl;
+    public EmployeeDTO findByAll(EmployeeDTO dto) {
+        Employee entity = employeeRepository.findById(dto.getId())
+                .orElseThrow(() -> new EntityNotFoundException("no id"));
+        dto.toDto(entity);
+        return dto;
     }
 
-    public EmployeeDTO findByAll(EmployeeDTO employeeDTO) {
-        Employee employee = employeeRepository.findById(employeeDTO.getId())
+    public void updateProfile(EmployeeDTO dto) {
+        Employee entity = employeeRepository.findById(dto.getId())
                 .orElseThrow(() -> new EntityNotFoundException("no id"));
-        employeeDTO.setEmployeeDTO(employee);
-        return employeeDTO;
-    }
-
-    public void updateProfile(EmployeeDTO employeeDTO) {
-        Employee employee = employeeRepository.findById(employeeDTO.getId())
-                .orElseThrow(() -> new EntityNotFoundException("no id"));
-        employee.setUserEmail(employeeDTO.getUserEmail());
-        employee.setUserTel(employeeDTO.getUserTel());
-        employee.setEmpTel(employeeDTO.getEmpTel());
-        employeeRepository.save(employee);
+        entity.setUserEmail(dto.getUserEmail());
+        entity.setUserTel(dto.getUserTel());
+        entity.setEmpTel(dto.getEmpTel());
+        employeeRepository.save(entity);
     }
 
     public EmployeeDTO findById(Integer id) {
-        Employee employee = employeeRepository.findById(id)
+        Employee entity = employeeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("no id"));
-        EmployeeDTO employeeDTO = new EmployeeDTO();
-        return employeeDTO.setEmployeeDTO(employee);
+        EmployeeDTO dto = new EmployeeDTO();
+        return dto.toDto(entity);
     }
 
-    public DepartmentDTO findByIdDepartInfo(EmployeeDTO employeeDTO) {
-        return employRepositoryImpl.findByEmpDepartInfo(employeeDTO.getId());
+    public DepartmentDTO findByIdDepartInfo(EmployeeDTO dto) {
+        return employRepositoryImpl.findByEmpDepartInfo(dto.getId());
     }
-
 }

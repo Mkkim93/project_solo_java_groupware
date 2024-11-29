@@ -4,6 +4,7 @@ import com.group.domain.hr.entity.Employee;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 
@@ -15,4 +16,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
     @Query("select e from Employee e where e.empEmail = :empEmail")
     Employee findByEmpEmail(@Param("empEmail") String empEmail);
 
+    @Query("select e from Employee e where e.empEmail = :empEmail and e.empPass = :empPass")
+    Employee findByEmpEmailAndPass(@Param("empEmail") String empEmail, @Param("empPass") String empPass);
 }

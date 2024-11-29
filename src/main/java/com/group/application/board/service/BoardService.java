@@ -5,8 +5,7 @@ import com.group.domain.board.entity.Board;
 import com.group.domain.board.repository.BoardRepository;
 import com.group.domain.board.repository.BoardRepositoryImpl;
 import com.group.domain.hr.entity.Employee;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,81 +15,67 @@ import java.time.LocalDateTime;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class BoardService {
 
     private final BoardRepositoryImpl boardRepositoryImpl;
     private final BoardRepository boardRepository;
-    private JPAQueryFactory jpaQueryFactory;
 
-    public BoardService(BoardRepository boardRepository,
-                        EntityManager entityManager,
-                        BoardRepositoryImpl boardRepositoryImpl) {
-        this.boardRepositoryImpl = boardRepositoryImpl;
-        this.boardRepository = boardRepository;
-        jpaQueryFactory = new JPAQueryFactory(entityManager);
-    }
-
-    public Board saveProcessAllBoard(BoardDTO boardDTO) {
-
-        // TODO jwt 에서 토큰 정보 가져와야함 현재는 그냥 객체 생성해서 임시로 진행
-        Employee employee = new Employee();
-        boardDTO.setEmpId(employee);
-        employee.setId(1);
-
-        Board board = fromDTO(boardDTO);
-        board.setEmpId(employee);
-        board.setBoardRegDate(LocalDateTime.now());
-
-        return boardRepository.save(board);
-    }
-
-    private Board fromDTO(BoardDTO boardDTO) {
-        return Board.builder()
-                .id(boardDTO.getId())
-                .empId(boardDTO.getEmpId())
-                .boardTitle(boardDTO.getBoardTitle())
-                .boardContent(boardDTO.getBoardContent())
-                .build();
-    }
-
-    public Page<BoardDTO> findAllByBoard(Pageable pageable) {
+    public Page<BoardDTO> findAll(Pageable pageable) {
         return boardRepositoryImpl.findAllByBoard(pageable);
     }
 
-    public BoardDTO findById(Integer id) {
-        boardRepository.updateBoardViewCount(id);
-        return boardRepositoryImpl.findByIdBoard(id);
+    public BoardDTO findByOne(Integer id) {
+        boardRepository.plusViewCount(id);
+        return boardRepositoryImpl.findByOneBoard(id);
     }
 
     // 조회수 올리지 않고 id 만 검색
-    public BoardDTO findByIdOnly(Integer id) {
-        return boardRepository.findByIdBoard(id);
-    }
-
-    public BoardDTO updateBoard(BoardDTO boardDTO) {
-
-        // TODO JWT 토큰 처리 해야됨
-        Employee employee = new Employee();
-        employee.setId(1);
-        boardDTO.setEmpId(employee);
-
-        Board entity = boardRepository.save(fromDTO(boardDTO));
-        entity.setBoardUpdateDate(LocalDateTime.now());
-        return boardDTO.fromDTO(entity);
+    // all board 제외 controller 에서 사용
+    public BoardDTO findByOnlyId(Integer id) {
+        return boardRepository.findByOneBoard(id);
     }
 
     // 단순 ID 검색할 때 사용 (조회수 관련 없는 메서드)
+    // all board controller 에서 사용
     public BoardDTO getBoardById(Integer id) {
-        BoardDTO boardDTO = new BoardDTO();
-        Board boardById = boardRepository.getBoardById(id);
-        return boardDTO.fromDTO(boardById);
+        BoardDTO dto = new BoardDTO();
+        Board board = boardRepository.getBoardById(id);
+        return dto.toDto(board);
     }
 
-    public void updateBoardViewCount(Integer id) {
-        boardRepository.updateBoardViewCount(id);
+    public Board saveAll(BoardDTO dto) {
+        Board board = convertToBoard(dto);
+        board.setEmployee(
+                Employee.builder()
+                .id(dto.getEmployee())
+                .build());
+        board.setBoardRegDate(LocalDateTime.now());
+        return boardRepository.save(board);
     }
 
-    public void deleteBoard(Integer id) {
-        boardRepository.updateBoardDeleted(id);
+    public BoardDTO update(BoardDTO dto) {
+        Board entity = boardRepository.save(convertToBoard(dto));
+        entity.setBoardUpdateDate(LocalDateTime.now());
+        return dto.toDto(entity);
+    }
+
+    public void delete(Integer id) {
+        boardRepository.delete(id);
+    }
+
+    public void plusViewCount(Integer id) {
+        boardRepository.plusViewCount(id);
+    }
+
+    private Board convertToBoard(BoardDTO dto) {
+        return Board.builder()
+                .id(dto.getId())
+                .employee(Employee.builder()
+                        .id(dto.getEmployee())
+                        .build())
+                .boardTitle(dto.getBoardTitle())
+                .boardContent(dto.getBoardContent())
+                .build();
     }
 }

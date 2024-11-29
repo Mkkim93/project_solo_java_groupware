@@ -30,6 +30,8 @@ public class FileBoardDTO {
     private String originFileName;
     private MultipartFile file;
 
+    private Integer employee;
+
     @QueryProjection
     public FileBoardDTO(Integer id, Integer boardId, String boardTitle, String boardContent,
                         String empName, LocalDateTime boardRegDate, Integer boardViewCount,

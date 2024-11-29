@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>건의 게시판 리스트</title>
+    <title>qna board</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
         body {
@@ -123,36 +123,36 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="qnABoardDTO : ${qnABoardDTO.content}">
-            <td th:text="${qnABoardDTO.id}" class="text-center"></td>
+        <tr th:each="list : ${qnaBoardList.content}">
+            <td th:text="${list.id}" class="text-center"></td>
             <td class="text-center">
-                <a th:if="${qnABoardDTO.boardSecret == 'N'}"
-                   th:text="${qnABoardDTO.boardTitle}"
-                   th:href="@{/board/qnaboarddetailview(id=${qnABoardDTO.id})}"></a>
+                <a th:if="${list.boardSercet == 'N'}"
+                   th:text="${list.boardTitle}"
+                   th:href="@{/board/qna/detail(id=${list.id})}"></a>
 
-                <a th:if="${qnABoardDTO.boardSecret == 'Y'}">
-                      <a th:onclick="|showPasswordPrompt(${qnABoardDTO.id})|">비밀글입니다</a></a>
+                <a th:if="${list.boardSecret == 'Y'}">
+                      <a th:onclick="|showPasswordPrompt(${list.id})|">비밀글입니다</a></a>
             </td>
-            <td th:text="${qnABoardDTO.empName}" class="text-center"></td>
-            <td th:text="${qnABoardDTO.boardRegDate}" class="text-center"></td>
-            <td th:text="${qnABoardDTO.boardViewCount}" class="text-center"></td>
-            <td th:text="${qnABoardDTO.boardSecret}" id="boardSecret" class="text-center"></td>
+            <td th:text="${list.empName}" class="text-center"></td>
+            <td th:text="${list.boardRegDate}" class="text-center"></td>
+            <td th:text="${list.boardViewCount}" class="text-center"></td>
+            <td th:text="${list.boardSecret}" id="boardSecret" class="text-center"></td>
         </tr>
         </tbody>
     </table>
 
     <div class="pagination">
-        <a th:if="${qnABoardDTO.hasPrevious()}" th:href="@{/board/qnaboardlist(page=${qnABoardDTO.number - 1})}">이전</a>
+        <a th:if="${qnaBoardList.hasPrevious()}" th:href="@{/board/qna/list(page=${qnaBoardList.number - 1})}">이전</a>
 
-        <span th:each="i : ${#numbers.sequence(qnABoardDTO.number - (qnABoardDTO.number % 5),
-        qnABoardDTO.number - (qnABoardDTO.number % 5) + 4)}" th:if="${i < qnABoardDTO.totalPages}">
-            <a th:href="@{/board/qnaboardlist(page=${i})}" th:text="${i + 1}"></a>
+        <span th:each="i : ${#numbers.sequence(qnaBoardList.number - (qnaBoardList.number % 5),
+        qnaBoardList.number - (qnaBoardList.number % 5) + 4)}" th:if="${i < qnaBoardList.totalPages}">
+            <a th:href="@{/board/qna/list(page=${i})}" th:text="${i + 1}"></a>
         </span>
 
-        <a th:if="${qnABoardDTO.hasNext()}" th:href="@{/board/qnaboardlist(page=${qnABoardDTO.number + 1})}">다음</a>
+        <a th:if="${qnaBoardList.hasNext()}" th:href="@{/board/qna/list(page=${qnaBoardList.number + 1})}">다음</a>
     </div>
 
-    <a class="btn" th:onclick="|location.href='@{/board/qnaboardwrite}'|">글 작성</a>
+    <a class="btn" th:onclick="|location.href='@{/board/qna/write}'|">글 작성</a>
 </div>
 
 <script>
@@ -160,7 +160,7 @@
         const boardPass = prompt("비밀번호를 입력하세요:");
         if (boardPass) {
             // 비밀번호와 함께 페이지로 직접 이동
-            window.location.href = `/board/qnaboarddetailview?id=${id}&boardPass=${boardPass}`;
+            window.location.href = `/board/qna/detail?id=${id}&boardPass=${boardPass}`;
         }
         else {
             alert("비밀번호가 입력되지 않았습니다.");

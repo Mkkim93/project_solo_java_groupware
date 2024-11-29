@@ -1,80 +1,56 @@
 package com.group.application.login.service;
 
 import com.group.application.hr.dto.EmployeeDTO;
-import com.group.application.hr.service.AttendanceService;
-import com.group.application.hr.service.DepartmentService;
 import com.group.domain.hr.entity.Employee;
-import com.group.domain.hr.repository.AttendanceRepository;
-import com.group.domain.hr.repository.DepartmentRepository;
 import com.group.domain.hr.repository.EmployeeRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class JoinService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final EmployeeRepository employeeRepository;
-    private final DepartmentRepository departmentRepository;
-    private final AttendanceRepository attendanceRepository;
-    private final AttendanceService attendanceService;
-    private final DepartmentService departmentService;
-
-    @Autowired
-    public JoinService(EmployeeRepository employeeRepository,
-                       BCryptPasswordEncoder bCryptPasswordEncoder,
-                       DepartmentRepository departmentRepository,
-                       AttendanceRepository attendanceRepository,
-                       AttendanceService attendanceService,
-                       DepartmentService departmentService) {
-        this.employeeRepository = employeeRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.departmentRepository = departmentRepository;
-        this.attendanceRepository = attendanceRepository;
-        this.attendanceService = attendanceService;
-        this.departmentService = departmentService;
-    }
 
     /**
      * # 회원가입 : 사원 등록
      */
-    public EmployeeDTO joinProcess(EmployeeDTO newEmpDto) {
-        Boolean isByEmpEmail = employeeRepository.existsByEmpEmail(newEmpDto.getEmpEmail());
-        if (isByEmpEmail) {
-            log.info("id 중복 true or false ={}", true);
+    public EmployeeDTO save(EmployeeDTO dto) {
+        Boolean existsByEmpEmail = employeeRepository.existsByEmpEmail(dto.getEmpEmail());
+        if (existsByEmpEmail) {
+            log.info("id 중복 검증 ={}", true);
             return null;
         }
-        Employee employee = getEntityForJoin(newEmpDto);
-        Employee saveEmployee = employeeRepository.save(employee);
-        EmployeeDTO savedEmpDto = getDtoForJoin(saveEmployee);
-        return savedEmpDto;
+        Employee savedEntity = employeeRepository.save(toEntity(dto));
+        return toDto(savedEntity);
     }
 
-    private EmployeeDTO getDtoForJoin(Employee saveEmployee) {
+    private EmployeeDTO toDto(Employee e) {
 
-        EmployeeDTO employeeDTO = EmployeeDTO.builder()
-                .empEmail(saveEmployee.getEmpEmail())
-                .empPass(saveEmployee.getEmpPass())
-                .empName(saveEmployee.getEmpName())
-                .empRegNo(saveEmployee.getEmpRegNo())
-                .userEmail(saveEmployee.getUserEmail())
-                .empNickName(saveEmployee.getEmpNickname())
+        EmployeeDTO dto = EmployeeDTO.builder()
+                .empEmail(e.getEmpEmail())
+                .empPass(e.getEmpPass())
+                .empName(e.getEmpName())
+                .empRegNo(e.getEmpRegNo())
+                .userEmail(e.getUserEmail())
+                .empNickName(e.getEmpNickname())
                 .build();
-        return employeeDTO;
+        return dto;
     }
 
-    private Employee getEntityForJoin(EmployeeDTO newEmpDto) {
-        Employee empEntity = Employee.builder()
-                .empEmail(newEmpDto.getEmpEmail())
-                .empPass(bCryptPasswordEncoder.encode(newEmpDto.getEmpPass()))
-                .empName(newEmpDto.getEmpName())
-                .empRegNo(newEmpDto.getEmpRegNo())
-                .userEmail(newEmpDto.getUserEmail())
-                .empNickname(newEmpDto.getEmpNickName())
+    private Employee toEntity(EmployeeDTO dto) {
+        Employee e = Employee.builder()
+                .empEmail(dto.getEmpEmail())
+                .empPass(bCryptPasswordEncoder.encode(dto.getEmpPass()))
+                .empName(dto.getEmpName())
+                .empRegNo(dto.getEmpRegNo())
+                .userEmail(dto.getUserEmail())
+                .empNickname(dto.getEmpNickName())
                 .build();
-        return empEntity;
+        return e;
     }
 }

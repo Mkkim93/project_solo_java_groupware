@@ -8,8 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-import java.util.List;
-
 @SpringBootTest
 class CommentServiceTest {
 
@@ -39,7 +37,7 @@ class CommentServiceTest {
     public void findAllByComRepo() {
         Integer id = 125;
         PageRequest pageRequest = PageRequest.of(0, 10);
-        Page<CommentDTO> allByCommentBoardId = commentBoardRepository.findAllByCommentBoardId(id, pageRequest);
+        Page<CommentDTO> allByCommentBoardId = commentBoardRepository.findByAllComment(id, pageRequest);
         for (CommentDTO commentDTO : allByCommentBoardId) {
             System.out.println("commentDTO.getId() = " + commentDTO.getId());
             System.out.println("commentDTO.getBoardId() = " + commentDTO.getBoardId());

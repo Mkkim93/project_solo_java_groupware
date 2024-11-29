@@ -4,6 +4,7 @@ import com.group.application.hr.dto.AttendanceDTO;
 import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.hr.service.AttendanceService;
 import com.group.application.hr.service.EmployeeService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,18 +14,13 @@ import java.time.LocalDate;
 
 @Controller
 @RequestMapping("/hr")
+@RequiredArgsConstructor
 public class AttendanceController {
 
     private final AttendanceService attendanceService;
     private final EmployeeService employeeService;
 
-    public AttendanceController(AttendanceService attendanceService,
-                                EmployeeService employeeService) {
-        this.attendanceService = attendanceService;
-        this.employeeService = employeeService;
-    }
-
-    @GetMapping("/detail")
+    @GetMapping("/atten")
     public String detail(Model model, AttendanceDTO attendanceDTO, EmployeeDTO employeeDTO,
                          @RequestParam(value = "page", defaultValue = "0") Integer page,
                          @RequestParam(value = "size", defaultValue = "11") Integer size){
@@ -40,6 +36,7 @@ public class AttendanceController {
         model.addAttribute("remainWorkTime", attendanceService.remainingWorkHoursToWeek(attendanceDTO));
         model.addAttribute("monthWorkTime", attendanceService.findByMonthDurationSum(attendanceDTO));
         model.addAttribute("employeeDTO", employeeService.findByAll(employeeDTO));
-        return "hr/detail";
+
+        return "/hr/atten";
     }
 }

@@ -23,16 +23,16 @@ public class QnABoard {
 
     @ManyToOne(cascade = ALL)
     @JoinColumn(name = "board_id")
-    private Board boardId;
+    private Board board;
 
     @Column(name = "board_secret")
     private String boardSecret;
 
     @Builder
-    public QnABoard(String boardPass, Board boardId, Integer id, String boardSecret) {
+    public QnABoard(String boardPass, Board board, Integer id, String boardSecret) {
         this.id = id;
         this.boardPass = boardPass;
-        this.boardId = boardId;
+        this.board = board;
         this.boardSecret = boardSecret;
     }
 

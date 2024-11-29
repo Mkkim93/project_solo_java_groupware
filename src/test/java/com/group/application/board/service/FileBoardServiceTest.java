@@ -5,12 +5,6 @@ import com.group.domain.board.entity.Board;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.mock.web.MockMultipartFile;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 
 @SpringBootTest
 class FileBoardServiceTest {
@@ -22,7 +16,7 @@ class FileBoardServiceTest {
     public void findByIdViewCount() {
         FileBoardDTO fileBoardDTO = new FileBoardDTO();
         fileBoardDTO.setId(74);
-        fileBoardService.findByIdFileBoard(fileBoardDTO.getId());
+        fileBoardService.findByOne(fileBoardDTO.getId());
         Board board = new Board();
 
         board.setId(fileBoardDTO.getFileBoardId());

@@ -7,12 +7,11 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 
 @Data
-@ToString
 @NoArgsConstructor
 public class CommentDTO {
 
-    private Integer boardId;
     private Integer id;
+    private Integer boardId;
     private String empName;
     private String comContent;
     private LocalDateTime comRegDate;

@@ -22,7 +22,7 @@ public class QFreeBoard extends EntityPathBase<FreeBoard> {
 
     public static final QFreeBoard freeBoard = new QFreeBoard("freeBoard");
 
-    public final QBoard boardId;
+    public final QBoard board;
 
     public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
@@ -44,7 +44,7 @@ public class QFreeBoard extends EntityPathBase<FreeBoard> {
 
     public QFreeBoard(Class<? extends FreeBoard> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.boardId = inits.isInitialized("boardId") ? new QBoard(forProperty("boardId"), inits.get("boardId")) : null;
+        this.board = inits.isInitialized("board") ? new QBoard(forProperty("board"), inits.get("board")) : null;
     }
 
 }

@@ -2,11 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>건의게시판 글 등록</title>
+    <title>write</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
+            background-color: #f9f9f9;
             margin: 0;
             padding: 0;
         }
@@ -14,7 +14,7 @@
         .layout {
             width: 500px;
             margin: 40px auto;
-            background-color: #ffffff;
+            background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
@@ -48,7 +48,7 @@
             width: 100%;
             padding: 12px;
             background-color: #007bff;
-            color: #ffffff;
+            color: #fff;
             border: none;
             border-radius: 4px;
             font-size: 16px;
@@ -67,54 +67,24 @@
             margin-top: -5px;
             margin-bottom: 10px;
         }
-
-        .input-group {
-            margin-top: 10px;
-            display: none;
-        }
-
     </style>
 </head>
 <body>
-
 <div class="layout">
-    <h2>건의게시판 글 등록</h2>
-    <form th:action="@{/board/qnaboardwrite}" th:object="${qnABoardDTO}" method="post">
+    <h2>공지게시판 글 등록</h2>
+    <form th:action="@{/board/notice/write}" th:object="${noticeBoardDto}" method="post">
 
         <label for="boardTitle"></label>
-        <input type="text" id="boardTitle" th:field="*{boardTitle}" placeholder="제목" required>
+        <input type="text" id="boardTitle" th:field="*{boardTitle}" placeholder="제목을 입력하세요" required>
+        <div class="required">* 필수 입력 사항입니다.</div>
 
         <label for="boardContent"></label>
-        <textarea id="boardContent" th:field="*{boardContent}" placeholder="내용" required></textarea>
-
-        <label>
-            비밀글 선택
-            <input class="form-check" type="checkbox" id="secretCheckBox" th:value="*{boardPass}" th:field="*{boardSecret}">
-        </label>
-
-        <div class="input-group" id="passwordGroup">
-            <input type="password" id="QBoardPass" th:field="*{boardPass}" placeholder="비밀번호">
-        </div>
+        <textarea id="boardContent" th:field="*{boardContent}" placeholder="내용을 입력하세요" required></textarea>
+        <div class="required">* 필수 입력 사항입니다.</div>
 
         <button type="submit">작성하기</button>
 
     </form>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        let secretCheckBox = document.getElementById('secretCheckBox');
-        let passwordGroup = document.getElementById('passwordGroup');
-
-        secretCheckBox.addEventListener('change', function () {
-            if (this.checked) {
-                passwordGroup.style.display = 'block'; // 체크박스 선택 시 비밀번호 입력 창 표시
-            } else {
-                passwordGroup.style.display = 'none'; // 체크박스 선택 해제 시 비밀번호 입력 창 숨김
-            }
-        });
-    });
-</script>
-
 </body>
 </html>

@@ -33,32 +33,27 @@ public class CommentBoard {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "board_id")
-    private Board boardId;
+    private Board board;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "emp_id")
-    private Employee empId;
+    private Employee employee;
 
     @PrePersist
     void createComment() {
         this.comRegDate = LocalDateTime.now();
     }
 
-    // 댓글 수정
-    void UpdateComment(String comContent) {
-        this.comContent = comContent;
-    }
-
     @Builder
-    public CommentBoard(CommentDTO commentDTO) {
-        this.id = commentDTO.getId();
-        this.comContent = commentDTO.getComContent();
-        this.comRegDate = commentDTO.getComRegDate();
-        this.empId = Employee.builder()
-                .id(commentDTO.getEmpId())
+    public CommentBoard(CommentDTO dto) {
+        this.id = dto.getId();
+        this.comContent = dto.getComContent();
+        this.comRegDate = dto.getComRegDate();
+        this.employee = Employee.builder()
+                .id(dto.getEmpId())
                 .build();
-        this.boardId = Board.builder()
-                .id(commentDTO.getBoardId())
+        this.board = Board.builder()
+                .id(dto.getBoardId())
                 .build();
     }
 }

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>자유게시판 글 등록</title>
+    <title>write</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -72,7 +72,7 @@
 <body>
 <div class="layout">
     <h2>자유게시판 글 등록</h2>
-    <form th:action="@{/board/freeboardwrite}" th:object="${freeBoardDTO}" method="post">
+    <form th:action="@{/board/free/write}" th:object="${freeBoardDto}" method="post">
 
         <label for="boardTitle"></label>
         <input type="text" id="boardTitle" th:field="*{boardTitle}" placeholder="게시글 제목을 입력하세요" required>

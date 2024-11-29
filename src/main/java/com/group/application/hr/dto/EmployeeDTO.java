@@ -30,6 +30,7 @@ public class EmployeeDTO {
     private Integer deptId;
     private Integer attId;
 
+
     @QueryProjection
     public EmployeeDTO(Integer id, String empEmail, String empPass,
                        String empName, String empRegNo, String userEmail,
@@ -55,25 +56,24 @@ public class EmployeeDTO {
     }
 
     // Entity -> DTO
-    public EmployeeDTO setEmployeeDTO(Employee employee) {
-        this.id = employee.getId();
-        this.empName = employee.getEmpName();
-        this.empRegNo = employee.getEmpRegNo();
-        this.empRank = employee.getEmpRank();
-        this.empNickName = employee.getEmpNickname();
-        this.userTel = employee.getUserTel();
-        this.userEmail = employee.getUserEmail();
-        this.empEmail = employee.getEmpEmail();
-        this.empMileage = employee.getEmpMileage();
-        this.empNo = employee.getEmpNo();
-        this.empTel = employee.getEmpTel();
+    public EmployeeDTO toDto(Employee e) {
+        this.id = e.getId();
+        this.empName = e.getEmpName();
+        this.empRegNo = e.getEmpRegNo();
+        this.empRank = e.getEmpRank();
+        this.empNickName = e.getEmpNickname();
+        this.userTel = e.getUserTel();
+        this.userEmail = e.getUserEmail();
+        this.empEmail = e.getEmpEmail();
+        this.empMileage = e.getEmpMileage();
+        this.empNo = e.getEmpNo();
+        this.empTel = e.getEmpTel();
         return this;
     }
 
-    public EmployeeDTO setDTO(Employee employee) {
-        this.id = employee.getId();
-        this.empEmail = employee.getEmpEmail();
+    public EmployeeDTO toDtoByIdEmail(Employee e) {
+        this.id = e.getId();
+        this.empEmail = e.getEmpEmail();
         return this;
     }
-
 }

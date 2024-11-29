@@ -22,11 +22,11 @@ public class FreeBoard {
 
     @ManyToOne(cascade = ALL, fetch = LAZY)
     @JoinColumn(name = "board_id")
-    private Board boardId;
+    private Board board;
 
     @Builder
-    public FreeBoard(Integer id, Board boardId) {
+    public FreeBoard(Integer id, Board board) {
         this.id = id;
-        this.boardId = boardId;
+        this.board = board;
     }
 }

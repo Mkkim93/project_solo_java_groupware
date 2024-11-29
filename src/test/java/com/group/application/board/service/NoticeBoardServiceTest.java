@@ -14,7 +14,7 @@ class NoticeBoardServiceTest {
     NoticeBoardService noticeBoardService;
 
     @Test
-    public void saveNoticeBoard() {
+    public void save() {
         BoardDTO boardDTO = new BoardDTO();
         boardDTO.setBoardTitle("공지 테스트 제목 입니다");
         boardDTO.setBoardContent("공지 테스트 내용 입니다.");

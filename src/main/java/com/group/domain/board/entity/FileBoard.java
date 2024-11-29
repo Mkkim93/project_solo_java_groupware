@@ -22,15 +22,15 @@ public class FileBoard {
 
     @ManyToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = "board_id")
-    private Board boardId;
+    private Board board;
 
     @OneToMany(mappedBy = "fileBoardId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<FileStore> fileStores = new ArrayList<>();
 
     @Builder
-    public FileBoard(Integer id, Board boardId) {
+    public FileBoard(Integer id, Board board) {
         this.id = id;
-        this.boardId = boardId;
+        this.board = board;
     }
 
 }

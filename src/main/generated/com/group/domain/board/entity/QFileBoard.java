@@ -22,7 +22,7 @@ public class QFileBoard extends EntityPathBase<FileBoard> {
 
     public static final QFileBoard fileBoard = new QFileBoard("fileBoard");
 
-    public final QBoard boardId;
+    public final QBoard board;
 
     public final ListPath<com.group.domain.file.entity.FileStore, com.group.domain.file.entity.QFileStore> fileStores = this.<com.group.domain.file.entity.FileStore, com.group.domain.file.entity.QFileStore>createList("fileStores", com.group.domain.file.entity.FileStore.class, com.group.domain.file.entity.QFileStore.class, PathInits.DIRECT2);
 
@@ -46,7 +46,7 @@ public class QFileBoard extends EntityPathBase<FileBoard> {
 
     public QFileBoard(Class<? extends FileBoard> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.boardId = inits.isInitialized("boardId") ? new QBoard(forProperty("boardId"), inits.get("boardId")) : null;
+        this.board = inits.isInitialized("board") ? new QBoard(forProperty("board"), inits.get("board")) : null;
     }
 
 }

@@ -11,6 +11,6 @@ public class GlobalExceptionHandler {
     public String handleCustomPassWordException(CustomException customException,
                                                 RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("failPassWord", customException.getMessage());
-        return "redirect:/board/qnaboardlist";
+        return "redirect:/board/qna/list";
     }
 }

@@ -62,5 +62,15 @@ class EmployeeServiceTest {
         assertThat(byId).extracting("id").isEqualTo(1);
     }
 
+    @Test
+    @DisplayName("회원 정보 조회")
+    void findByAll() {
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        employeeDTO.setEmpEmail("king00314@naver.com");
+        employeeDTO.setEmpPass("1234");
+
+        employeeService.findByAll(employeeDTO);
+    }
+
 
 }

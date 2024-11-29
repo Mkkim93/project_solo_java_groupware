@@ -7,6 +7,7 @@ import com.group.application.board.service.FileBoardService;
 import com.group.application.file.FileBoardStoreDTO;
 import com.group.application.file.FileStoreService;
 import com.group.domain.file.entity.FileStore;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -29,7 +30,8 @@ import java.util.List;
 
 @Slf4j
 @Controller
-@RequestMapping("/board")
+@RequestMapping("/board/file")
+@RequiredArgsConstructor
 public class FileBoardController {
 
     private final FileBoardService fileBoardService;
@@ -37,114 +39,94 @@ public class FileBoardController {
     private final CommentService commentService;
     private final BoardService boardService;
 
-    public FileBoardController(FileBoardService fileBoardService,
-                               FileStoreService fileStoreService,
-                               CommentService commentService,
-                               BoardService boardService) {
-        this.fileBoardService = fileBoardService;
-        this.fileStoreService = fileStoreService;
-        this.commentService = commentService;
-        this.boardService = boardService;
-
-    }
-
-    @GetMapping("/fileboardlist")
-    public String boardView(Model model,
-                            @RequestParam(value = "page", defaultValue = "0") int page,
-                            @RequestParam(value = "size", defaultValue = "10") int size
-                            ) {
+    @GetMapping("/list")
+    public String view(@RequestParam(value = "page", defaultValue = "0") int page,
+                       @RequestParam(value = "size", defaultValue = "10") int size,
+                       Model model) {
         Pageable pageRequest = PageRequest.of(page, size);
-        Page<FileBoardDTO> fileBoardDTO = fileBoardService.findAllByFileBoard(pageRequest);
-        model.addAttribute("fileBoardDTO", fileBoardDTO);
-        return "board/fileboardlist";
+        Page<FileBoardDTO> fileBoardDto = fileBoardService.findByAll(pageRequest);
+        model.addAttribute("fileBoardList", fileBoardDto);
+        return "board/file/list";
     }
 
-    @GetMapping("/fileboardwrite")
-    public String fileBoardWriteView(Model model, FileBoardDTO fileBoardDTO) {
-        model.addAttribute("fileBoardDTO", fileBoardDTO);
-        model.addAttribute("fileStoreBoardDTO", fileStoreService.findByStoreId(fileBoardDTO.getId()));
-        return "board/fileboardwrite";
+    @GetMapping("/detail")
+    public String detail(@RequestParam Integer id,
+                         @RequestParam(value = "page", defaultValue = "0") int page,
+                         @RequestParam(value = "size", defaultValue = "10") int size,
+                         Model model) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        FileBoardDTO fileBoardDto = fileBoardService.findById(id);
+        model.addAttribute("fileStoreDto", fileStoreService.findByStoreId(id));
+        model.addAttribute("fileBoardDto", fileBoardService.findByOne(id));
+        model.addAttribute("commentDto", commentService.findAll(fileBoardDto.getBoardId(), pageRequest));
+        model.addAttribute("boardDto", boardService.findByOnlyId(fileBoardDto.getBoardId()));
+        return "/board/file/detail";
+    }
+
+    @GetMapping("/write")
+    public String write(FileBoardDTO fileBoardDto, Model model) {
+        model.addAttribute("fileBoardDto", fileBoardDto);
+        model.addAttribute("fileStoreDto", fileStoreService.findByStoreId(fileBoardDto.getId()));
+        return "board/file/write";
     }
 
     //TODO JWT 토큰 스크립트 헤더로 처리 하면 될듯
-    @PostMapping("/fileboardwrite")
-    public String fileBoardWrite(@RequestParam(name = "file", required = false) List<MultipartFile> files,
-                                 @ModelAttribute FileBoardDTO fileBoardDTO, Model model) throws IOException {
-        fileBoardService.saveFileBoard(fileBoardDTO, files);
-        model.addAttribute("fileStoreBoardDTO", fileStoreService.findByStoreId(fileBoardDTO.getId()));
-        return "redirect:/board/fileboardlist";
+    @PostMapping("/write")
+    public String writeProc(@RequestParam(name = "file", required = false) List<MultipartFile> files,
+                            @ModelAttribute FileBoardDTO fileBoardDto, Model model) throws IOException {
+        fileBoardDto.setEmployee(1); // TODO 임시 ID
+        fileBoardService.save(fileBoardDto, files);
+        model.addAttribute("fileStoreDto", fileStoreService.findByStoreId(fileBoardDto.getId()));
+        return "redirect:/board/file/list";
     }
 
-    // TODO
-    @GetMapping("/fileboarddetailview")
-    public String boardDetailView(Model model,
-                                  @RequestParam Integer id,
-                                  @RequestParam(value = "page", defaultValue = "0") int page,
-                                  @RequestParam(value = "size", defaultValue = "10") int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
-        FileBoardDTO fileBoardDTO = fileBoardService.findById(id);
-
-        model.addAttribute("fileBoardStoreDTO", fileStoreService.findByStoreId(id));
-
-        model.addAttribute("fileBoardDTO", fileBoardService.findByIdFileBoard(id));
-        model.addAttribute("commentDTO", commentService.findAll(fileBoardDTO.getBoardId(), pageRequest));
-        model.addAttribute("boardDTO", boardService.findByIdOnly(fileBoardDTO.getBoardId()));
-        return "/board/fileboarddetailview";
+    @GetMapping("/modify/{id}")
+    public String modify(@PathVariable("id") Integer id, Model model) {
+        FileBoardDTO fileBoardDto = fileBoardService.findById(id);
+        List<FileBoardStoreDTO> fileBoardStoreDto = fileStoreService.findByStoreId(id);
+        model.addAttribute("fileBoardDto", fileBoardDto);
+        model.addAttribute("fileStoreDto", fileBoardStoreDto);
+        return "/board/file/modify";  // 수정 페이지로 이동
     }
 
-    @GetMapping("/fileboardmodify/{id}")
-    public String boardModifyView(Model model, @PathVariable("id") Integer id) {
-        FileBoardDTO fileBoardDTO = fileBoardService.findById(id);
-        List<FileBoardStoreDTO> fileBoardStoreDTO = fileStoreService.findByStoreId(id);
-        model.addAttribute("fileBoardDTO", fileBoardDTO);
-        model.addAttribute("fileBoardStoreDTO", fileBoardStoreDTO);
-        return "/board/fileboardmodify";  // 수정 페이지로 이동
-    }
-
-    @PostMapping("/fileboardmodify/update/{id}")
-    public String boardModifyWriting(@ModelAttribute FileBoardDTO fileBoardDTO,
-                                     @RequestParam(name = "file", required = false) List<MultipartFile> files,
-                                     @PathVariable("id") Integer id, Model model) throws IOException {
+    @PostMapping("/modify/update/{id}")
+    public String modifyProc(@ModelAttribute FileBoardDTO fileBoardDto,
+                             @RequestParam(name = "file", required = false) List<MultipartFile> files,
+                             @PathVariable("id") Integer id, Model model) throws IOException {
         // 기존 파일 게시글 정보 가져오기
         FileBoardDTO fileBoardTemp = fileBoardService.findById(id);
 
         // 파일 게시글 정보 업데이트
-        fileBoardTemp.setBoardTitle(fileBoardDTO.getBoardTitle());
-        fileBoardTemp.setBoardContent(fileBoardDTO.getBoardContent());
+        fileBoardTemp.setBoardTitle(fileBoardDto.getBoardTitle());
+        fileBoardTemp.setBoardContent(fileBoardDto.getBoardContent());
+        fileBoardTemp.setEmployee(1); // TODO 임시 ID
 
-
-        List<FileBoardStoreDTO> fileBoardStoreDTO = fileStoreService.findByStoreId(id);
-        model.addAttribute("fileBoardStoreDTO", fileBoardStoreDTO);
+        List<FileBoardStoreDTO> fileStoreDto = fileStoreService.findByStoreId(id);
+        model.addAttribute("fileStoreDto", fileStoreDto);
 
         // 새로운 파일 업로드 처리
         if (files != null || files.isEmpty()) {
-            fileBoardService.saveFileBoard(fileBoardTemp, files);
+            fileBoardService.save(fileBoardTemp, files);
         }
         else {
-            fileBoardService.updateFileBoard(fileBoardTemp);
+            fileBoardService.update(fileBoardTemp);
         }
 
-        return "redirect:/board/fileboardlist";  // 수정 후 목록 페이지로 리다이렉트
+        return "redirect:/board/file/list";  // 수정 후 목록 페이지로 리다이렉트
     }
 
-    @GetMapping("/fileboarddetailview/delete/{id}")
-    public String deleteBoard(@PathVariable("id") Integer id) {
-        FileBoardDTO fileBoardDTO = fileBoardService.findById(id);
-        fileBoardService.deleteBoard(fileBoardDTO.getBoardId());
+    @GetMapping("/detail/delete/{id}")
+    public String delete(@PathVariable("id") Integer id) {
+        FileBoardDTO fileBoardDto = fileBoardService.findById(id);
+        fileBoardService.delete(fileBoardDto.getBoardId());
         return "redirect:/board/fileboardlist";
     }
 
-    /*@ResponseBody
-    @GetMapping("/images/{filename}")
-    public Resource downloadImage(@PathVariable String filename) throws MalformedURLException {
-        return new UrlResource("file:" + fileStoreService.getFullPath(filename));
-    }*/
-
     // 파일 다운로드
     @GetMapping("/download/{id}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable("id") Integer id) throws MalformedURLException {
+    public ResponseEntity<Resource> download(@PathVariable("id") Integer id) throws MalformedURLException {
         // 파일 정보 가져오기
-        FileStore fileBoardStore = fileStoreService.findByIdOnly(id);
+        FileStore fileBoardStore = fileStoreService.findById(id);
 
         if (fileBoardStore == null) {
             return ResponseEntity.notFound().build(); // 파일이 없을 경우 404 반환

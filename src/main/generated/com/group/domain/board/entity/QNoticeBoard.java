@@ -22,7 +22,7 @@ public class QNoticeBoard extends EntityPathBase<NoticeBoard> {
 
     public static final QNoticeBoard noticeBoard = new QNoticeBoard("noticeBoard");
 
-    public final QBoard boardId;
+    public final QBoard board;
 
     public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
@@ -44,7 +44,7 @@ public class QNoticeBoard extends EntityPathBase<NoticeBoard> {
 
     public QNoticeBoard(Class<? extends NoticeBoard> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.boardId = inits.isInitialized("boardId") ? new QBoard(forProperty("boardId"), inits.get("boardId")) : null;
+        this.board = inits.isInitialized("board") ? new QBoard(forProperty("board"), inits.get("board")) : null;
     }
 
 }

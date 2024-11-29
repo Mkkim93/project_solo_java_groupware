@@ -38,7 +38,7 @@ public class QBoard extends EntityPathBase<Board> {
 
     public final ListPath<CommentBoard, QCommentBoard> comments = this.<CommentBoard, QCommentBoard>createList("comments", CommentBoard.class, QCommentBoard.class, PathInits.DIRECT2);
 
-    public final com.group.domain.hr.entity.QEmployee empId;
+    public final com.group.domain.hr.entity.QEmployee employee;
 
     public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
@@ -60,7 +60,7 @@ public class QBoard extends EntityPathBase<Board> {
 
     public QBoard(Class<? extends Board> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.empId = inits.isInitialized("empId") ? new com.group.domain.hr.entity.QEmployee(forProperty("empId"), inits.get("empId")) : null;
+        this.employee = inits.isInitialized("employee") ? new com.group.domain.hr.entity.QEmployee(forProperty("employee"), inits.get("employee")) : null;
     }
 
 }

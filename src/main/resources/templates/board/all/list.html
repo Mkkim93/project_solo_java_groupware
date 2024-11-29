@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>게시판 리스트</title>
+    <title>all board</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <style>
         body {
@@ -61,32 +61,32 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="boardDTO : ${boardDTO.content}">
-                <td th:text="${boardDTO.id}" class="text-center"></td>
-                <td class="text-center"><a th:text="${boardDTO.boardTitle}" th:href="@{/board/boarddetailview(id=${boardDTO.id})}" class="text-decoration-none" ></a></td>
-                <td th:text="${boardDTO.empName}" class="text-center"></td>
-                <td th:text="${boardDTO.boardRegDate}" class="text-center"></td>
-                <td th:text="${boardDTO.boardViewCount}" class="text-center"></td>
-                <td th:text="${boardDTO.isDeleted}" class="text-center"></td>
+            <tr th:each="list : ${allBoardList.content}">
+                <td th:text="${list.id}" class="text-center"></td>
+                <td class="text-center"><a th:text="${list.boardTitle}" th:href="@{/board/all/detail(id=${list.id})}" class="text-decoration-none" ></a></td>
+                <td th:text="${list.empName}" class="text-center"></td>
+                <td th:text="${list.boardRegDate}" class="text-center"></td>
+                <td th:text="${list.boardViewCount}" class="text-center"></td>
+                <td th:text="${list.isDeleted}" class="text-center"></td>
             </tr>
             </tbody>
         </table>
         <div class="pagination">
-            <li th:if="${boardDTO.hasPrevious()}">
-                <a th:href="@{/board/boardlist(page=${boardDTO.number - 1})}" class="btn btn-link">이전</a>
+            <li th:if="${allBoardList.hasPrevious()}">
+                <a th:href="@{/board/all/list(page=${allBoardList.number - 1})}" class="btn btn-link">이전</a>
             </li>
 
-            <li th:each="i : ${#numbers.sequence(boardDTO.number - (boardDTO.number % 5),
-            boardDTO.number - (boardDTO.number % 5) + 4)}" th:if="${i < boardDTO.totalPages}">
-                <a th:href="@{/board/boardlist(page=${i})}" class="btn btn-link" th:text="${i + 1}"></a>
+            <li th:each="i : ${#numbers.sequence(allBoardList.number - (allBoardList.number % 5),
+            allBoardList.number - (allBoardList.number % 5) + 4)}" th:if="${i < allBoardList.totalPages}">
+                <a th:href="@{/board/all/list(page=${i})}" class="btn btn-link" th:text="${i + 1}"></a>
             </li>
 
-            <li th:if="${boardDTO.hasNext()}">
-                <a th:href="@{/board/boardlist(page=${boardDTO.number + 1})}" class="btn btn-link">다음</a>
+            <li th:if="${allBoardList.hasNext()}">
+                <a th:href="@{/board/all/list(page=${allBoardList.number + 1})}" class="btn btn-link">다음</a>
             </li>
         </div>
     </div>
-    <button th:onclick="|location.href='@{/board/boardwrite}'|" class="btn btn-primary btn-create">글 작성</button>
+    <button th:onclick="|location.href='@{/board/all/write}'|" class="btn btn-primary btn-create">글 작성</button>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>

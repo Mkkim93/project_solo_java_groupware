@@ -16,15 +16,15 @@ public interface BoardRepositoryCustom {
 
     Page<QnABoardDTO> findAllByQnABoard(Pageable pageable);
 
-    BoardDTO findByIdBoard(Integer id);
+    BoardDTO findByOneBoard(Integer id);
 
-    FreeBoardDTO findByIdFreeBoard(Integer id);
+    FreeBoardDTO findByOneFreeBoard(Integer id);
 
-    FileBoardDTO findByIdFileBoard(Integer id);
+    FileBoardDTO findByOneFileBoard(Integer id);
 
-    NoticeBoardDTO findByIdNoticeBoard(Integer id);
+    NoticeBoardDTO findByOneNoticeBoard(Integer id);
 
-    QnABoardDTO findByIdQnABoard(Integer id, String boardPass);
+    QnABoardDTO findByOneQnABoard(Integer id, String boardPass);
 
-    QnABoardDTO findByIdQnABoardNotPass(Integer id);
+    QnABoardDTO findByOneQnABoardNotPass(Integer id);
 }

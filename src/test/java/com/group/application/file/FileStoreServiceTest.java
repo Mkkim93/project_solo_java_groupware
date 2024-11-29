@@ -52,7 +52,7 @@ class FileStoreServiceTest {
     public void findByStoreId() {
         Integer id = 58;
         Integer boardDtoId = 69;
-        FileStore onlyId = fileStoreService.findByIdOnly(boardDtoId);
+        FileStore onlyId = fileStoreService.findById(boardDtoId);
         System.out.println("onlyId = " + onlyId.getId());
         System.out.println("onlyId.getFilePath() = " + onlyId.getFilePath());
         System.out.println("onlyId.getFileName() = " + onlyId.getFileName());

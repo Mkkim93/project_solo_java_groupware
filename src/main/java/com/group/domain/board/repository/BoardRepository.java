@@ -14,12 +14,16 @@ public interface BoardRepository extends JpaRepository<Board, Integer> , BoardRe
 
     @Modifying
     @Transactional // TODO 트랜잭션 충돌 가능성 있음
-    @Query("update Board b set b.boardDeleteDate = CURRENT_TIMESTAMP, b.boardIsDeleted = 'Y' where b.id = :id")
-    Integer updateBoardDeleted(@Param("id") Integer id);
+    @Query("update Board b " +
+            "set b.boardDeleteDate = CURRENT_TIMESTAMP, b.boardIsDeleted = 'Y' " +
+            "where b.id = :id")
+    Integer delete(@Param("id") Integer id);
 
     @Modifying
-    @Query("update Board b set b.boardViewCount = b.boardViewCount + 1 where b.id = :id")
-    Integer updateBoardViewCount(@Param("id") Integer id);
+    @Query("update Board b " +
+            "set b.boardViewCount = b.boardViewCount + 1 " +
+            "where b.id = :id")
+    Integer plusViewCount(@Param("id") Integer id);
 
     Board getBoardById(Integer id);
 }

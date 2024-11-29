@@ -8,7 +8,7 @@
 <body>
 <div class="container mt-5">
     <h1 class="text-center mb-4">메일 작성</h1>
-    <form th:action="@{/mail/tomeProc}" th:object="${mailBoxDTO}"  method="post" class="p-4 border rounded shadow-sm">
+    <form th:action="@{/mail/tomeProc}" th:object="${mailBoxDto}"  method="post" class="p-4 border rounded shadow-sm">
         <div class="mb-3">
             <input type="hidden" id="receiverEmail" name="receiverEmail"  th:value="${empMail}" class="form-control" placeholder="받는 메일 주소를 입력하세요" required>
         </div>

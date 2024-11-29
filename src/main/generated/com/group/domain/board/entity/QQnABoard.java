@@ -22,7 +22,7 @@ public class QQnABoard extends EntityPathBase<QnABoard> {
 
     public static final QQnABoard qnABoard = new QQnABoard("qnABoard");
 
-    public final QBoard boardId;
+    public final QBoard board;
 
     public final StringPath boardPass = createString("boardPass");
 
@@ -48,7 +48,7 @@ public class QQnABoard extends EntityPathBase<QnABoard> {
 
     public QQnABoard(Class<? extends QnABoard> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.boardId = inits.isInitialized("boardId") ? new QBoard(forProperty("boardId"), inits.get("boardId")) : null;
+        this.board = inits.isInitialized("board") ? new QBoard(forProperty("board"), inits.get("board")) : null;
     }
 
 }

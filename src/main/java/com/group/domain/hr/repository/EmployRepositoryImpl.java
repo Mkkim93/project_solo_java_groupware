@@ -50,16 +50,10 @@ public class EmployRepositoryImpl extends QuerydslRepositorySupport implements E
         LocalDate today = LocalDate.now();
 
         return jpaQueryFactory.select(new QAttendanceDTO(
-                        attendance.id,
-                        attendance.attOn,
-                        attendance.attOff,
-                        attendance.attDuration,
-                        attendance.attOverDuration,
-                        attendance.attPerception,
-                        attendance.attLeave,
-                        attendance.attVacation,
-                        attendance.attDate,
-                        attendance.attCreate,
+                        attendance.id, attendance.attOn, attendance.attOff,
+                        attendance.attDuration, attendance.attOverDuration, attendance.attPerception,
+                        attendance.attLeave, attendance.attVacation,
+                        attendance.attDate, attendance.attCreate,
                         attendance.employee.id,
                         employee.empName))
                 .from(attendance)
@@ -75,17 +69,10 @@ public class EmployRepositoryImpl extends QuerydslRepositorySupport implements E
     public Page<AttendanceDTO> findByAllEmpAttInfo(Integer id, LocalDate attDate, PageRequest pageRequest) {
         int searchByMonth = attDate.getMonthValue(); // 월단위 조회 변수
         List<AttendanceDTO> results = jpaQueryFactory.select(new QAttendanceDTO(
-                        attendance.id,
-                        attendance.attOn,
-                        attendance.attOff,
-                        attendance.attDuration,
+                        attendance.id, attendance.attOn, attendance.attOff, attendance.attDuration,
                         attendance.attOverDuration.count(),
-                        attendance.attPerception.sum(),
-                        attendance.attLeave.sum(),
-                        attendance.attVacation.sum(),
-                        attendance.attDate,
-                        attendance.attCreate,
-                        attendance.employee.id,
+                        attendance.attPerception.sum(), attendance.attLeave.sum(), attendance.attVacation.sum(),
+                        attendance.attDate, attendance.attCreate, attendance.employee.id,
                         employee.empName))
                 .from(attendance)
                 .join(attendance.employee, employee)

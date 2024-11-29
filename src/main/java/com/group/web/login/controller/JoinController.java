@@ -1,10 +1,8 @@
 package com.group.web.login.controller;
 
 import com.group.application.hr.dto.EmployeeDTO;
-import com.group.application.hr.service.EmployeeService;
-import com.group.application.jwt.JWTUtil;
 import com.group.application.login.service.JoinService;
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,46 +11,22 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
-@Slf4j
 @Controller
+@RequiredArgsConstructor
 public class JoinController {
 
-    private final EmployeeService employeeService;
+    public static final String REGISTER_PATH = "/register";
     private final JoinService joinService;
-    private final JWTUtil jwtUtil;
 
-
-    public JoinController(JoinService joinService,
-                          JWTUtil jwtUtil,
-                          EmployeeService employeeService) {
-        this.employeeService = employeeService;
-        this.joinService = joinService;
-        this.jwtUtil = jwtUtil;
+    @GetMapping(REGISTER_PATH)
+    public String view(Model model) {
+        model.addAttribute("employeeDTO", new EmployeeDTO());
+        return REGISTER_PATH;
     }
 
-    @GetMapping("/join")
-    public String joinView(Model model, EmployeeDTO employeeDto) {
-        model.addAttribute("employeeDto", employeeDto);  // 모델에 employeeDto를 추가
-        log.info("welcome joinPage!");
-        return "join";
-    }
-
-    @PostMapping("/join")
-    public String joinProcess(@ModelAttribute("employeeDto") EmployeeDTO employeeDto) {
-        joinService.joinProcess(employeeDto);
+    @PostMapping(REGISTER_PATH)
+    public String proc(@ModelAttribute("employeeDTO") EmployeeDTO employeeDto) {
+        joinService.save(employeeDto);
         return "redirect:/login";
-    }
-
-    @GetMapping("/login")
-    public String loinView(Model model, EmployeeDTO employeeDto) {
-        model.addAttribute("employeeDto", employeeDto);
-        log.info("welcome loginPage!");
-        return "login";
-    }
-
-    @PostMapping("/login")
-    public String loginProcess(Model model, EmployeeDTO employeeDto) {
-        model.addAttribute("employeeDto", employeeDto);
-        return "redirect:/myPage";
     }
 }

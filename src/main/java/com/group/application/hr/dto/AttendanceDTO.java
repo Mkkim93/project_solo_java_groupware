@@ -51,32 +51,13 @@ public class AttendanceDTO {
         this.employee = employee;
     }
 
-    public AttendanceDTO converterDTO(Attendance attendance) {
-        this.id = attendance.getId();
-        this.attOn = attendance.getAttOn();
-        this.attOff = attendance.getAttOff();
-        this.attDuration = attendance.getAttDuration();
-        this.employee = attendance.getEmployee().getId();
+    public AttendanceDTO toDto(Attendance e) {
+        this.id = e.getId();
+        this.attOn = e.getAttOn();
+        this.attOff = e.getAttOff();
+        this.attDuration = e.getAttDuration();
+        this.employee = e.getEmployee().getId();
         return this;
-    }
-
-    // TODO 나중에 안쓸수도 있음
-    public AttendanceDTO(LocalDateTime attOn, LocalDateTime attOff, Long attRemain, Long attOverDuration) {
-        this.attOn = attOn;
-        this.attOff = attOff;
-        this.attRemain = attRemain;
-        this.attOverDuration = attOverDuration;
-    }
-
-    // 초과근무시간과 잔여근무시간 계산
-    public AttendanceDTO calculateOvertimeAndRemainingTime(Attendance attendance) {
-        Long basicTime = 8L;
-        Long duration = attendance.getAttDuration();
-
-        Long overTime = Math.max(0, duration - basicTime * 60);
-        Long remainingTime = Math.max(0, basicTime * 60 - duration);
-
-        return new AttendanceDTO(attendance.getAttOn(), attendance.getAttOff(), overTime, remainingTime);
     }
 
     // 월별 근태 조회를 위한 Projections DTO 생성
@@ -90,12 +71,5 @@ public class AttendanceDTO {
         this.attLeave = attLeave;
         this.attVacation = attVacation;
         this.attOverDuration = attOverDuration;
-    }
-
-    public AttendanceDTO toAttendanceDTO(Attendance attendance) {
-        this.id = attendance.getId();
-        this.attDate = attendance.getAttDate();
-        this.employee = attendance.getEmployee().getId();
-        return this;
     }
 }
