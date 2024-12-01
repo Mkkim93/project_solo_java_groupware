@@ -3,6 +3,7 @@ package com.group.application.login.service;
 import com.group.application.hr.dto.EmployeeDTO;
 import com.group.domain.hr.entity.Employee;
 import com.group.domain.hr.repository.EmployeeRepository;
+import com.group.exception.JoinException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,27 +20,14 @@ public class JoinService {
     /**
      * # 회원가입 : 사원 등록
      */
-    public EmployeeDTO save(EmployeeDTO dto) {
-        Boolean existsByEmpEmail = employeeRepository.existsByEmpEmail(dto.getEmpEmail());
-        if (existsByEmpEmail) {
-            log.info("id 중복 검증 ={}", true);
-            return null;
+    public void save(EmployeeDTO dto) {
+        Boolean exists = employeeRepository.existsByEmpEmail(dto.getEmpEmail());
+        if (exists) {
+            log.info("id 중복={}", false);
+            throw new JoinException("이미 존재 하는 E-mail 입니다. 다시 입력해주세요");
         }
-        Employee savedEntity = employeeRepository.save(toEntity(dto));
-        return toDto(savedEntity);
-    }
-
-    private EmployeeDTO toDto(Employee e) {
-
-        EmployeeDTO dto = EmployeeDTO.builder()
-                .empEmail(e.getEmpEmail())
-                .empPass(e.getEmpPass())
-                .empName(e.getEmpName())
-                .empRegNo(e.getEmpRegNo())
-                .userEmail(e.getUserEmail())
-                .empNickName(e.getEmpNickname())
-                .build();
-        return dto;
+        log.info("id 중복 검증 ={}", true);
+        employeeRepository.save(toEntity(dto));
     }
 
     private Employee toEntity(EmployeeDTO dto) {

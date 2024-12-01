@@ -3,7 +3,7 @@ package com.group.application.hr.service;
 import com.group.application.hr.dto.DepartmentDTO;
 import com.group.application.hr.dto.EmployeeDTO;
 import com.group.domain.hr.entity.Employee;
-import com.group.domain.hr.repository.EmployRepositoryImpl;
+import com.group.domain.hr.repository.EmployeeRepositoryImpl;
 import com.group.domain.hr.repository.EmployeeRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
-    private final EmployRepositoryImpl employRepositoryImpl;
+    private final EmployeeRepositoryImpl employeeRepositoryImpl;
 
     public EmployeeDTO findByAll(EmployeeDTO dto) {
         Employee entity = employeeRepository.findById(dto.getId())
@@ -43,6 +43,6 @@ public class EmployeeService {
     }
 
     public DepartmentDTO findByIdDepartInfo(EmployeeDTO dto) {
-        return employRepositoryImpl.findByEmpDepartInfo(dto.getId());
+        return employeeRepositoryImpl.findByEmpDepartInfo(dto.getId());
     }
 }

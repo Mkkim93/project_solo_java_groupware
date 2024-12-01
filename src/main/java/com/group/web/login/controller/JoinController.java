@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-
 @Controller
 @RequiredArgsConstructor
 public class JoinController {
@@ -20,12 +19,12 @@ public class JoinController {
 
     @GetMapping(REGISTER_PATH)
     public String view(Model model) {
-        model.addAttribute("employeeDTO", new EmployeeDTO());
+        model.addAttribute("employeeDto", new EmployeeDTO());
         return REGISTER_PATH;
     }
 
     @PostMapping(REGISTER_PATH)
-    public String proc(@ModelAttribute("employeeDTO") EmployeeDTO employeeDto) {
+    public String proc(@ModelAttribute("employeeDto") EmployeeDTO employeeDto) {
         joinService.save(employeeDto);
         return "redirect:/login";
     }

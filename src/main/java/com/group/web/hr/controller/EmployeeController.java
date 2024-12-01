@@ -17,34 +17,34 @@ public class EmployeeController {
     private final AttendanceService attendanceService;
 
     @GetMapping("/home")
-    public String home(Model model, EmployeeDTO employeeDTO) {
+    public String home(Model model, EmployeeDTO employeeDto) {
         // TODO 인증된 사용자 정보 사용
-        employeeDTO.setId(1);
-        model.addAttribute("employeeDTO", employeeService.findByAll(employeeDTO));
-        model.addAttribute("departmentDTO", employeeService.findByIdDepartInfo(employeeDTO));
-        model.addAttribute("attendanceDTO", attendanceService.findByIdAttInfo(employeeDTO));
+        employeeDto.setId(1);
+        model.addAttribute("employeeDto", employeeService.findByAll(employeeDto));
+        model.addAttribute("departmentDto", employeeService.findByIdDepartInfo(employeeDto));
+        model.addAttribute("attendanceDto", attendanceService.findByIdAttInfo(employeeDto));
         return "/hr/home";
     }
 
     @GetMapping("/detail")
-    public String detail(Model model, EmployeeDTO employeeDTO) {
-        employeeDTO.setId(1);
-        model.addAttribute("employeeDTO", employeeService.findByAll(employeeDTO));
+    public String detail(Model model, EmployeeDTO employeeDto) {
+        employeeDto.setId(1);
+        model.addAttribute("employeeDto", employeeService.findByAll(employeeDto));
         return "/hr/detail";
     }
 
     @GetMapping("/modify/{id}")
-    public String modify(@PathVariable("id") Integer id, EmployeeDTO employeeDTO, Model model) {
-        employeeDTO.setId(id);
-        model.addAttribute("employeeDTO", employeeService.findByAll(employeeDTO));
+    public String modify(@PathVariable("id") Integer id, EmployeeDTO employeeDto, Model model) {
+        employeeDto.setId(id);
+        model.addAttribute("employeeDto", employeeService.findByAll(employeeDto));
         return "/hr/modify";
     }
 
     @PostMapping("/modify/update/{id}")
     public String modifyProc(@PathVariable("id") Integer id,
-                              @ModelAttribute EmployeeDTO employeeDTO) {
-        employeeDTO.setId(id);
-        employeeService.updateProfile(employeeDTO);
+                              @ModelAttribute EmployeeDTO employeeDto) {
+        employeeDto.setId(id);
+        employeeService.updateProfile(employeeDto);
         return "redirect:/hr/detail";
     }
 }

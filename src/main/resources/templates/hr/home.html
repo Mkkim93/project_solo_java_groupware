@@ -11,24 +11,16 @@
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.15/index.global.min.js'></script>
     <script src="https://apis.google.com/js/api.js"></script>
-    <!--<link rel="stylesheet" href="/resource/css/bootstrap.css">-->
-    <style>
-        .embedded-object {
-            width: 100%;
-            height: auto;
-            max-width: 400px;
-        }
-    </style>
 </head>
 <body>
 <div class="dashboard">
     <!-- 사이드바 -->
     <div class="sidebar">
         <div class="profile-section">
-            <form th:action="@{/hr/detail}" th:object="${employeeDTO}" method="get">
-                <h3 type="text" id="empName" name="empName" th:text="${employeeDTO.empName}"></h3>
-                <h3 type="text" id="empRank" name="empRank" th:text="${employeeDTO.empRank}"></h3>
-                <h3 type="text" id="deptName" name="deptName" th:text="${departmentDTO.deptName}"></h3>
+            <form th:action="@{/hr/detail}" th:object="${employeeDto}" method="get">
+                <h3 type="text" id="empName" name="empName" th:text="*{empName}"></h3>
+                <h3 type="text" id="empRank" name="empRank" th:text="*{empRank}"></h3>
+                <h3 type="text" id="deptName" name="deptName" th:text="${departmentDto.deptName}"></h3>
                 <button type="submit" class="btn">나의 정보</button>
             </form>
         </div>
@@ -49,20 +41,20 @@
     <div class="main-content">
         <header class="header">
             <h2>My Portal</h2>
-            <input type="hidden" id="id" name="id" th:value="${attendanceDTO != null ? attendanceDTO.id : 0}">
-            <input type="hidden" id="attOn" name="attOn" th:value="${attendanceDTO != null ? attendanceDTO.attOn : ''}">
-            <input type="hidden" id="attOff" name="attOff" th:value="${attendanceDTO != null ? attendanceDTO.attOff : ''}">
-            <input type="hidden" id="attDuration" name="attDuration" th:value="${attendanceDTO != null ? attendanceDTO.attDuration : ''}">
-            <input type="hidden" id="employee" name="employee" th:value="${attendanceDTO != null ? attendanceDTO.employee : 0}">
+            <input type="hidden" id="id" name="id" th:value="${attendanceDto != null ? attendanceDto.id : 0}">
+            <input type="hidden" id="attOn" name="attOn" th:value="${attendanceDto != null ? attendanceDto.attOn : ''}">
+            <input type="hidden" id="attOff" name="attOff" th:value="${attendanceDto != null ? attendanceDto.attOff : ''}">
+            <input type="hidden" id="attDuration" name="attDuration" th:value="${attendanceDto != null ? attendanceDto.attDuration : ''}">
+            <input type="hidden" id="employee" name="employee" th:value="${attendanceDto != null ? attendanceDto.employee : 0}">
 
             <div class="attendance-buttons">
                 <button id="comment-attOn-btn" class="btn attOn" onclick="attOnLogic()">출근</button>
                 <button id="comment-attOff-btn" class="btn attOff" onclick="attOffLogic()">퇴근</button>
             </div>
             <div class="attendance-times">
-                <h3>출근 시간: <span id="checkInTime" th:text="${attendanceDTO != null ? attendanceDTO.attOn : ''}"></span></h3>
-                <h3>퇴근 시간: <span id="checkOutTime" th:text="${attendanceDTO != null ? attendanceDTO.attOff : ''}"></span></h3>
-                <h3>금일 근무 시간: <span id="durationTime" th:text="${attendanceDTO != null ? attendanceDTO.attDuration : ''}"></span></h3>
+                <h3>출근 시간: <span id="checkInTime" th:text="${attendanceDto != null ? attendanceDto.attOn : ''}"></span></h3>
+                <h3>퇴근 시간: <span id="checkOutTime" th:text="${attendanceDto != null ? attendanceDto.attOff : ''}"></span></h3>
+                <h3>금일 근무 시간: <span id="durationTime" th:text="${attendanceDto != null ? attendanceDto.attDuration : ''}"></span></h3>
             </div>
 
             <div class="header-right">
@@ -73,7 +65,6 @@
         </header>
 
         <div class="dashboard">
-            <!-- 상단 섹션: 진행 중인 프로젝트 -->
             <section class="stats">
                 <div class="stat-card large">
                     <h3 class="text-center">나의 일정 보기</h3>
@@ -114,30 +105,25 @@
             </div>
             <div class="notification-card">
                 <h3>메일함</h3>
-                <!--<iframe type="text/html" src="/mail/list" width="300" height="200" border="none"></iframe>-->
                 <ul>
                     <li>메일 제목 test1: 메일 내용 test1</li>
                     <li>메일 제목 test2: 메일 내용 test2</li>
                 </ul>
             </div>
         </section>
-
-        <!-- 출근 및 퇴근 시간 표시 섹션 추가 -->
-
     </div>
 </div>
 
 <script th:inline="javascript">
     const attOnLogic = () => {
-        const id = document.getElementById("id").value || 0;  // 기본값 설정
+        const id = document.getElementById("id").value || 0;
         const attOn = document.getElementById("attOn").value || '';
         const employee = document.getElementById("employee").value || 0;
-        const currentTime = new Date().toLocaleTimeString(); // 현재 시간을 포맷
+        const currentTime = new Date().toLocaleTimeString();
 
-        // 출근 시간 존재 여부 확인
         if (attOn) {
             alert("이미 출근하셨습니다.");
-            return; // 이미 출근한 경우 종료
+            return;
         }
 
         $.ajax({
@@ -166,10 +152,10 @@
         const employee = document.getElementById("employee").value || 0;
         const attOff = document.getElementById("attOff").value || '';
         const currentTime = new Date().toLocaleTimeString(); // 현재 시간을 포맷
-        // 퇴근 시간 존재 여부 확인
+
         if (attOff) {
             alert("이미 퇴근하셨습니다.");
-            return; // 이미 퇴근한 경우 종료
+            return;
         }
 
         $.ajax({
@@ -181,8 +167,8 @@
                 "attOff": attOff
             },
             success: function(res) {
-                // 서버에서 반환된 attDuration 확인
-                console.log("서버 응답:", res);  // 서버 응답 확인
+
+                console.log("서버 응답:", res);
 
                 const totalMinutes = parseInt(res.attDuration, 10) || 0; // 'attDuration' 이 문자열일 경우 변환
                 const hours = Math.floor(totalMinutes / 60); // 전체 분을 시간으로 변환

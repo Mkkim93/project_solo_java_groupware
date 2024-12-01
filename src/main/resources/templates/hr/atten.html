@@ -130,7 +130,7 @@
     <h2 class="text-center mb-4">근태 현황</h2>
     <div>
         <table class="table table-header table-striped">
-            <thead th:object="${employeeDTO}">
+            <thead th:object="${employeeDto}">
             <input type="hidden" th:value="*{id}">
             <p th:text="*{empName}">님의 근태 현황</p>
             </thead>

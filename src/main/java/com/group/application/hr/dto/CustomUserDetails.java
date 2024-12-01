@@ -1,38 +1,31 @@
-package com.group.application.login.dto;
+package com.group.application.hr.dto;
 
 import com.group.domain.hr.entity.Employee;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
+@RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
     private final Employee employee;
 
-    public CustomUserDetails(Employee employee) {
-        this.employee = employee;
-    }
-
+    // Role 값을 반환
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() { // role 값 반환
-
+    public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> collection = new ArrayList<>();
 
         collection.add(new GrantedAuthority() {
             @Override
             public String getAuthority() {
-
-                return employee.getEmpIsAdmin();
+                return employee.getRoleType();
             }
         });
         return collection;
-    }
-
-    @Override
-    public String getPassword() {
-        return employee.getEmpPass();
     }
 
     @Override
@@ -40,8 +33,9 @@ public class CustomUserDetails implements UserDetails {
         return employee.getEmpEmail();
     }
 
-    public Employee getEmployee() {
-        return employee;
+    @Override
+    public String getPassword() {
+        return employee.getEmpPass();
     }
 
     @Override

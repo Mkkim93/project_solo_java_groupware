@@ -18,14 +18,10 @@ class JoinServiceTest {
 
     @Test
     @DisplayName("회원가입 테스트")
-    public void joinTest() throws Exception {
+    public void joinTest() {
         EmployeeDTO empDto = new EmployeeDTO();
-        empDto.setEmpEmail("alsrb362@daum.net");
+        empDto.setEmpEmail("test123@gmail.com");
         empDto.setEmpPass("1234");
-        empDto.setEmpRegNo("930415-1406212");
-        empDto.setUserEmail("alsrb333@daum.net");
-        empDto.setEmpName("임요환");
-        empDto.setEmpNickName("황제테란");
         joinService.save(empDto);
     }
 }

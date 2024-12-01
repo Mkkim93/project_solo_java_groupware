@@ -23,11 +23,11 @@ import static com.group.domain.hr.entity.QEmployee.*;
 
 @Repository
 @Transactional
-public class EmployRepositoryImpl extends QuerydslRepositorySupport implements EmployeeRepositoryCustom {
+public class EmployeeRepositoryImpl extends QuerydslRepositorySupport implements EmployeeRepositoryCustom {
 
     private final JPAQueryFactory jpaQueryFactory;
 
-    public EmployRepositoryImpl(EntityManager entityManager) {
+    public EmployeeRepositoryImpl(EntityManager entityManager) {
         super(Employee.class);
         jpaQueryFactory = new JPAQueryFactory(entityManager);
     }

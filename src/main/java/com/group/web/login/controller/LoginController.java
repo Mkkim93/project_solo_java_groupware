@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 @Controller
 @RequiredArgsConstructor
 public class LoginController {
@@ -21,16 +20,13 @@ public class LoginController {
 
     @GetMapping(LOGIN_PATH)
     public String login(Model model) {
-        model.addAttribute("employeeDTO", new EmployeeDTO());
+        model.addAttribute("employeeDto", new EmployeeDTO());
         return LOGIN_PATH;
     }
 
     @PostMapping(LOGIN_PATH)
-    public String home(@RequestParam("empEmail") String empEmail,
-                       @RequestParam("empPass") String empPass,
-                       Model model) {
-        model.addAttribute("employeeResult",
-                loginService.findByEmpInfo(empEmail, empPass));
-        return "redirect:/hr/home";
+    public String home(Model model, EmployeeDTO employeeDto) {
+        model.addAttribute("employeeDto", loginService.findByEmpInfo(employeeDto));
+        return "/login";
     }
 }

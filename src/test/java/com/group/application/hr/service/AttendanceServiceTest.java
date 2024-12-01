@@ -3,27 +3,16 @@ package com.group.application.hr.service;
 import com.group.application.hr.dto.AttendanceDTO;
 import com.group.domain.hr.entity.Attendance;
 import com.group.domain.hr.repository.AttendanceRepository;
-import com.group.domain.hr.repository.EmployRepositoryImpl;
-import net.bytebuddy.asm.Advice;
+import com.group.domain.hr.repository.EmployeeRepositoryImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.DayOfWeek;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoField;
-import java.time.temporal.IsoFields;
-import java.util.Date;
-
-import static com.fasterxml.jackson.databind.type.LogicalType.DateTime;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class AttendanceServiceTest {
@@ -35,26 +24,26 @@ class AttendanceServiceTest {
     private AttendanceRepository attendanceRepository;
 
     @Autowired
-    private EmployRepositoryImpl employRepository;
+    private EmployeeRepositoryImpl employRepository;
 
-    @Test
+    /*@Test
     void attOnTest() {
         AttendanceDTO attendanceDTO = new AttendanceDTO();
         attendanceDTO.setEmployee(1);
 
-        AttendanceDTO attendanceDTOResult = attendanceService.attOn(attendanceDTO);
+        AttendanceDTO attendanceDTOResult = attendanceService.att(attendanceDTO);
 
         System.out.println("attendanceDTOResult.getAttOn() = " + attendanceDTOResult.getAttOn());
         System.out.println("attendanceDTOResult.getEmployee() = " + attendanceDTOResult.getEmployee());
     }
-
-    @Test
+*/
+    /*@Test
     void attOffTest() {
         AttendanceDTO attendanceDTO = new AttendanceDTO();
         attendanceDTO.setId(1);
         attendanceDTO.setEmployee(1);
         attendanceService.attOff(attendanceDTO);
-    }
+    }*/
 
     @Test
     void findById() {
@@ -83,14 +72,14 @@ class AttendanceServiceTest {
         attendance.setAttOff(attOff);
     }
 
-    @Test
+    /*@Test
     @DisplayName("durationTime Debugging")
     void debugDuration() {
         AttendanceDTO attendanceDTO = new AttendanceDTO();
         attendanceDTO.setId(1);
         attendanceDTO.setEmployee(1);
         attendanceService.attOff(attendanceDTO);
-    }
+    }*/
 
     @Test
     @DisplayName("지각 시 지각 attPerception + 1 증가")

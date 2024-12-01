@@ -72,54 +72,54 @@
 <body>
 <div class="layout">
     <h1>사원 정보 수정</h1>
-    <form th:action="@{/hr/modify/update/{id}(id=${employeeDTO.id})}"
-          th:object="${employeeDTO}" method="post">
+    <form th:action="@{/hr/modify/update/{id}(id=${employeeDto.id})}"
+          th:object="${employeeDto}" method="post">
         <table>
             <tr>
                 <th>이름</th>
-                <td th:text="${employeeDTO.empName}"></td>
+                <td th:text="${employeeDto.empName}"></td>
             </tr>
             <tr>
                 <th>직급</th>
-                <td th:text="${employeeDTO.empRank}"></td>
+                <td th:text="${employeeDto.empRank}"></td>
             </tr>
             <tr>
                 <th>주민등록번호</th>
-                <td th:text="${employeeDTO.empRegNo}"></td>
+                <td th:text="${employeeDto.empRegNo}"></td>
             </tr>
             <tr>
                 <th>닉네임</th>
-                <td th:text="${employeeDTO.empNickName}"></td>
+                <td th:text="${employeeDto.empNickName}"></td>
             </tr>
             <tr>
                 <th>사내 연락처</th>
                 <td>
-                    <input type="text" class="form-control" id="empTel" name="empTel" th:value="${employeeDTO.empTel}">
+                    <input type="text" class="form-control" id="empTel" name="empTel" th:value="${employeeDto.empTel}">
                 </td>
             </tr>
             <tr>
                 <th>개인 연락처</th>
                 <td>
-                    <input type="text" class="form-control" id="userTel" name="userTel" th:value="${employeeDTO.userTel}">
+                    <input type="text" class="form-control" id="userTel" name="userTel" th:value="${employeeDto.userTel}">
                 </td>
             </tr>
             <tr>
                 <th>사내 메일 주소</th>
-                <td th:text="${employeeDTO.empEmail}"></td>
+                <td th:text="${employeeDto.empEmail}"></td>
             </tr>
             <tr>
                 <th>개인 메일 주소</th>
                 <td>
-                    <input type="text" class="form-control" id="userEmail" name="userEmail" th:value="${employeeDTO.userEmail}">
+                    <input type="text" class="form-control" id="userEmail" name="userEmail" th:value="${employeeDto.userEmail}">
                 </td>
             </tr>
             <tr>
                 <th>사내 마일리지</th>
-                <td th:text="${employeeDTO.empMileage}"></td>
+                <td th:text="${employeeDto.empMileage}"></td>
             </tr>
             <tr>
                 <th>사원 번호</th>
-                <td th:text="${employeeDTO.empNo}"></td>
+                <td th:text="${employeeDto.empNo}"></td>
             </tr>
         </table>
 

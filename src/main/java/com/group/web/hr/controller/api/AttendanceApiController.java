@@ -27,18 +27,17 @@ public class AttendanceApiController {
 
     private final AttendanceService attendanceService;
 
-    // 출근 처리 로직 ajax
     @PostMapping("/in")
-    public ResponseEntity workIn(@ModelAttribute AttendanceDTO attendanceDTO) {
-        attendanceDTO.setEmployee(1);
-        AttendanceDTO attendanceDTOResult = attendanceService.workIn(attendanceDTO);
-        return new ResponseEntity<>(attendanceDTOResult, HttpStatus.OK);
+    public ResponseEntity workIn(@ModelAttribute AttendanceDTO attendancedto) {
+        attendancedto.setEmployee(1);
+        AttendanceDTO result = attendanceService.workIn(attendancedto);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping("/out")
-    public ResponseEntity workOut(@ModelAttribute AttendanceDTO attendanceDTO) {
-        attendanceDTO.setEmployee(1);
-        AttendanceDTO attendanceDTOResult = attendanceService.workOut(attendanceDTO);
-        return new ResponseEntity<>(attendanceDTOResult, HttpStatus.OK);
+    public ResponseEntity workOut(@ModelAttribute AttendanceDTO attendancedto) {
+        attendancedto.setEmployee(1);
+        AttendanceDTO result = attendanceService.workOut(attendancedto);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

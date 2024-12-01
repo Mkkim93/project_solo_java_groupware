@@ -71,9 +71,9 @@ public class EmployeeDTO {
         return this;
     }
 
-    public EmployeeDTO toDtoByIdEmail(Employee e) {
+    public EmployeeDTO(Employee e) {
         this.id = e.getId();
         this.empEmail = e.getEmpEmail();
-        return this;
+        this.empPass = e.getEmpPass();
     }
 }

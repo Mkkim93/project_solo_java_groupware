@@ -5,13 +5,11 @@ import com.group.application.hr.dto.EmployeeDTO;
 import com.group.domain.hr.entity.Attendance;
 import com.group.domain.hr.entity.Employee;
 import com.group.domain.hr.repository.AttendanceRepository;
-import com.group.domain.hr.repository.EmployRepositoryImpl;
+import com.group.domain.hr.repository.EmployeeRepositoryImpl;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,10 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.*;
 import java.time.temporal.ChronoField;
 import java.time.temporal.TemporalAdjusters;
-import java.time.temporal.WeekFields;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -33,17 +28,17 @@ public class AttendanceService {
     private final Long WORK_HOURS_PER_DAY = 8L;
 
     private final AttendanceRepository attendanceRepository;
-    private final EmployRepositoryImpl employRepositoryImpl;
+    private final EmployeeRepositoryImpl employeeRepositoryImpl;
 
     @Autowired
     public AttendanceService(AttendanceRepository attendanceRepository,
-                             EmployRepositoryImpl employRepositoryImpl) {
+                             EmployeeRepositoryImpl employeeRepositoryImpl) {
         this.attendanceRepository = attendanceRepository;
-        this.employRepositoryImpl = employRepositoryImpl;
+        this.employeeRepositoryImpl = employeeRepositoryImpl;
     }
 
     public AttendanceDTO findByIdAttInfo(EmployeeDTO employeeDTO) {
-        return employRepositoryImpl.findByOneEmpAttInfo(employeeDTO.getId());
+        return employeeRepositoryImpl.findByOneEmpAttInfo(employeeDTO.getId());
     }
 
     // 출근 시간 로직
@@ -122,7 +117,7 @@ public class AttendanceService {
     public Page<AttendanceDTO> findAllByEmpAttInfo(AttendanceDTO attendanceDTO,
                                                    LocalDate localDate,
                                                    PageRequest pageRequest) {
-       return employRepositoryImpl.findByAllEmpAttInfo(attendanceDTO
+       return employeeRepositoryImpl.findByAllEmpAttInfo(attendanceDTO
                .getEmployee(), localDate, pageRequest);
     }
 
