@@ -82,7 +82,7 @@
 <div class="container">
     <div class="layout">
         <h2>게시글 수정</h2>
-        <form th:action="@{/board/all/modify/update/{id}(id=${boardDTO.id})}" th:object="${boardDto}" method="post">
+        <form th:action="@{/board/all/modify/update/{id}(id=${boardDto.id})}" th:object="${boardDto}" method="post">
 
             <input type="hidden" th:value="*{id}" th:field="*{id}" />
 

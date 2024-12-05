@@ -56,7 +56,7 @@ public class Employee {
     @Column(name = "emp_joinyn")
     private String empJoinYN;
 
-    @Column(name = "role_type") // roleType -> 차후 컬럼 및 변수명 수정
+    @Column(name = "role_type")
     private String roleType;
 
     @Column(name = "emp_no") // 사원 번호

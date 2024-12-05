@@ -1,6 +1,6 @@
 package com.group.application.hr.service;
 
-import com.group.application.hr.dto.CustomUserDetails;
+import com.group.application.login.dto.CustomUserDetails;
 import com.group.domain.hr.entity.Employee;
 import com.group.domain.hr.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,14 +12,9 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
-
     private final EmployeeRepository employeeRepository;
-
-    public CustomUserDetailsService(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
-    }
-
     // DB 접근 후 특정 Employee 데이터 return
     @Override
     public UserDetails loadUserByUsername(String empEmail) throws UsernameNotFoundException {

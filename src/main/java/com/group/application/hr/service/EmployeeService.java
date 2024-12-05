@@ -45,4 +45,9 @@ public class EmployeeService {
     public DepartmentDTO findByIdDepartInfo(EmployeeDTO dto) {
         return employeeRepositoryImpl.findByEmpDepartInfo(dto.getId());
     }
+
+    // TEST
+    public Employee findByEmpEmail(String empEmail) {
+        return employeeRepository.findByEmpEmail(empEmail);
+    }
 }

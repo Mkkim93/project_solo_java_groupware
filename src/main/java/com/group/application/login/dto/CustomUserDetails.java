@@ -1,4 +1,4 @@
-package com.group.application.hr.dto;
+package com.group.application.login.dto;
 
 import com.group.domain.hr.entity.Employee;
 import lombok.RequiredArgsConstructor;
@@ -7,14 +7,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
     private final Employee employee;
 
-    // Role 값을 반환
+    // RoleType 반환
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> collection = new ArrayList<>();
@@ -55,6 +54,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
+        // 계정 미접속 기간에 따라 휴면 계정으로 전환
         return true;
     }
 }

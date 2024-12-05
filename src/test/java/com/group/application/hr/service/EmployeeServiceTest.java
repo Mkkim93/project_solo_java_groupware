@@ -71,4 +71,14 @@ class EmployeeServiceTest {
 
         employeeService.findByAll(employeeDTO);
     }
+
+    @Test
+    @DisplayName("email 로 정보 조회 (임시)")
+    void findByEmpEmailInfo() {
+        EmployeeDTO dto = new EmployeeDTO();
+        dto.setEmpEmail("alsrb362@daum.net");
+        Employee employee = employeeService.findByEmpEmail(dto.getEmpEmail());
+        System.out.println("employee.getEmpEmail() = " + employee.getEmpEmail());
+        System.out.println("employee.getEmpName() = " + employee.getEmpName());
+    }
 }

@@ -2,6 +2,7 @@ package com.group.application.hr.dto;
 
 import com.group.domain.hr.entity.Employee;
 import com.querydsl.core.annotations.QueryProjection;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class EmployeeDTO {
 
     private Integer id;
@@ -29,6 +31,7 @@ public class EmployeeDTO {
     private LocalDateTime empJoinDate;
     private Integer deptId;
     private Integer attId;
+    private String roleType;
 
 
     @QueryProjection
@@ -68,6 +71,7 @@ public class EmployeeDTO {
         this.empMileage = e.getEmpMileage();
         this.empNo = e.getEmpNo();
         this.empTel = e.getEmpTel();
+        this.roleType = e.getRoleType();
         return this;
     }
 
@@ -75,5 +79,6 @@ public class EmployeeDTO {
         this.id = e.getId();
         this.empEmail = e.getEmpEmail();
         this.empPass = e.getEmpPass();
+        this.roleType = e.getRoleType();
     }
 }
