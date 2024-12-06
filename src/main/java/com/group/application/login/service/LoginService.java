@@ -17,7 +17,7 @@ public class LoginService {
     private final EmployeeRepository employeeRepository;
     private final BCryptPasswordEncoder encoder;
 
-    public EmployeeDTO findByEmpInfo(EmployeeDTO dto) {
+    public EmployeeDTO login(EmployeeDTO dto) {
         Employee e = employeeRepository.findByEmpEmail(dto.getEmpEmail());
         if (e == null) {
             throw new BadCredentialsException("Invalid credentials");

@@ -2,6 +2,7 @@ package com.group.application.hr.dto;
 
 import com.group.domain.hr.entity.Attendance;
 import com.querydsl.core.annotations.QueryProjection;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class AttendanceDTO {
 
     private Integer id;
@@ -61,9 +63,11 @@ public class AttendanceDTO {
     }
 
     // 월별 근태 조회를 위한 Projections DTO 생성
-    public AttendanceDTO(Long attDuration, Long attOverDuration) {
+    public AttendanceDTO(Long attDuration, Long attOverDuration, Long attPerception, Integer employee) {
         this.attDuration = attDuration;
         this.attOverDuration = attOverDuration;
+        this.attPerception = attPerception;
+        this.employee = employee;
     }
 
     public AttendanceDTO(Long attPerception, Long attLeave, Long attVacation, Long attOverDuration) {
@@ -71,5 +75,11 @@ public class AttendanceDTO {
         this.attLeave = attLeave;
         this.attVacation = attVacation;
         this.attOverDuration = attOverDuration;
+    }
+
+    public AttendanceDTO(LocalDateTime attOn, LocalDateTime attOff, Integer employee) {
+        this.attOn = attOn;
+        this.attOff = attOff;
+        this.employee = employee;
     }
 }

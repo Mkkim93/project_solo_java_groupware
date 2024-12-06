@@ -37,6 +37,10 @@ public class CustomUserDetails implements UserDetails {
         return employee.getEmpPass();
     }
 
+    public String getUUID() {
+        return employee.getEmpUUID();
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;

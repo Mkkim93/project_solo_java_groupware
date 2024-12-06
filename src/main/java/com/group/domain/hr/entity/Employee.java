@@ -91,5 +91,6 @@ public class Employee {
     @PrePersist void createInfo() {
         this.empJoinDate = LocalDateTime.now();
         this.empUUID = java.util.UUID.randomUUID().toString();
+        this.roleType = "USER";
     }
 }

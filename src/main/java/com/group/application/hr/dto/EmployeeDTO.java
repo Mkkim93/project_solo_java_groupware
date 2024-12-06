@@ -32,7 +32,7 @@ public class EmployeeDTO {
     private Integer deptId;
     private Integer attId;
     private String roleType;
-
+    private String empUUID;
 
     @QueryProjection
     public EmployeeDTO(Integer id, String empEmail, String empPass,
@@ -75,10 +75,25 @@ public class EmployeeDTO {
         return this;
     }
 
+    // login employee entity -> dto
     public EmployeeDTO(Employee e) {
         this.id = e.getId();
         this.empEmail = e.getEmpEmail();
         this.empPass = e.getEmpPass();
+        this.empName = e.getEmpName();
+        this.empRegNo = e.getEmpRegNo();
+        this.userEmail = e.getUserEmail();
+        this.empNickName = e.getEmpNickname();
+        this.empRank = e.getEmpRank();
+        this.userTel = e.getUserTel();
+        this.empNo = e.getEmpNo();
+        this.empMileage = e.getEmpMileage();
+        this.empImg = e.getEmpImg();
+        this.empTel = e.getEmpTel();
+        this.empJoinDate = e.getEmpJoinDate();
+        this.deptId = getDeptId();
+        this.attId = getAttId();
         this.roleType = e.getRoleType();
+        this.empUUID = e.getEmpUUID();
     }
 }

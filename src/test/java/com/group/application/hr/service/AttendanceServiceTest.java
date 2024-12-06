@@ -1,6 +1,7 @@
 package com.group.application.hr.service;
 
 import com.group.application.hr.dto.AttendanceDTO;
+import com.group.application.hr.dto.EmployeeDTO;
 import com.group.domain.hr.entity.Attendance;
 import com.group.domain.hr.repository.AttendanceRepository;
 import com.group.domain.hr.repository.EmployeeRepositoryImpl;
@@ -176,5 +177,34 @@ class AttendanceServiceTest {
         attendanceDTO.setEmployee(1);
         attendanceDTO.setAttDate(LocalDate.now());
         attendanceService.findByWeekOfMonthLogic(attendanceDTO);
+    }
+
+    @Test
+    @DisplayName("2024.12.06 weekWork Test")
+    void weekTest() {
+        AttendanceDTO attendanceDTO = new AttendanceDTO();
+        attendanceDTO.setEmployee(29);
+        AttendanceDTO result = attendanceService.findByWeekOfMonthLogic(attendanceDTO);
+        System.out.println("result.getId() = " + result.getId());
+        System.out.println("result.getEmployee() = " + result.getEmployee());
+        System.out.println("result.getAttDuration() = " + result.getAttDuration());
+        System.out.println("result.getAttPerception() = " + result.getAttPerception());
+    }
+
+    @Test
+    void findByIdAttInfo() {
+        EmployeeDTO dto = new EmployeeDTO();
+        dto.setId(29);
+        dto.setEmpUUID("6103a7be-69ac-47f4-89ee-267997f87a64");
+        AttendanceDTO result = attendanceService.findByIdAttInfo(dto);
+        /*System.out.println("result.getId() = " + result.getId());*/
+        System.out.println("result.getEmployee() = " + result.getEmployee());
+        System.out.println("result.getAttOn() = " + result.getAttOn());
+    }
+
+    @Test
+    void findByOneEmpAttInfo() {
+        employRepository.findByOneEmpAttInfo(29);
+        EmployeeDTO dto = new EmployeeDTO();
     }
 }

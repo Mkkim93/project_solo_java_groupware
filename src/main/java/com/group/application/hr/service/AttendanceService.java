@@ -5,6 +5,7 @@ import com.group.application.hr.dto.EmployeeDTO;
 import com.group.domain.hr.entity.Attendance;
 import com.group.domain.hr.entity.Employee;
 import com.group.domain.hr.repository.AttendanceRepository;
+import com.group.domain.hr.repository.EmployeeRepository;
 import com.group.domain.hr.repository.EmployeeRepositoryImpl;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -27,22 +28,27 @@ public class AttendanceService {
     private final LocalDateTime checkedTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(9, 0));
     private final Long WORK_HOURS_PER_DAY = 8L;
 
+
     private final AttendanceRepository attendanceRepository;
+    private final EmployeeRepository employeeRepository;
     private final EmployeeRepositoryImpl employeeRepositoryImpl;
 
     @Autowired
     public AttendanceService(AttendanceRepository attendanceRepository,
+                             EmployeeRepository employeeRepository,
                              EmployeeRepositoryImpl employeeRepositoryImpl) {
         this.attendanceRepository = attendanceRepository;
+        this.employeeRepository = employeeRepository;
         this.employeeRepositoryImpl = employeeRepositoryImpl;
     }
 
-    public AttendanceDTO findByIdAttInfo(EmployeeDTO employeeDTO) {
-        return employeeRepositoryImpl.findByOneEmpAttInfo(employeeDTO.getId());
+    public AttendanceDTO findByIdAttInfo(EmployeeDTO dto) {
+        Employee entity = employeeRepository.findByEmployeeEntity(dto.getEmpUUID());
+        return employeeRepositoryImpl.findByOneEmpAttInfo(entity.getId());
     }
 
     // 출근 시간 로직
-    public AttendanceDTO workIn(AttendanceDTO attendanceDTO) {
+    public AttendanceDTO workIn(AttendanceDTO attendanceDto) {
 
         LocalDate today = LocalDate.now(); // 오늘 날짜를 가져온다
         LocalDateTime startOfToday = today.atStartOfDay(); // 오늘의 시작 시간(00:00:00) 을 설정
@@ -50,7 +56,7 @@ public class AttendanceService {
 
         // employee id 를 기준으로 기존 출근 기록 조회 (오늘의 시작시간 between 종료시간 사이 기록 조회)
         Optional<Attendance> existAtt = attendanceRepository.findByEmployeeIdAndAttOnBetween(
-                attendanceDTO.getEmployee(), startOfToday, endOfToday
+                attendanceDto.getEmployee(), startOfToday, endOfToday
         );
 
         Attendance attendance;
@@ -63,7 +69,7 @@ public class AttendanceService {
                     .attOn(LocalDateTime.now())
                     .attDate(LocalDate.now()) // 출근 처리 후 오늘 날짜를 저장
                     .employee(Employee.builder()
-                            .id(attendanceDTO.getEmployee())
+                            .id(attendanceDto.getEmployee())
                             .build())
                     .build();
         }
@@ -73,18 +79,18 @@ public class AttendanceService {
         if (attendance.getAttOn().isAfter(checkedTime)) { // 출근 시간 ex) 09시 00분 보다 늦으면 지각 count 증가
             attendanceRepository.updatePerceptionCount(attendance.getId());
         }
-        return attendanceDTO.toDto(savedAtt);
+        return attendanceDto.toDto(savedAtt);
     }
 
     // 퇴근 시간 로직
-    public AttendanceDTO workOut(AttendanceDTO attendanceDTO) {
+    public AttendanceDTO workOut(AttendanceDTO attendanceDto) {
 
         LocalDate today = LocalDate.now();
         LocalDateTime startOfToday = today.atStartOfDay();
         LocalDateTime endOfToday = today.atTime(LocalTime.MAX);
 
         Attendance attendance = attendanceRepository.findByEmployeeIdAndAttOnBetween(
-                attendanceDTO.getEmployee(), startOfToday, endOfToday)
+                attendanceDto.getEmployee(), startOfToday, endOfToday)
                 .orElseThrow(() -> new EntityNotFoundException("no id"));
 
         if (attendance.getId() == null) {
@@ -94,12 +100,12 @@ public class AttendanceService {
         } else {
             attendance.setAttOff(LocalDateTime.now());
             attendance.setEmployee(Employee.builder()
-                            .id(attendanceDTO.getEmployee())
+                            .id(attendanceDto.getEmployee())
                     .build());
             Attendance savedAtt = attendanceRepository.save(attendance);
             savedDurationTime(savedAtt);
             log.info("existingAttendance.getId={}", attendance.getId());
-            return attendanceDTO.toDto(savedAtt);
+            return attendanceDto.toDto(savedAtt);
         }
     }
 
@@ -114,10 +120,10 @@ public class AttendanceService {
         return duration.toMinutes();
     }
 
-    public Page<AttendanceDTO> findAllByEmpAttInfo(AttendanceDTO attendanceDTO,
+    public Page<AttendanceDTO> findAllByEmpAttInfo(AttendanceDTO attendanceDto,
                                                    LocalDate localDate,
                                                    PageRequest pageRequest) {
-       return employeeRepositoryImpl.findByAllEmpAttInfo(attendanceDTO
+       return employeeRepositoryImpl.findByAllEmpAttInfo(attendanceDto
                .getEmployee(), localDate, pageRequest);
     }
 
@@ -126,11 +132,7 @@ public class AttendanceService {
      * 2. 이번주 초과 근무 시간
      * 3. 이번주 잔여 근무 시간
      */
-    public AttendanceDTO findByWeekOfMonthLogic(AttendanceDTO attendanceDTO) {
-        Attendance attendance = attendanceRepository.findById(attendanceDTO.getEmployee())
-                .orElseThrow(() -> new EntityNotFoundException("no id"));
-
-        attendanceDTO.setEmployee(attendance.getEmployee().getId());
+    public AttendanceDTO findByWeekOfMonthLogic(AttendanceDTO attendanceDto) {
 
         // 현재 요일이 포함된 주차를 구하는 메서드
         LocalDate today = LocalDate.now();
@@ -144,7 +146,7 @@ public class AttendanceService {
         LocalDate endDay = startDay.plusDays(6);
 
         return attendanceRepository
-                .getAttendanceByOfWeekDuration(attendanceDTO.getEmployee(), startDay, endDay);
+                .getAttendanceByOfWeekDuration(attendanceDto.getEmployee(), startDay, endDay);
     }
 
     /**
@@ -161,8 +163,8 @@ public class AttendanceService {
     }
 
     // 주말을 제외한 남은 근무 시간 계산 로직
-    public Long remainingWorkHoursToWeek(AttendanceDTO attendanceDTO) {
-        LocalDate today = attendanceDTO.getAttDate(); // 현재 직원의 데이터를 등록한 시점의 날짜를 통해 남은 근무 시간을 계산
+    public Long remainingWorkHoursToWeek(AttendanceDTO attendanceDto) {
+        LocalDate today = attendanceDto.getAttDate(); // 현재 직원의 데이터를 등록한 시점의 날짜를 통해 남은 근무 시간을 계산
         DayOfWeek todayDayOfWeek = today.getDayOfWeek();
 
         // 주말인 경우 다음 월요일부터 계산 시작

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoField;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,6 +29,23 @@ class AttendanceRepositoryTest {
         /*System.out.println("attendance.getId() = " + attendance.getId());
         // System.out.println("attendance.getEmployee() = " + attendance.getEmployee().getId());
         System.out.println("attendance.getClass() = " + attendance.getClass());*/
+    }
+
+    @Test
+    @DisplayName("이번주 근무 시간")
+    void weekWorkTime() {
+
+        LocalDate today = LocalDate.now();
+        int day = today.get(ChronoField.DAY_OF_WEEK);
+
+        if (day == 7) {
+            day = 0;
+        }
+
+        LocalDate startDay = today.minusDays(day);
+        LocalDate endDay = startDay.plusDays(6);
+
+        attendanceRepository.getAttendanceByOfWeekDuration(29, startDay, endDay);
     }
 
 }

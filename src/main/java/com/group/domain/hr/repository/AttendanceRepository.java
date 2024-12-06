@@ -34,14 +34,16 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Integer>
     @Query("update Attendance a set a.attPerception = a.attPerception + 1 where a.id = :id")
     void updatePerceptionCount(@Param("id") Integer id);
 
-    @Query("select new com.group.application.hr.dto.AttendanceDTO(sum(a.attDuration), sum(a.attOverDuration)) " +
+    @Query("select new com.group.application.hr.dto.AttendanceDTO(sum(a.attDuration), sum(a.attOverDuration), sum(a.attPerception), a.employee.id) " +
             "from Attendance a where a.employee.id = :id and " +
             "function('YEAR', a.attDate) = :year " +
-            "and function('MONTH', a.attDate) = :month")
+            "and function('MONTH', a.attDate) = :month " +
+            "group by a.employee.id")
     AttendanceDTO getAttendanceByOfMonthDuration(@Param("id") Integer id, @Param("year") Integer year, @Param("month") Integer month);
 
-    @Query("select new com.group.application.hr.dto.AttendanceDTO(sum(a.attDuration), sum(a.attOverDuration)) " +
-            "from Attendance a where a.employee.id = :id and a.attDate between :startDay and :endDay")
+    @Query("select new com.group.application.hr.dto.AttendanceDTO(sum(a.attDuration), sum(a.attOverDuration), sum(a.attPerception), a.employee.id) " +
+            "from Attendance a where a.employee.id = :id and a.attDate between :startDay and :endDay " +
+            "group by a.employee.id")
     AttendanceDTO getAttendanceByOfWeekDuration(@Param("id") Integer id, @Param("startDay") LocalDate startDay, @Param("endDay") LocalDate endDay);
 
     @Query("select new com.group.application.hr.dto.AttendanceDTO(sum(a.attPerception), sum(a.attLeave), sum(a.attVacation), count(a.attOverDuration))" +

@@ -81,4 +81,16 @@ class EmployeeServiceTest {
         System.out.println("employee.getEmpEmail() = " + employee.getEmpEmail());
         System.out.println("employee.getEmpName() = " + employee.getEmpName());
     }
+
+    @Test
+    @DisplayName("uuid 로 회원 정보 조회하기")
+    void findByUUID() {
+        EmployeeDTO dto = new EmployeeDTO();
+        dto.setEmpUUID("f6c3bd62-9dd2-46a3-95ec-bcf760428acd");
+        EmployeeDTO result = employeeService.findByAll(dto);
+        System.out.println("dto.getId() = " + result.getId());
+        System.out.println("dto.getEmpEmail() = " + result.getEmpEmail());
+        System.out.println("dto.getEmpName() = " + result.getEmpName());
+        System.out.println("dto.getEmpUUID() = " + result.getEmpUUID());
+    }
 }

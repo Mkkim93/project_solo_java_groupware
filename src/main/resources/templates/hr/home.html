@@ -116,9 +116,9 @@
 
 <script th:inline="javascript">
     const attOnLogic = () => {
-        const id = document.getElementById("id").value || 0;
+        const id = document.getElementById("id").value || 9;
         const attOn = document.getElementById("attOn").value || '';
-        const employee = document.getElementById("employee").value || 0;
+        const employee = document.getElementById("employee").value || 29;
         const currentTime = new Date().toLocaleTimeString();
 
         if (attOn) {
@@ -129,14 +129,18 @@
         $.ajax({
             type: "POST",
             url: "/att/in",
-            data: {
+            contentType: "application/json", // 추가
+            data: JSON.stringify({
                 "id": id,
                 "employee": employee,
                 "attOn": attOn
-            },
+            }),
             success: function (res) {
                 document.getElementById("checkInTime").textContent = currentTime; // 출근 시간 표시
                 alert("열심히 일해라");
+                console.log('id', id);
+                console.log('employee', employee);
+                console.log('attOn', attOn);
                 console.log("출근 완료", res);
             },
             error: function (err) {
@@ -161,6 +165,7 @@
         $.ajax({
             type: "POST",
             url: "/att/out",
+            contentType: "application/json", // 추가
             data: {
                 "id": id,
                 "employee": employee,
@@ -188,9 +193,9 @@
 </script>
 
 <script th:inline="javascript">
-    let attendancePerception = [[${attendanceDTO != null ? attendanceDTO.attPerception : 0}]];
-    let attendanceLeave = [[${attendanceDTO != null ? attendanceDTO.attLeave : 0}]];
-    let attendanceVacation = [[${attendanceDTO != null ? attendanceDTO.attVacation : 0}]];
+    let attendancePerception = [[${attendanceDto != null ? attendanceDto.attPerception : 0}]];
+    let attendanceLeave = [[${attendanceDto != null ? attendanceDto.attLeave : 0}]];
+    let attendanceVacation = [[${attendanceDto != null ? attendanceDto.attVacation : 0}]];
 
     const ctx = document.getElementById('attendance-chart').getContext('2d');
     const attendanceChart = new Chart(ctx, {

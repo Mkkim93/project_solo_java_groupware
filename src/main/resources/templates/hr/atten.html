@@ -131,8 +131,7 @@
     <div>
         <table class="table table-header table-striped">
             <thead th:object="${employeeDto}">
-            <input type="hidden" th:value="*{id}">
-            <p th:text="*{empName}">님의 근태 현황</p>
+            <p th:text="*{empName}"></p>님의 근태 현황
             </thead>
             <tbody>
 
@@ -291,6 +290,8 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
         <script>
             document.querySelectorAll('.week-header').forEach(header => {
                 header.addEventListener('click', () => {

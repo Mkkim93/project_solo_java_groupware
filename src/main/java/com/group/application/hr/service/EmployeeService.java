@@ -20,15 +20,12 @@ public class EmployeeService {
     private final EmployeeRepositoryImpl employeeRepositoryImpl;
 
     public EmployeeDTO findByAll(EmployeeDTO dto) {
-        Employee entity = employeeRepository.findById(dto.getId())
-                .orElseThrow(() -> new EntityNotFoundException("no id"));
-        dto.toDto(entity);
-        return dto;
+        EmployeeDTO findDto = employeeRepository.findByEmployee(dto.getEmpUUID());
+        return findDto;
     }
 
     public void updateProfile(EmployeeDTO dto) {
-        Employee entity = employeeRepository.findById(dto.getId())
-                .orElseThrow(() -> new EntityNotFoundException("no id"));
+        Employee entity = employeeRepository.findByEmployeeEntity(dto.getEmpUUID());
         entity.setUserEmail(dto.getUserEmail());
         entity.setUserTel(dto.getUserTel());
         entity.setEmpTel(dto.getEmpTel());
@@ -43,11 +40,20 @@ public class EmployeeService {
     }
 
     public DepartmentDTO findByIdDepartInfo(EmployeeDTO dto) {
-        return employeeRepositoryImpl.findByEmpDepartInfo(dto.getId());
+        EmployeeDTO findDto = employeeRepository.findByEmployee(dto.getEmpUUID());
+        return employeeRepositoryImpl.findByEmpDepartInfo(findDto.getId());
     }
 
     // TEST
     public Employee findByEmpEmail(String empEmail) {
         return employeeRepository.findByEmpEmail(empEmail);
+    }
+
+    public EmployeeDTO findByEmployee(String empUUID) {
+        return employeeRepository.findByEmployee(empUUID);
+    }
+
+    public Integer findByIDFromUUID(String empUUID) {
+        return employeeRepository.findByIdFromUUID(empUUID);
     }
 }

@@ -48,7 +48,6 @@ public class EmployeeRepositoryImpl extends QuerydslRepositorySupport implements
     @Override
     public AttendanceDTO findByOneEmpAttInfo(Integer id) {
         LocalDate today = LocalDate.now();
-
         return jpaQueryFactory.select(new QAttendanceDTO(
                         attendance.id, attendance.attOn, attendance.attOff,
                         attendance.attDuration, attendance.attOverDuration, attendance.attPerception,
