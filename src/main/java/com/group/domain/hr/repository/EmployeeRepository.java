@@ -5,12 +5,7 @@ import com.group.domain.hr.entity.Employee;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
-
-@Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
     Boolean existsByEmpEmail(String empEmail);
@@ -28,4 +23,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
     @Query("select e.id from Employee e where e.empUUID = :empUUID")
     Integer findByIdFromUUID(@Param("empUUID") String empUUID);
+
 }

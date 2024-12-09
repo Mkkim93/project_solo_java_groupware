@@ -7,9 +7,8 @@
 <body>
 <div class="layout">
     <h2>건의 사항 수정</h2>
-    <form th:action="@{/board/qna/modfiy/update/{id}(id=${qnaBoardDto.id})}"
+    <form th:action="@{/board/qna/modify/update/{id}(id=${qnaBoardDto.id})}"
           th:object="${qnaBoardDto}" method="post">
-        <input type="hidden" th:value="*{id}" />
 
         <label for="boardTitle"></label>
         <input type="text" id="boardTitle" name="boardTitle" th:field="*{boardTitle}" placeholder="제목" required/>

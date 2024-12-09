@@ -68,4 +68,13 @@ class FileStoreServiceTest {
             System.out.println("stoId.getFilePath() = " + stoId.getFilePath());
         }
     }
+
+    @Test
+    void findByIdTestV2() {
+        List<FileBoardStoreDTO> result = fileStoreService.findByStoreId(81);
+        for (FileBoardStoreDTO dto : result) {
+            System.out.println("dto.getId() = " + dto.getId()); // 83
+            System.out.println("dto.getFileBoardId() = " + dto.getFileBoardId()); // 81
+        }
+    }
 }

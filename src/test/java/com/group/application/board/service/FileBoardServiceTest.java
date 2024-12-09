@@ -26,11 +26,11 @@ class FileBoardServiceTest {
     }
 
     @Test
-    public void findByIdOnly() {
-        Integer id = 76;
-        FileBoardDTO fileBoardDTO = fileBoardService.findById(id);
-        System.out.println("fileBoardDTO.getId() = " + fileBoardDTO.getId());
-        System.out.println("fileBoardDTO.getBoardId() = " + fileBoardDTO.getBoardId());
+    void fileSearchByFileContent() {
+        FileBoardDTO dto = fileBoardService.findById(82);
+        System.out.println("dto.getId() = " + dto.getId()); // 81
+        System.out.println("dto.getBoardId() = " + dto.getBoardId()); // 165
+
     }
 }
 

@@ -70,8 +70,10 @@
 <body>
 
 <div class="container">
-    <h1 th:text="${noticeBoardDto.boardTitle}">공지 제목입니다.</h1>
-    <p th:text="${noticeBoardDto.boardContent}">여기에 공지 내용이 표시됩니다.</p>
+    제목 : <h1 th:text="${noticeBoardDto.boardTitle}">공지 제목입니다.</h1>
+    내용 : <p th:text="${noticeBoardDto.boardContent}">여기에 공지 내용이 표시됩니다.</p>
+    작성자 : <p th:text="${noticeBoardDto.empName}"></p>
+    작성 일자 : <p th:text="${noticeBoardDto.boardRegDate}"></p>
 
     <div class="actions">
         <a class="btn" th:href="@{/board/notice/modify/{id}(id=${noticeBoardDto.id})}">수정</a>
@@ -80,7 +82,7 @@
 </div>
 <!-- 댓글 작성 부분 -->
 <div id="comment-write">
-    <input type="number" name="empId" id="empId" placeholder="작성자">
+    <input type="hidden" name="empId" id="empId" th:value="${empId}" placeholder="작성자">
 
     <input type="hidden" name="empName" id="empName">
 

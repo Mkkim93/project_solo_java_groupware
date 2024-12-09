@@ -1,5 +1,6 @@
 package com.group.application.board.dto;
 
+import com.group.application.hr.dto.EmployeeDTO;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,7 @@ public class QnABoardDTO {
     private String boardSecret;
     private String boardPass;
     private Integer boardId;
-    private Integer employee;
+    private EmployeeDTO employee;
 
     @QueryProjection
     public QnABoardDTO(Integer id,

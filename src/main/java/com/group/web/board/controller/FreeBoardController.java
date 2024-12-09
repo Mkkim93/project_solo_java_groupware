@@ -4,6 +4,10 @@ import com.group.application.board.dto.FreeBoardDTO;
 import com.group.application.board.service.BoardService;
 import com.group.application.board.service.CommentService;
 import com.group.application.board.service.FreeBoardService;
+import com.group.application.cookie.service.CookieService;
+import com.group.application.hr.dto.EmployeeDTO;
+import com.group.application.hr.service.EmployeeService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +24,8 @@ public class FreeBoardController {
     private final FreeBoardService freeBoardService;
     private final CommentService commentService;
     private final BoardService boardService;
+    private final CookieService cookieService;
+    private final EmployeeService employeeService;
 
     @GetMapping("/list")
     public String view(@RequestParam(value = "page", defaultValue = "0") int page,
@@ -35,7 +41,12 @@ public class FreeBoardController {
     public String detail(@RequestParam("id") Integer id,
                          @RequestParam(value = "page", defaultValue = "0") int page,
                          @RequestParam(value = "size", defaultValue = "10") int size,
+                         @CookieValue(value = "jwtToken") String token,
                          Model model) {
+        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
+        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+        model.addAttribute("empId", dto.getId());
+
         PageRequest pageRequest = PageRequest.of(page, size);
         FreeBoardDTO freeBoardDto = freeBoardService.findById(id);
         model.addAttribute("freeBoardDto", freeBoardService.findByOne(id));
@@ -51,8 +62,11 @@ public class FreeBoardController {
     }
 
     @PostMapping("/write")
-    public String writeProc(FreeBoardDTO freeBoardDto) {
-        freeBoardDto.setEmployee(1); // TODO 임시 ID
+    public String writeProc(FreeBoardDTO freeBoardDto,
+                            @CookieValue(value = "jwtToken") String token) {
+        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
+        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+        freeBoardDto.setEmployee(dto);
         freeBoardService.save(freeBoardDto);
         return "redirect:/board/free/list";
     }
@@ -65,11 +79,18 @@ public class FreeBoardController {
 
     @PostMapping("/modify/update/{id}")
     public String modifyProc(@PathVariable("id") Integer id,
-                             @ModelAttribute FreeBoardDTO freeBoardDto) {
+                             @ModelAttribute FreeBoardDTO freeBoardDto,
+                             @CookieValue(value = "jwtToken") String token) {
+
+        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
+        EmployeeDTO dto = employeeService.findByEmployeeEntity(uuid);
+
         FreeBoardDTO freeBoardTemp = freeBoardService.findById(id);
+
         freeBoardTemp.setBoardTitle(freeBoardDto.getBoardTitle());
         freeBoardTemp.setBoardContent(freeBoardDto.getBoardContent());
-        freeBoardTemp.setEmployee(1); // TODO 임시 ID
+        freeBoardTemp.setEmployee(dto);
+
         freeBoardService.update(freeBoardTemp);
         return "redirect:/board/free/list";
     }

@@ -96,4 +96,10 @@ public class EmployeeDTO {
         this.roleType = e.getRoleType();
         this.empUUID = e.getEmpUUID();
     }
+
+    public EmployeeDTO(Integer id, String roleType, String empUUID) {
+        this.id = id;
+        this.roleType = roleType;
+        this.empUUID = empUUID;
+    }
 }

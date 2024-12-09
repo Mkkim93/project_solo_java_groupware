@@ -45,7 +45,6 @@ public class FileBoardService {
     public void save(FileBoardDTO dto, List<MultipartFile> file) throws IOException {
 
         // TODO 파일 저장 로직 별도 메서드로 구분 해야될 듯
-
         BoardDTO boardDTO = new BoardDTO();
         boardDTO.convertToFileBoardDto(dto);
         Board board = boardService.saveAll(boardDTO);
@@ -56,7 +55,7 @@ public class FileBoardService {
         FileBoard fileBoardId = fileBoardRepository.findById(fileBoard.getId())
                 .orElseThrow(() -> new EntityNotFoundException("no id"));
 
-            fileStoreService.save(fileBoardId, file);
+        fileStoreService.save(fileBoardId, file);
     }
 
     public void update(FileBoardDTO dto) {

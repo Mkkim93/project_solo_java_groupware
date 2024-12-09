@@ -1,5 +1,6 @@
 package com.group.application.board.dto;
 
+import com.group.application.hr.dto.EmployeeDTO;
 import com.group.domain.board.entity.Board;
 import com.group.domain.board.entity.FreeBoard;
 import com.group.domain.hr.entity.Employee;
@@ -16,12 +17,12 @@ public class FreeBoardDTO {
     private Integer id;
     private String boardTitle;
     private String empName;
+    private String boardContent;
     private LocalDateTime boardRegDate;
     private Integer boardViewCount;
     private String isDeleted;
-    private String boardContent;
     private Integer boardId;
-    private Integer employee;
+    private EmployeeDTO employee;
 
     @QueryProjection
     public FreeBoardDTO(Integer id, Integer boardId, String boardTitle,

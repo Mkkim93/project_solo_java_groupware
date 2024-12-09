@@ -13,8 +13,10 @@ import java.util.List;
 @Repository
 public interface FileStoreRepository extends JpaRepository<FileStore, Integer> {
 
-    @Query("select new com.group.application.file.FileBoardStoreDTO(s.id, s.fileName, s.fileSize, s.fileType, s.filePath, s.fileRegDate, s.fileBoardId.id, s.OriginFileName) " +
+    @Query("select new com.group.application.file.FileBoardStoreDTO(s.id, s.fileName, " +
+            "s.fileSize, s.fileType, s.filePath, " +
+            "s.fileRegDate, s.fileBoardId.id, s.OriginFileName) " +
             "from FileStore s, FileBoard f " +
-            "where s.fileBoardId.id = f.id and s.fileBoardId.id =:id")
+            "where s.fileBoardId.id = f.id and s.fileBoardId.id = :id")
     List<FileBoardStoreDTO> findByFileBoardStoreId(@Param("id") Integer id);
 }

@@ -6,22 +6,28 @@
 </head>
 <body>
 <div class="layout">
-    <h2>게시글 수정</h2>
+    <h1 class="mt-4">게시글 수정</h1>
 
-    <form th:action="@{/board/free/modify/update/{id}(id=${freeBoardDto.id})}" th:object="${freeBoardDto}" method="post">
+    <form th:action="@{/board/free/modify/update/{id}(id=${freeBoardDto.id})}"
+          th:object="${freeBoardDto}" method="post">
 
         <input type="hidden" th:field="*{id}" />
+        <div class="form-group">
 
-        <label for="boardTitle"></label>
-        <input type="text" id="boardTitle" name="boardTitle" th:field="*{boardTitle}" placeholder="제목" required/>
+            <label for="boardTitle"></label>
+            <input type="text" class="form-control" id="boardTitle" name="boardTitle" th:field="*{boardTitle}" placeholder="제목" required/>
+        </div>
 
-        <label for="boardContent"></label>
-        <textarea id="boardContent" name="boardContent" th:field="*{boardContent}" placeholder="내용" required></textarea>
-
-        <button type="submit">게시글 수정</button>
-
+        <div class="form-group">
+            <label for="boardContent"></label>
+            <textarea id="boardContent" name="boardContent"
+                      th:field="*{boardContent}" placeholder="내용" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">게시글 수정</button>
     </form>
 </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

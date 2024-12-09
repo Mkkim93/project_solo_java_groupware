@@ -2,12 +2,16 @@ package com.group.web.board.controller;
 
 import com.group.application.board.dto.CommentDTO;
 import com.group.application.board.service.CommentService;
+import com.group.application.cookie.service.CookieService;
+import com.group.application.hr.dto.EmployeeDTO;
+import com.group.application.hr.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -18,11 +22,14 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
 
     private final CommentService commentService;
+    private final CookieService cookieService;
+    private final EmployeeService employeeService;
 
     @PostMapping("/save")
     public ResponseEntity save(@RequestParam(value = "page", defaultValue = "0") int page,
                                @RequestParam(value = "size", defaultValue = "10") int size,
                                @ModelAttribute CommentDTO commentDto) {
+
         PageRequest pageRequest = PageRequest.of(page, size);
         Integer saveResult = commentService.save(commentDto);
 
@@ -47,11 +54,10 @@ public class CommentController {
 
     @GetMapping("/lists")
     public ResponseEntity<Page<CommentDTO>> commentsQna(@RequestParam("boardId") Integer boardId,
-                                                        @RequestParam("boardPass") String boardPass,
                                                         @RequestParam(value = "page", defaultValue = "0") int page,
                                                         @RequestParam(value = "size", defaultValue = "10") int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<CommentDTO> CommentDto = commentService.findAllQna(boardId, boardPass, pageRequest);
+        Page<CommentDTO> CommentDto = commentService.findAllQna(boardId, pageRequest);
         return new ResponseEntity<>(CommentDto, HttpStatus.OK);
     }
 }

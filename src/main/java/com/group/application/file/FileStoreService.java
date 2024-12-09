@@ -1,5 +1,6 @@
 package com.group.application.file;
 
+import com.group.application.board.dto.FileBoardDTO;
 import com.group.domain.board.entity.FileBoard;
 import com.group.domain.file.entity.FileStore;
 import com.group.domain.file.repository.FileStoreRepository;

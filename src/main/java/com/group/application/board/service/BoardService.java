@@ -1,6 +1,7 @@
 package com.group.application.board.service;
 
 import com.group.application.board.dto.BoardDTO;
+import com.group.application.cookie.service.CookieService;
 import com.group.domain.board.entity.Board;
 import com.group.domain.board.repository.BoardRepository;
 import com.group.domain.board.repository.BoardRepositoryImpl;
@@ -20,6 +21,7 @@ public class BoardService {
 
     private final BoardRepositoryImpl boardRepositoryImpl;
     private final BoardRepository boardRepository;
+
 
     public Page<BoardDTO> findAll(Pageable pageable) {
         return boardRepositoryImpl.findAllByBoard(pageable);
@@ -48,7 +50,7 @@ public class BoardService {
         Board board = convertToBoard(dto);
         board.setEmployee(
                 Employee.builder()
-                .id(dto.getEmployee())
+                .id(dto.getEmployee().getId())
                 .build());
         board.setBoardRegDate(LocalDateTime.now());
         return boardRepository.save(board);
@@ -72,7 +74,7 @@ public class BoardService {
         return Board.builder()
                 .id(dto.getId())
                 .employee(Employee.builder()
-                        .id(dto.getEmployee())
+                        .id(dto.getEmployee().getId())
                         .build())
                 .boardTitle(dto.getBoardTitle())
                 .boardContent(dto.getBoardContent())

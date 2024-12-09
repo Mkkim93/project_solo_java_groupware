@@ -4,8 +4,11 @@ import com.group.application.board.dto.FileBoardDTO;
 import com.group.application.board.service.BoardService;
 import com.group.application.board.service.CommentService;
 import com.group.application.board.service.FileBoardService;
+import com.group.application.cookie.service.CookieService;
 import com.group.application.file.FileBoardStoreDTO;
 import com.group.application.file.FileStoreService;
+import com.group.application.hr.dto.EmployeeDTO;
+import com.group.application.hr.service.EmployeeService;
 import com.group.domain.file.entity.FileStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,8 +39,10 @@ public class FileBoardController {
 
     private final FileBoardService fileBoardService;
     private final FileStoreService fileStoreService;
+    private final CookieService cookieService;
     private final CommentService commentService;
     private final BoardService boardService;
+    private final EmployeeService employeeService;
 
     @GetMapping("/list")
     public String view(@RequestParam(value = "page", defaultValue = "0") int page,
@@ -53,14 +58,18 @@ public class FileBoardController {
     public String detail(@RequestParam Integer id,
                          @RequestParam(value = "page", defaultValue = "0") int page,
                          @RequestParam(value = "size", defaultValue = "10") int size,
+                         @CookieValue(value = "jwtToken") String token,
                          Model model) {
+        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
+        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+        model.addAttribute("empId", dto.getId());
         PageRequest pageRequest = PageRequest.of(page, size);
         FileBoardDTO fileBoardDto = fileBoardService.findById(id);
         model.addAttribute("fileStoreDto", fileStoreService.findByStoreId(id));
         model.addAttribute("fileBoardDto", fileBoardService.findByOne(id));
         model.addAttribute("commentDto", commentService.findAll(fileBoardDto.getBoardId(), pageRequest));
         model.addAttribute("boardDto", boardService.findByOnlyId(fileBoardDto.getBoardId()));
-        return "/board/file/detail";
+        return "board/file/detail";
     }
 
     @GetMapping("/write")
@@ -70,11 +79,13 @@ public class FileBoardController {
         return "board/file/write";
     }
 
-    //TODO JWT 토큰 스크립트 헤더로 처리 하면 될듯
     @PostMapping("/write")
-    public String writeProc(@RequestParam(name = "file", required = false) List<MultipartFile> files,
+    public String writeProc(@CookieValue(value = "jwtToken") String token,
+                            @RequestParam(name = "file", required = false) List<MultipartFile> files,
                             @ModelAttribute FileBoardDTO fileBoardDto, Model model) throws IOException {
-        fileBoardDto.setEmployee(1); // TODO 임시 ID
+        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
+        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+        fileBoardDto.setEmployee(dto);
         fileBoardService.save(fileBoardDto, files);
         model.addAttribute("fileStoreDto", fileStoreService.findByStoreId(fileBoardDto.getId()));
         return "redirect:/board/file/list";
@@ -86,22 +97,28 @@ public class FileBoardController {
         List<FileBoardStoreDTO> fileBoardStoreDto = fileStoreService.findByStoreId(id);
         model.addAttribute("fileBoardDto", fileBoardDto);
         model.addAttribute("fileStoreDto", fileBoardStoreDto);
-        return "/board/file/modify";  // 수정 페이지로 이동
+        return "board/file/modify";  // 수정 페이지로 이동
     }
 
     @PostMapping("/modify/update/{id}")
     public String modifyProc(@ModelAttribute FileBoardDTO fileBoardDto,
                              @RequestParam(name = "file", required = false) List<MultipartFile> files,
-                             @PathVariable("id") Integer id, Model model) throws IOException {
+                             @PathVariable("id") Integer id, Model model,
+                             @CookieValue(value = "jwtToken") String token) throws IOException {
+
+        // 사용자 정보 가져오기
+        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
+        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+
         // 기존 파일 게시글 정보 가져오기
         FileBoardDTO fileBoardTemp = fileBoardService.findById(id);
 
         // 파일 게시글 정보 업데이트
         fileBoardTemp.setBoardTitle(fileBoardDto.getBoardTitle());
         fileBoardTemp.setBoardContent(fileBoardDto.getBoardContent());
-        fileBoardTemp.setEmployee(1); // TODO 임시 ID
+        fileBoardTemp.setEmployee(dto);
 
-        List<FileBoardStoreDTO> fileStoreDto = fileStoreService.findByStoreId(id);
+        List<FileBoardStoreDTO> fileStoreDto = fileStoreService.findByStoreId(id); // == id
         model.addAttribute("fileStoreDto", fileStoreDto);
 
         // 새로운 파일 업로드 처리
@@ -111,7 +128,6 @@ public class FileBoardController {
         else {
             fileBoardService.update(fileBoardTemp);
         }
-
         return "redirect:/board/file/list";  // 수정 후 목록 페이지로 리다이렉트
     }
 
@@ -119,7 +135,7 @@ public class FileBoardController {
     public String delete(@PathVariable("id") Integer id) {
         FileBoardDTO fileBoardDto = fileBoardService.findById(id);
         fileBoardService.delete(fileBoardDto.getBoardId());
-        return "redirect:/board/fileboardlist";
+        return "redirect:/board/file/list";
     }
 
     // 파일 다운로드

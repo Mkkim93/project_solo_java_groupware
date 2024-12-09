@@ -30,7 +30,7 @@ public class QnABoardService {
     }
 
     public QnABoardDTO findByOne(Integer id, String boardPass) {
-        QnABoardDTO dto = boardRepositoryImpl.findByOneQnABoard(id, boardPass);
+        QnABoardDTO dto = boardRepositoryImpl.findByOneBuilder(id, boardPass);
         boardService.plusViewCount(dto.getBoardId());
         return dto;
     }
@@ -40,6 +40,7 @@ public class QnABoardService {
                 .orElseThrow(() -> new EntityNotFoundException("not id"));
 
         QnABoardDTO dto = new QnABoardDTO();
+        dto.setId(qnABoard.getId());
         dto.setBoardId(qnABoard.getBoard().getId());
         return dto;
     }
@@ -54,14 +55,19 @@ public class QnABoardService {
         QnABoard qnABoard = qnABoardRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("not id"));
 
-        if (qnABoard.getBoardPass().equals(" ")) {
+        if (qnABoard.getBoardPass() == null || qnABoard.getBoardPass().trim().isEmpty()) {
             return boardRepositoryImpl.findByOneQnABoardNotPass(id);
         }
-        if (!qnABoard.getBoardPass().equals(boardPass)) {
+
+        else if (!qnABoard.getBoardPass().equals(boardPass)) {
             log.info("비밀번호가 다릅니다");
             throw new CustomException("fail password!");
         }
         return boardRepositoryImpl.findByOneQnABoard(id, boardPass);
+    }
+
+    public QnABoardDTO findByModify(QnABoardDTO dto) {
+        return boardRepositoryImpl.findByOneBuilder(dto);
     }
 
     public void save(QnABoardDTO dto) {

@@ -93,4 +93,8 @@ public class Employee {
         this.empUUID = java.util.UUID.randomUUID().toString();
         this.roleType = "USER";
     }
+
+    public EmployeeDTO toDto(Employee e) {
+        return new EmployeeDTO(e.getId(), e.getRoleType(), e.getEmpUUID());
+    }
 }

@@ -1,5 +1,6 @@
 package com.group.application.board.dto;
 
+import com.group.application.hr.dto.EmployeeDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;

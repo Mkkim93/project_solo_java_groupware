@@ -51,9 +51,9 @@ public class FreeBoardService {
         freeBoardRepository.save(entity);
     }
 
-    public void update(FreeBoardDTO freeBoardDTO) {
+    public void update(FreeBoardDTO freeBoardDto) {
         BoardDTO boardDTO = new BoardDTO();
-        boardDTO.convertToFreeBoardDto(freeBoardDTO);
+        boardDTO.convertToFreeBoardDto(freeBoardDto);
         boardService.saveAll(boardDTO);
     }
 

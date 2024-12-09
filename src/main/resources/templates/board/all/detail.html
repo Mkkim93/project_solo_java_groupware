@@ -107,8 +107,8 @@
 
 <!-- 댓글 작성 부분 -->
 <div id="comment-write">
-    <label for="empId">회원 id 가 들어갈 부분</label> <!--jwt 구현 후, 제거-->
-    <input type="number" name="empId" id="empId" placeholder="작성자">
+    <label for="empId">회원 id 가 들어갈 부분</label>
+    <input type="hidden" name="empId" id="empId" th:value="${empId}" placeholder="작성자">
 
     <input type="hidden" name="empName" id="empName">
 

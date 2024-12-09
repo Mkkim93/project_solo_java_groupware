@@ -138,7 +138,8 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                         noticeBoard.id, noticeBoard.board.id,
                         board.boardTitle,
                         employee.empName,
-                        board.boardContent, board.boardRegDate,
+                        board.boardContent,
+                        board.boardRegDate,
                         board.boardViewCount, board.boardIsDeleted))
                 .from(noticeBoard)
                 .innerJoin(noticeBoard.board, board)
@@ -217,8 +218,23 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
         return new PageImpl<>(results, pageable, count);
     }
 
+    public QnABoardDTO findByOneBuilder(QnABoardDTO dto) {
+        if (dto.getBoardPass() == null) {
+            return findByOneQnABoardNotPass(dto.getId());
+        }
+        return findByOneQnABoard(dto.getId(), dto.getBoardPass());
+    }
+
+    public QnABoardDTO findByOneBuilder(Integer id, String boardPass) {
+        if (boardPass == null) {
+            return findByOneQnABoardNotPass(id);
+        }
+        return findByOneQnABoard(id, boardPass);
+    }
+
     @Override
     public QnABoardDTO findByOneQnABoard(Integer id, String boardPass) {
+
         return jpaQueryFactory
                 .select(new QQnABoardDTO(
                         qnABoard.id, qnABoard.board.id,
@@ -231,8 +247,9 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                 .innerJoin(qnABoard.board, board)
                 .innerJoin(board.employee, employee)
                 .where(
+                        qnABoard.boardSecret.eq("Y"),
                         qnABoard.id.eq(id),
-                        (eqBoardPass(boardPass))
+                        qnABoard.boardPass.eq(boardPass)
                 ).fetchOne();
     }
 
@@ -250,11 +267,5 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                 .innerJoin(board.employee, employee)
                 .where(qnABoard.id.eq(id))
                 .fetchOne();
-    }
-
-    private BooleanExpression eqBoardPass(String boardPass) {
-        if (boardPass == null || boardPass.trim().isEmpty()) {
-        }
-        return qnABoard.boardPass.eq(boardPass);
     }
 }

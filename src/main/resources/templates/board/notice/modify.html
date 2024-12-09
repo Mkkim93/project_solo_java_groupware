@@ -8,10 +8,8 @@
 <div class="layout">
     <h2>공지 수정</h2>
 
-    <form th:action="@{/board/modify/update/{id}(id=${noticeBoardDto.id})}"
+    <form th:action="@{/board/notice/modify/update/{id}(id=${noticeBoardDto.id})}"
           th:object="${noticeBoardDto}" method="post">
-
-        <input type="hidden" th:field="*{id}" />
 
         <label for="boardTitle"></label>
         <input type="text" id="boardTitle" name="boardTitle" th:field="*{boardTitle}" placeholder="제목을 입력하세요" required/>

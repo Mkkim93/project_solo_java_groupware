@@ -23,27 +23,34 @@
 </head>
 <body>
 <div class="container">
-    <h1 class="mt-4">파일 게시판 수정</h1>
-    <form th:action="@{/board/fileboardmodify/update/{id}(id=${fileBoardDto.id})}" method="post" enctype="multipart/form-data">
+    <h1 class="mt-4">게시글 수정</h1>
+
+    <form th:action="@{/board/file/modify/update/{id}(id=${fileBoardDto.id})}"
+          th:object="${fileBoardDto}" method="post" enctype="multipart/form-data">
+
         <div class="form-group">
             <label for="boardTitle">제목</label>
-            <input type="text" class="form-control" id="boardTitle" name="boardTitle" th:value="${fileBoardDto.boardTitle}" required>
+            <input type="text" class="form-control" id="boardTitle" name="boardTitle"
+                   th:field="*{boardTitle}">
         </div>
 
         <div class="form-group">
             <label for="boardContent">내용</label>
-            <textarea class="form-control" id="boardContent" name="boardContent" rows="5" required th:text="${fileBoardDto.boardContent}"></textarea>
+            <textarea class="form-control" id="boardContent" name="boardContent" rows="5"
+                      th:field="*{boardContent}"></textarea>
         </div>
 
         <div class="form-group">
             <label for="file">첨부파일</label>
             <input type="file" class="form-control-file" id="file" name="file" multiple>
 
-            <ul th:each="fileStore : ${fileStoreDto}">
+            <!--TODO 기존 파일 VIEW PARSE ERR 발생-->
+            <!--<ul th:each="fileStore : ${fileStoreDto}">
                 <li>
-                    <p type="hidden" th:value="${fileStore.id}" th:field="${fileStore.id}" /> 기존 파일:<p th:text="${fileStore.getOriginFileName()}"></p>
+                    <input type="hidden" th:value="${fileStore.id}" th:field="${fileStore.id}" />
+                    기존 파일:<p th:text="${fileStore.getOriginFileName()}"></p>
                 </li>
-            </ul>
+            </ul>-->
         </div>
 
         <button type="submit" class="btn btn-primary">수정 완료</button>

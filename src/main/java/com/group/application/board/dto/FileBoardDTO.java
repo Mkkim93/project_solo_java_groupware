@@ -1,5 +1,6 @@
 package com.group.application.board.dto;
 
+import com.group.application.hr.dto.EmployeeDTO;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,7 +31,7 @@ public class FileBoardDTO {
     private String originFileName;
     private MultipartFile file;
 
-    private Integer employee;
+    private EmployeeDTO employee;
 
     @QueryProjection
     public FileBoardDTO(Integer id, Integer boardId, String boardTitle, String boardContent,
@@ -45,4 +46,5 @@ public class FileBoardDTO {
         this.boardViewCount = boardViewCount;
         this.isDeleted = isDeleted;
     }
+
 }

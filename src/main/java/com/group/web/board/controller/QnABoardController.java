@@ -4,6 +4,9 @@ import com.group.application.board.dto.QnABoardDTO;
 import com.group.application.board.service.BoardService;
 import com.group.application.board.service.CommentService;
 import com.group.application.board.service.QnABoardService;
+import com.group.application.cookie.service.CookieService;
+import com.group.application.hr.dto.EmployeeDTO;
+import com.group.application.hr.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +24,8 @@ public class QnABoardController {
     private final QnABoardService qnABoardService;
     private final CommentService commentService;
     private final BoardService boardService;
+    private final EmployeeService employeeService;
+    private final CookieService cookieService;
 
     @GetMapping("/list")
     public String view(@RequestParam(value = "page", defaultValue = "0") int page,
@@ -28,8 +33,9 @@ public class QnABoardController {
                        Model model) {
         Pageable pageRequest = PageRequest.of(page, size);
         Page<QnABoardDTO> qnaBoardDto = qnABoardService.findAll(pageRequest);
+
         model.addAttribute("qnaBoardList", qnaBoardDto);
-        return "/board/qna/list";
+        return "board/qna/list";
     }
 
     @GetMapping("/detail")
@@ -37,26 +43,21 @@ public class QnABoardController {
                          @RequestParam(value = "boardPass", required = false) String boardPass,
                          @RequestParam(value = "page", defaultValue = "0") int page,
                          @RequestParam(value = "size", defaultValue = "10") int size,
-                         RedirectAttributes redirectAttributes, Model model) {
-        if (boardPass == null) {
-            model.addAttribute("notBoardDto", qnABoardService.findByIdNotPass(id));
-            return "/board/qna/detail";
-        }
+                         @CookieValue(value = "jwtToken") String token,
+                         Model model) {
 
+        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
+        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+        model.addAttribute("empId", dto.getId());
         QnABoardDTO qnaBoardDto = qnABoardService.findById(id, boardPass);
-        if (!qnaBoardDto.getBoardPass().equals(boardPass)) {
-            redirectAttributes.addFlashAttribute("failPassWord", "failPassWord");
-            return "redirect:/board/qna/list";  // 게시판 목록으로 리다이렉트
-        }
 
         // 댓글 관련 model & 페이징 객체
-        PageRequest pageRequest = PageRequest.of(page, size);
         model.addAttribute("qnaBoardDto", qnABoardService.findByOne(id, boardPass));
         model.addAttribute("boardDto", boardService.findByOnlyId(qnaBoardDto.getBoardId()));
-        model.addAttribute("commentDto", commentService.findAll(qnaBoardDto.getBoardId(), pageRequest));
-        // 비밀번호가 맞는 경우 상세 페이지를 모델에 추가하여 반환
 
-        // 비밀번호가 틀린 경우 TODO : NPE 로직
+        PageRequest pageRequest = PageRequest.of(page, size);
+        model.addAttribute("commentDto", commentService.findAll(qnaBoardDto.getBoardId(), pageRequest));
+
         return "/board/qna/detail";  // 상세 페이지를 렌더링
     }
 
@@ -67,28 +68,35 @@ public class QnABoardController {
     }
 
     @PostMapping("/write")
-    public String writeProc(QnABoardDTO qnaBoardDto) {
-        qnaBoardDto.setEmployee(1); // TODO 임시 ID
+    public String writeProc(@CookieValue(value = "jwtToken") String token,
+                            QnABoardDTO qnaBoardDto) {
+        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
+        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+        qnaBoardDto.setEmployee(dto);
         qnABoardService.save(qnaBoardDto);
         return "redirect:/board/qna/list";
     }
 
-    @GetMapping("modify/{id}")
+    @GetMapping("/modify/{id}")
     public String modify(@PathVariable("id") Integer id,
-                         @RequestParam(value = "boardPass", required = false) String boardPass,
-                         Model model) {
-        model.addAttribute("qnaBoardDto", qnABoardService.findById(id, boardPass));
+                         QnABoardDTO qnABoardDto, Model model) {
+        model.addAttribute("qnaBoardDto", qnABoardService.findByModify(qnABoardDto));
         return "/board/qna/modify";
     }
 
     @PostMapping("/modify/update/{id}")
-    public String modifyProc(@PathVariable("id") Integer id,
-                             @RequestParam(value = "boardPass", required = false) String boardPass,
+    public String modifyProc(@CookieValue(value = "jwtToken") String token,
+                             @PathVariable("id") Integer id,
                              @ModelAttribute QnABoardDTO qnaBoardDto) {
-        QnABoardDTO qnaBoardTemp = qnABoardService.findById(id, boardPass);
+
+        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
+        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+
+        QnABoardDTO qnaBoardTemp = qnABoardService.findByOnlyId(id);
         qnaBoardTemp.setBoardTitle(qnaBoardDto.getBoardTitle());
         qnaBoardTemp.setBoardContent(qnaBoardDto.getBoardContent());
-        qnaBoardTemp.setEmployee(1); // TODO 임시 ID
+        qnaBoardTemp.setEmployee(dto);
+
         qnABoardService.update(qnaBoardTemp);
         return "redirect:/board/qna/list";
     }

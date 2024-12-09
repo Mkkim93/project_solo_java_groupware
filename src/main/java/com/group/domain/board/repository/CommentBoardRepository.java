@@ -24,7 +24,6 @@ public interface CommentBoardRepository extends JpaRepository<CommentBoard, Inte
             "where e.id = b.employee.id " +
             "and b.id = c.board.id " +
             "and c.board.id = q.board.id " +
-            "and c.board.id = :id " +
-            "and q.boardPass = :boardPass")
-    Page<CommentDTO> findByQnaComment(@Param("id") Integer id, @Param("boardPass") String boardPass, Pageable pageable);
+            "and c.board.id = :id ")
+    Page<CommentDTO> findByQnaComment(@Param("id") Integer id, Pageable pageable);
 }

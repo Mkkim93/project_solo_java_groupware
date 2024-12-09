@@ -39,10 +39,10 @@ public class CommentService {
     }
 
     // 비밀글 게시판 댓글을 위한 비즈니스로직 별도 구현
-    public Page<CommentDTO> findAllQna(Integer boardId, String boardPass, Pageable pageable) {
+    public Page<CommentDTO> findAllQna(Integer boardId, Pageable pageable) {
         // TODO
         Page<CommentDTO> commentDTOList = commentBoardRepository
-                .findByQnaComment(boardId, boardPass, pageable);
+                .findByQnaComment(boardId, pageable);
         return commentDTOList;
     }
 }

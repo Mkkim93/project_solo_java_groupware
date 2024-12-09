@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.stream.Stream;
+
 @SpringBootTest
 class QnABoardServiceTest {
 
@@ -59,6 +61,32 @@ class QnABoardServiceTest {
         QnABoardDTO byId = qnABoardService.findById(id, boardPass);
         System.out.println("byId.getBoardId() = " + byId.getBoardId());
         System.out.println("byId.getId() = " + byId.getId());
+    }
+
+    @Test
+    void notPassWorkBoardDetail() {
+        QnABoardDTO dto = new QnABoardDTO();
+        dto.setId(5);
+        QnABoardDTO result = qnABoardService.findByIdNotPass(dto.getId());
+        Stream.of(result).forEach(System.out::println);
+    }
+
+    @Test
+    void findIdBuilder() {
+        Integer id = 5;
+        QnABoardDTO result = qnABoardService.findByOne(id, null);
+        System.out.println("result.getBoardId() = " + result.getBoardId());
+        System.out.println("result.getBoardPass() = " + result.getBoardPass());
+        System.out.println("result.getBoardTitle() = " + result.getBoardTitle());
+        System.out.println("result.getBoardContent() = " + result.getBoardContent());
+    }
+
+    @Test
+    void findByOnlyId() {
+        QnABoardDTO result = qnABoardService.findByOnlyId(5);
+        System.out.println("result.getId() = " + result.getId());
+        System.out.println("result.getBoardPass() = " + result.getBoardPass());
+        System.out.println("result.getBoardId() = " + result.getBoardId());
     }
 
 }

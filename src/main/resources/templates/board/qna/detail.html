@@ -89,7 +89,8 @@
 
 <!-- 댓글 작성 부분 -->
 <div id="comment-write">
-    <input type="number" name="empId" id="empId" placeholder="작성자">
+    <!--// TODO-->
+    <input type="hidden" name="empId" id="empId" th:value="${empId}" placeholder="작성자">
     <input type="hidden" name="empName" id="empName">
     <input type="text" name="comContent" id="comContent" placeholder="내용">
     <input type="hidden" name="comRegDate" id="comRegDate" placeholder="내용">
@@ -106,16 +107,13 @@
     // 댓글 목록 로드 함수
     const loadComments = (page = 0) => {
         const boardId = [[${boardDto.id}]];
-        /*const boardPass = [[${qnABoardDTO.boardPass}]];*/
         console.log(boardId)
-        /*console.log(boardPass)*/
         $.ajax({
             type: "GET",
             url: "/comment/list",
             dataType: 'json',
             data: {
                 boardId: boardId,
-                /*boardPass: boardPass,*/
                 page: page,
                 size: 10
             },
@@ -174,7 +172,7 @@
         const comRegDate = document.getElementById("comRegDate").value;
 
         console.log(boardId);
-        console.log(empId);
+        /*console.log(empId);*/
         console.log(comContent);
         console.log(comRegDate);
 
