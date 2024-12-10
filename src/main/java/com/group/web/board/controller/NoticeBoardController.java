@@ -44,8 +44,7 @@ public class NoticeBoardController {
                          Model model) {
         String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
         EmployeeDTO dto = employeeService.findByEmployee(uuid);
-        model.addAttribute("empId", dto.getId());
-
+        model.addAttribute("employeeDto", dto);
         PageRequest pageRequest = PageRequest.of(page, size);
         NoticeBoardDTO noticeboarddto = noticeBoardService.findByOnlyId(id);
         model.addAttribute("commentDto", commentService.findAll(noticeboarddto.getBoardId(), pageRequest));

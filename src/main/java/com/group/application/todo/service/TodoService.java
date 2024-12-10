@@ -23,36 +23,36 @@ public class TodoService {
     private final TodoRepository todoRepository;
 
     // 일정 저장
-    public TodoDTO todoSave(TodoDTO todoDTO) {
-        return todoRepositoryCustom.todoSave(todoDTO);
+    public TodoDTO todoSave(TodoDTO todoDto) {
+        return todoRepositoryCustom.todoSave(todoDto);
     }
 
     // 일정 조회 (리스트) / apiController
-    public List<TodoDTO> findByTodoList(TodoDTO todoDTO) {
-        List<Todo> searchByTodoList = todoRepositoryCustom.findByTodoOfMonth(todoDTO);
-        return todoDTO.setListDTO(searchByTodoList);
+    public List<TodoDTO> findByTodoList(TodoDTO todoDto) {
+        List<Todo> searchByTodoList = todoRepositoryCustom.findByTodoOfMonth(todoDto);
+        return todoDto.setListDTO(searchByTodoList);
     }
 
     // 일정 조회 (리스트) / Controller
-    public List<TodoDTO> findByTodoOne(TodoDTO todoDTO) {
-        return todoRepositoryImpl.findByOneTodo(todoDTO);
+    public List<TodoDTO> findByTodoOne(TodoDTO todoDto) {
+        return todoRepositoryImpl.findByOneTodo(todoDto);
     }
 
     // 일정 조회 (회원 id 에 대한 리스트)
-    public void updateTodo(TodoDTO todoDTO) {
+    public void updateTodo(TodoDTO todoDto) {
         Todo todo = new Todo();
-        Todo todoResult = todo.setEntity(todoDTO);
+        Todo todoResult = todo.setEntity(todoDto);
         todoRepository.save(todoResult);
     }
 
     public TodoDTO findByTodoId(Integer id) {
-        TodoDTO todoDTO = new TodoDTO();
+        TodoDTO todoDto = new TodoDTO();
         Todo todo = todoRepository.getTodoById(id);
-        return todoDTO.setDTO(todo);
+        return todoDto.setDTO(todo);
     }
 
-    public Integer findById(TodoDTO todoDTO) {
-        Todo todo = todoRepository.findById(todoDTO.getId()).get();
+    public Integer findById(TodoDTO todoDto) {
+        Todo todo = todoRepository.findById(todoDto.getId()).get();
         return todo.getId();
     }
 }

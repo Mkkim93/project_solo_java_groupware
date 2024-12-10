@@ -59,7 +59,7 @@ public class Todo {
         this.todoEndDate = todoDTO.getTodoEndDate();
         this.todoUpdate = todoDTO.getTodoUpdate();
         this.employee = Employee.builder()
-                .id(todoDTO.getEmployee())
+                .id(todoDTO.getEmployee().getId())
                 .build();
         return this;
     }

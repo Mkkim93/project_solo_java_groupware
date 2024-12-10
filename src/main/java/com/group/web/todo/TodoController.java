@@ -1,5 +1,8 @@
 package com.group.web.todo;
 
+import com.group.application.cookie.service.CookieService;
+import com.group.application.hr.dto.EmployeeDTO;
+import com.group.application.hr.service.EmployeeService;
 import com.group.application.todo.dto.TodoDTO;
 import com.group.application.todo.service.TodoService;
 import lombok.RequiredArgsConstructor;
@@ -15,18 +18,27 @@ import java.time.LocalDateTime;
 public class TodoController {
 
     private final TodoService todoService;
+    private final EmployeeService employeeService;
+    private final CookieService cookieService;
 
     @GetMapping("/detail")
-    public String showCalendar(Model model, @ModelAttribute TodoDTO todoDTO) {
-        todoDTO.setEmployee(1); // TODO jwt
-        model.addAttribute("todoDTO", todoService.findByTodoOne(todoDTO));
+    public String showCalendar(@CookieValue(value = "jwtToken") String token, Model model, TodoDTO todoDto) {
+        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
+        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+        todoDto.setEmployee(dto);
+        model.addAttribute("todoDto", todoService.findByTodoOne(todoDto));
+        model.addAttribute("employeeDto", dto);
         return "/todo/detail";
     }
 
     @GetMapping("/readonly")
-    public String readOnlyCalender(Model model, TodoDTO todoDTO) {
-        todoDTO.setEmployee(1); // TODO jwt
-        model.addAttribute("todoDTO", todoService.findByTodoOne(todoDTO));
+    public String readOnlyCalender(@CookieValue(value = "jwtToken") String token,
+                                   Model model, TodoDTO todoDto) {
+        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
+        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+        todoDto.setEmployee(dto);
+        model.addAttribute("todoDto", todoService.findByTodoOne(todoDto));
+        model.addAttribute("employeeDto", dto);
         return "todo/readonly";
     }
 
@@ -34,22 +46,25 @@ public class TodoController {
     @GetMapping("/modify/{id}")
     public String modify(@PathVariable("id") Integer id,
                              Model model) {
-        TodoDTO todoDTO = todoService.findByTodoId(id);
-        model.addAttribute("todoDTO", todoDTO);
+        TodoDTO todoDto = todoService.findByTodoId(id);
+        model.addAttribute("todoDto", todoDto);
         return "/todo/modify";
     }
 
     @PostMapping("/modify/update/{id}")
     public String todoUpdateWriting(@PathVariable("id") Integer id,
-                                    @ModelAttribute TodoDTO todoDTO) {
+                                    @ModelAttribute TodoDTO todoDto,
+                                    @CookieValue(value = "jwtToken") String token, Model model) {
+        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
+        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+        model.addAttribute("employeeDto", dto);
         TodoDTO todoTemp = todoService.findByTodoId(id);
-        todoTemp.setEmployee(1); // TODO jwt
-
-        todoTemp.setTodoType(todoDTO.getTodoType());
-        todoTemp.setTodoTitle(todoDTO.getTodoTitle());
-        todoTemp.setTodoContent(todoDTO.getTodoContent());
-        todoTemp.setTodoStartDate(todoDTO.getTodoStartDate());
-        todoTemp.setTodoEndDate(todoDTO.getTodoEndDate());
+        todoTemp.setEmployee(dto);
+        todoTemp.setTodoType(todoDto.getTodoType());
+        todoTemp.setTodoTitle(todoDto.getTodoTitle());
+        todoTemp.setTodoContent(todoDto.getTodoContent());
+        todoTemp.setTodoStartDate(todoDto.getTodoStartDate());
+        todoTemp.setTodoEndDate(todoDto.getTodoEndDate());
         todoTemp.setTodoUpdate(LocalDateTime.now());
 
         todoService.updateTodo(todoTemp);

@@ -39,7 +39,7 @@
         }
 
         .actions {
-            display: flex;
+            display: none;
             justify-content: flex-end;
             gap: 15px;
         }
@@ -81,7 +81,7 @@
     <strong>qnABoardDTO.empName: </strong><span th:text="${qnaBoardDto.empName}"></span><br/>
     <strong>qnABoardDTO.boardId: </strong><span th:text="${qnaBoardDto.boardId}"></span><br/>
 
-    <div class="actions">
+    <div class="actions" th:if="${boardDto.empName} == ${employeeDto.empName}" style="display: flex">
         <a class="btn" th:href="@{/board/qna/modify/{id}(id=${qnaBoardDto.id})}">수정</a>
         <a class="btn delete" th:href="@{/board/qna/detail/delete/{id}(id=${qnaBoardDto.id})}">삭제</a>
     </div>
@@ -90,7 +90,7 @@
 <!-- 댓글 작성 부분 -->
 <div id="comment-write">
     <!--// TODO-->
-    <input type="hidden" name="empId" id="empId" th:value="${empId}" placeholder="작성자">
+    <input type="hidden" name="empId" id="empId" th:value="${employeeDto.id}" placeholder="작성자">
     <input type="hidden" name="empName" id="empName">
     <input type="text" name="comContent" id="comContent" placeholder="내용">
     <input type="hidden" name="comRegDate" id="comRegDate" placeholder="내용">

@@ -111,7 +111,6 @@
 
                     const popup = document.querySelector('dialog'); // 다이얼로그 선택
                     const dataIdElement = document.getElementById('data-id'); // ID 요소 선택
-
                     // info.event.id 값 확인 및 할당
                     if (info.event.id) {
                         dataIdElement.textContent = info.event.id.trim(); // 공백 제거
@@ -129,7 +128,7 @@
                 }
             });
 
-            fetch('/todo/list?employee=1') //TODO 파라미터 1 은 jwt 구현시 회원 정보의 id로 변경
+            fetch(`/todo/list?employee=[[${employeeDto.id}]]`) //TODO 파라미터 1 은 jwt 구현시 회원 정보의 id로 변경
                 .then(response => response.json())
                 .then(data => {
                     data.forEach(todo => {
@@ -162,7 +161,7 @@
                 var todoStartDate = document.getElementById('todoStartDate').value;
                 var todoEndDate = document.getElementById('todoEndDate').value;
                 var todoContent = document.getElementById('todoContent').value;
-                var employee = document.getElementById('employee').value;
+                employee: { id: document.getElementById('employee').value };
                 var eventData = {
                     id: id,
                     todoTitle: todoTitle,
@@ -171,10 +170,11 @@
                     // todoStatus: 'scheduled',
                     todoStartDate: todoStartDate,
                     todoEndDate: todoEndDate,
-                    employee: employee
+                    employee: {id: document.getElementById('employee').value},
                 };
 
-                fetch('/todo/add', {
+
+                fetch(`/todo/add`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -191,6 +191,7 @@
                             start: data.todoStartDate,
                             end: data.todoEndDate,
                             description: data.todoContent,
+                            employee: data.employee.id,
                             extendedProps: {
                                 description: data.todoContent
                             },
@@ -216,13 +217,13 @@
     <div class="sidebar">
         <h3>카테고리</h3>
         <ul>
+            <!--TODO-->
             <li><a href="#">전체 일정</a></li>
             <li><a href="#">내 일정</a></li>
             <li><a href="#">팀 일정</a></li>
             <li><a href="#">완료된 일정</a></li>
         </ul>
     </div>
-
 
     <div class="content">
 
@@ -232,7 +233,7 @@
 
         <div>
             <h3>일정 추가</h3>
-            <form id="addEventForm" th:object="${todoDTO}">
+            <form id="addEventForm" th:object="${todoDto}">
                 <input type="hidden" id="id" name="todoId">
 
                 <label for="todoType">일정 종류</label>
@@ -243,7 +244,7 @@
                 </select>
 
                 <label for="employee">사원 번호:</label>
-                <input type="text" id="employee" name="employee" required>
+                <input type="hidden" id="employee" name="employee" th:value="${employeeDto.id}" required>
 
                 <label for="todoTitle">일정 제목:</label>
                 <input type="text" id="todoTitle" name="todoTitle" required>

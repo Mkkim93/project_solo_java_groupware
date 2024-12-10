@@ -11,41 +11,42 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
+@Transactional
 @RequiredArgsConstructor
 public class TodoQueryRepository {
 
     private final EntityManager em;
 
-    public TodoDTO todoSave(TodoDTO todoDTO) {
-        Integer employee = todoDTO.getEmployee();
+    public TodoDTO todoSave(TodoDTO todoDto) {
+        Integer employee = todoDto.getEmployee().getId();
         Employee setEmpId = new Employee();
         setEmpId.setId(employee);
         Todo todo = Todo.builder()
-                .id(todoDTO.getId())
-                .todoType(todoDTO.getTodoType())
-                .todoTitle(todoDTO.getTodoTitle())
-                .todoContent(todoDTO.getTodoContent())
-                .todoStatus(todoDTO.getTodoStatus())
-                .todoStartDate(todoDTO.getTodoStartDate())
-                .todoEndDate(todoDTO.getTodoEndDate())
+                .id(todoDto.getId())
+                .todoType(todoDto.getTodoType())
+                .todoTitle(todoDto.getTodoTitle())
+                .todoContent(todoDto.getTodoContent())
+                .todoStatus(todoDto.getTodoStatus())
+                .todoStartDate(todoDto.getTodoStartDate())
+                .todoEndDate(todoDto.getTodoEndDate())
                 .employee(setEmpId)  // Employee 객체 전달
                 .build();
         em.persist(todo);
-        return todoDTO.setDTO(todo);
+        return todoDto.setDTO(todo);
     }
 
-    public List<Todo> findByTodoOfMonth(TodoDTO todoDTO) {
-        Integer employee = todoDTO.getEmployee();
+    public List<Todo> findByTodoOfMonth(TodoDTO todoDto) {
+        Integer employee = todoDto.getEmployee().getId();
         Employee setEmpId = new Employee();
         setEmpId.setId(employee);
         Todo todo = Todo.builder()
-                .id(todoDTO.getId())
-                .todoType(todoDTO.getTodoType())
-                .todoTitle(todoDTO.getTodoTitle())
-                .todoContent(todoDTO.getTodoContent())
-                .todoStatus(todoDTO.getTodoStatus())
-                .todoStartDate(todoDTO.getTodoStartDate())
-                .todoEndDate(todoDTO.getTodoEndDate())
+                .id(todoDto.getId())
+                .todoType(todoDto.getTodoType())
+                .todoTitle(todoDto.getTodoTitle())
+                .todoContent(todoDto.getTodoContent())
+                .todoStatus(todoDto.getTodoStatus())
+                .todoStartDate(todoDto.getTodoStartDate())
+                .todoEndDate(todoDto.getTodoEndDate())
                 .employee(setEmpId)  // Employee 객체 전달
                 .build();
 

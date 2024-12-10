@@ -29,26 +29,26 @@ public class TodoRepositoryImpl extends QuerydslRepositorySupport implements Tod
     }
 
     @Override
-    public List<TodoDTO> findByOneTodo(TodoDTO todoDTO) {
+    public List<TodoDTO> findByOneTodo(TodoDTO todoDto) {
 
         List<TodoDTO> result = jpaQueryFactory.select(new QTodoDTO(
                         todo.id, todo.todoType, todo.todoTitle, todo.todoContent,
                         todo.todoStartDate, todo.todoEndDate, todo.todoStatus, todo.employee.id))
                 .from(todo)
                 .join(todo.employee, employee)
-                .where(todo.employee.id.eq(todoDTO.getEmployee()))
+                .where(todo.employee.id.eq(todoDto.getEmployee().getId()))
                 .fetch();
         return result;
     }
 
     @Override
-    public void updateTodo(TodoDTO todoDTO) {
+    public void updateTodo(TodoDTO todoDto) {
 
         jpaQueryFactory.update(todo)
-                .set(todo.todoTitle, existTitle(todoDTO.getTodoTitle(), todoDTO.getId()))
-                .set(todo.todoContent, existContent(todoDTO.getTodoContent(), todoDTO.getId()))
+                .set(todo.todoTitle, existTitle(todoDto.getTodoTitle(), todoDto.getId()))
+                .set(todo.todoContent, existContent(todoDto.getTodoContent(), todoDto.getId()))
                 .set(todo.todoUpdate, LocalDateTime.now())
-                .where(todo.id.eq(todoDTO.getId()))
+                .where(todo.id.eq(todoDto.getId()))
                 .execute();
     }
 

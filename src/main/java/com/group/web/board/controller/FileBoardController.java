@@ -62,7 +62,7 @@ public class FileBoardController {
                          Model model) {
         String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
         EmployeeDTO dto = employeeService.findByEmployee(uuid);
-        model.addAttribute("empId", dto.getId());
+        model.addAttribute("employeeDto", dto);
         PageRequest pageRequest = PageRequest.of(page, size);
         FileBoardDTO fileBoardDto = fileBoardService.findById(id);
         model.addAttribute("fileStoreDto", fileStoreService.findByStoreId(id));

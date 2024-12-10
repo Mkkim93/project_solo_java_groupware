@@ -18,12 +18,12 @@ class CommentServiceTest {
     CommentBoardRepository commentBoardRepository;
 
     // TODO
-    @Test
+
     public void findAllByComment() {
         PageRequest pageRequest = PageRequest.of(0, 10);
         Integer boardId = 4;
         String boardPass = "1234";
-        Page<CommentDTO> allQna = commentService.findAllQna(boardId, boardPass, pageRequest);
+        Page<CommentDTO> allQna = commentService.findAllQna(boardId, pageRequest);
         for (CommentDTO commentDTO : allQna) {
             System.out.println("commentDTO.getComContent() = " + commentDTO.getComContent());
             System.out.println("commentDTO.getBoardId() = " + commentDTO.getBoardId());

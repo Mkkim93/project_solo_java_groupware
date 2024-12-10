@@ -39,7 +39,7 @@
         }
 
         .actions {
-            display: flex;
+            display: none;
             justify-content: flex-end;
             gap: 15px;
         }
@@ -82,14 +82,14 @@
     <strong>freeBoardDTO.boardId:</strong> <span th:text="${freeBoardDto.boardId}"></span><br/>
     <strong>boardDTO.boardId:</strong> <span th:text="${boardDto.boardId}"></span><br/>
 
-    <div class="actions">
+    <div class="actions" th:if="${boardDto.empName} == ${employeeDto.empName}" style="display: flex">
         <a class="btn" th:href="@{/board/free/modify/{id}(id=${freeBoardDto.id})}">수정</a>
         <a class="btn delete" th:href="@{/board/free/detail/delete/{id}(id=${freeBoardDto.id})}">삭제</a>
     </div>
 </div>
 <!-- 댓글 작성 부분 -->
 <div id="comment-write">
-    <input type="hidden" name="empId" id="empId" th:value="${empId}" placeholder="작성자">
+    <input type="hidden" name="empId" id="empId" th:value="${employeeDto.id}" placeholder="작성자">
     <input type="hidden" name="empName" id="empName">
     <input type="text" name="comContent" id="comContent" placeholder="내용">
     <input type="hidden" name="comRegDate" id="comRegDate" placeholder="내용">

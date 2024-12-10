@@ -1,5 +1,6 @@
 package com.group.web.mail;
 
+import com.group.application.cookie.service.CookieService;
 import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.hr.service.EmployeeService;
 import com.group.application.mail.dto.MailBoxDTO;
@@ -18,11 +19,14 @@ public class MailController {
 
     private final MailService mailService;
     private final EmployeeService employeeService;
+    private final CookieService cookieService;
 
     @GetMapping("/list")
-    public String sendMailBox(Model model, EmployeeDTO employeeDTO) {
-        employeeDTO.setId(1); // TODO 임시 ID
-        List<MailBoxDTO> mailBoxList = mailService.findAllBySendMail(employeeDTO);
+    public String sendMailBox(@CookieValue("jwtToken") String token, Model model) {
+        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
+        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+        List<MailBoxDTO> mailBoxList = mailService.findAllBySendMail(dto);
+        model.addAttribute("employeeDto", dto);
         model.addAttribute("mailBoxList", mailBoxList);
         return "/mail/list";
     }
@@ -40,17 +44,21 @@ public class MailController {
     }
 
     @GetMapping("/tome")
-    public String toMeWriteMail(Model model, MailBoxDTO mailBoxDTO) {
+    public String toMeWriteMail(@CookieValue("jwtToken") String token, Model model, MailBoxDTO mailBoxDTO) {
         model.addAttribute("mailBoxDto", new MailBoxDTO());
-        mailBoxDTO.setSenderEmployeeId(1); // TODO 임시 ID
+        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
+        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+        mailBoxDTO.setSenderEmployeeId(dto.getId());
         String myEmpMail = mailService.findByEmpMail(mailBoxDTO.getSenderEmployeeId());
         model.addAttribute("empMail", myEmpMail);
         return "/mail/tome";
     }
 
     @PostMapping("/tomeProc")
-    public String tomeProc(Model model, MailBoxDTO mailBoxDTO) {
-        mailBoxDTO.setSenderEmployeeId(1); // TODO 임시 ID
+    public String tomeProc(@CookieValue("jwtToken") String token, Model model, MailBoxDTO mailBoxDTO) {
+        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
+        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+        mailBoxDTO.setSenderEmployeeId(dto.getId());
         String myEmpMail = mailService.findByEmpMail(mailBoxDTO.getSenderEmployeeId());
         model.addAttribute("empMail", myEmpMail);
         model.addAttribute("mailBoxDto", mailService.write(mailBoxDTO));

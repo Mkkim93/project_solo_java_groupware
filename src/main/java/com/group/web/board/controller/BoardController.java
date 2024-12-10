@@ -44,9 +44,10 @@ public class BoardController {
                          Model model) {
         String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
         EmployeeDTO dto = employeeService.findByEmployee(uuid);
-        model.addAttribute("empId", dto.getId());
-        PageRequest pageRequest = PageRequest.of(page, size);
+        model.addAttribute("employeeDto", dto);
         model.addAttribute("boardDto", boardService.findByOne(id));
+
+        PageRequest pageRequest = PageRequest.of(page, size);
         model.addAttribute("commentDto", commentService.findAll(id, pageRequest));
         return "/board/all/detail";
     }

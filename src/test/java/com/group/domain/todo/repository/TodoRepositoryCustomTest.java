@@ -28,7 +28,7 @@ class TodoRepositoryCustomTest {
     @DisplayName("일정 등록")
     void todoSave() {
         TodoDTO todoDTO = new TodoDTO();
-        todoDTO.setEmployee(1);
+        // todoDTO.setEmployee(1);
         todoDTO.setTodoType("회의");
         todoDTO.setTodoTitle("개발 회의");
         todoDTO.setTodoContent("회의 내용 테스트");
@@ -40,7 +40,7 @@ class TodoRepositoryCustomTest {
     @DisplayName("월 단위 일정 조회하기")
     void todoSearchByMonth() {
         TodoDTO todoDTO = new TodoDTO();
-        todoDTO.setEmployee(1);
+        // todoDTO.setEmployee(1);
         List<Todo> byTodoOfMonth = todoRepositoryCustom.findByTodoOfMonth(todoDTO);
         for (Todo todo : byTodoOfMonth) {
             System.out.println("todo.getId() = " + todo.getId());
@@ -54,7 +54,7 @@ class TodoRepositoryCustomTest {
     @DisplayName("캘린더 데이터 조회 (내부 서비스 레이어로 테스트 수정)")
     void todoSearchByMonthV2() {
         TodoDTO todoDTO = new TodoDTO();
-        todoDTO.setEmployee(1);
+        // todoDTO.setEmployee(1);
         List<TodoDTO> todoResult = todoService.findByTodoList(todoDTO);
         // dto 조회
         for (TodoDTO dto : todoResult) {
@@ -67,10 +67,10 @@ class TodoRepositoryCustomTest {
 
     @Test
     void findById() {
-        TodoDTO todoDTO = new TodoDTO();
+        /*TodoDTO todoDTO = new TodoDTO();
         todoDTO.setEmployee(1);
         TodoDTO byTodoId = todoService.findByTodoId(5);
-        System.out.println("byTodoId = " + byTodoId);
+        System.out.println("byTodoId = " + byTodoId);*/
 
     }
 

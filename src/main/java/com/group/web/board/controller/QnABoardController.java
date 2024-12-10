@@ -48,7 +48,8 @@ public class QnABoardController {
 
         String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
         EmployeeDTO dto = employeeService.findByEmployee(uuid);
-        model.addAttribute("empId", dto.getId());
+
+        model.addAttribute("employeeDto", dto);
         QnABoardDTO qnaBoardDto = qnABoardService.findById(id, boardPass);
 
         // 댓글 관련 model & 페이징 객체

@@ -116,7 +116,7 @@
                     document.getElementById('todoStartDate').value = info.event.start.toISOString().slice(0, 16); // 날짜 형식 맞추기
                     document.getElementById('todoEndDate').value = info.event.end.toISOString().slice(0, 16);
                     document.getElementById('todoContent').value = info.event.extendedProps.description;
-                    document.getElementById('employee').value = "1"; // 예시로 사원 번호 1로 설정
+                    document.getElementById('employee').value = ${employeeDto}
 
                     popup.querySelector('div').innerHTML = `
                     <h3>일정 수정</h3>
@@ -164,9 +164,9 @@
                     todoContent: todoContent,
                     todoStartDate: todoStartDate,
                     todoEndDate: todoEndDate,
-                    employee: employee
+                    employee: employee,
                 };
-                fetch('/todo/update/{id}', {
+                fetch(`/todo/update/[[${id}]]`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -215,8 +215,8 @@
             <div class="layout">
                 <h2>일정 수정</h2>
 
-                <form th:action="@{/todo/modify/update/{id}(id=${todoDTO.id})}"
-                      th:object="${todoDTO}" method="post">
+                <form th:action="@{/todo/modify/update/{id}(id=${todoDto.id})}"
+                      th:object="${todoDto}" method="post">
 
                     <input type="hidden" th:value="*{id}" th:field="*{id}" />
 

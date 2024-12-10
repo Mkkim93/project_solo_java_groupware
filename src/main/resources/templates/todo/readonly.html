@@ -50,7 +50,7 @@
                 }
             });
 
-            fetch('/todo/list?employee=1') //TODO 파라미터 1 은 jwt 구현시 회원 정보의 id로 변경
+            fetch(`/todo/list?employee=[[${employeeDto.id}]]`) //TODO 파라미터 1 은 jwt 구현시 회원 정보의 id로 변경
                 .then(response => response.json())
                 .then(data => {
                     data.forEach(todo => {
@@ -80,7 +80,7 @@
 </dialog>
 <div>
     <div id="calendar"></div>
-    <form id="addEventForm" class="addEventForm" th:object="${todoDTO}"></form>
+    <form id="addEventForm" class="addEventForm" th:object="${todoDto}"></form>
 </div>
 </body>
 </html>

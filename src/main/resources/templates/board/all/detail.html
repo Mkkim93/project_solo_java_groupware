@@ -38,7 +38,7 @@
             text-align: right;
         }
         .actions {
-            display: flex;
+            display: none;
             justify-content: flex-end;
             gap: 10px;
         }
@@ -99,7 +99,7 @@
     <h1 th:text="${boardDto.boardTitle}">제목입니다.</h1>
     <p class="author" th:text="'작성자: ' + ${boardDto.empName}">작성자 정보</p>
     <p th:text="${boardDto.boardContent}">여기에 게시글 내용이 표시됩니다.</p>
-    <div class="actions">
+    <div class="actions" th:if="${boardDto.empName} == ${employeeDto.empName}" style="display: flex">
         <a class="btn" th:href="@{/board/all/modify/{id}(id = ${boardDto.id})}">수정</a>
         <a class="btn delete" th:href="@{/board/all/detail/delete/{id}(id=${boardDto.id})}">삭제</a>
     </div>
@@ -108,7 +108,7 @@
 <!-- 댓글 작성 부분 -->
 <div id="comment-write">
     <label for="empId">회원 id 가 들어갈 부분</label>
-    <input type="hidden" name="empId" id="empId" th:value="${empId}" placeholder="작성자">
+    <input type="hidden" name="empId" id="empId" th:value="${employeeDto.id}" placeholder="작성자">
 
     <input type="hidden" name="empName" id="empName">
 
