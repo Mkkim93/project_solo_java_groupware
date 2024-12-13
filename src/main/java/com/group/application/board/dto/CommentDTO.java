@@ -40,4 +40,8 @@ public class CommentDTO {
         this.boardId = boardId;
         this.boardPass = boardPass;
     }
+
+    public CommentDTO(Integer boardId) {
+        this.boardId = boardId;
+    }
 }

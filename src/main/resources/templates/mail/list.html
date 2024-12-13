@@ -2,77 +2,131 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>받은 메일함</title>
+    <title>전체 메일함</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
 </head>
 <body>
 <div class="container">
-    <!-- 좌측 상단 버튼 그룹 -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <button class="btn btn-primary me-2" onclick="writeMail()">메일쓰기</button>
-            <button class="btn btn-secondary" onclick="writeToSelf()">내게쓰기</button>
-        </div>
-        <h2 class="text-center flex-grow-1">받은 메일함</h2>
-    </div>
+    <div class="row">
+        <!-- 좌측 세로 버튼 그룹 -->
+        <div class="col-md-2">
+            <div class="d-flex flex-column align-items-stretch">
 
-    <div>
-        <table class="table table-header table-striped">
-            <thead>
-            <tr>
-                <th class="text-center">받는 사람</th>
-                <th class="text-center">제목</th>
-                <th class="text-center">보낸 날짜</th>
-                <th class="text-center">보낸 사람</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- List<MailBoxDTO>를 mailBoxList로 처리 -->
-            <tr th:each="list : ${mailBoxList}">
-                <input type="hidden" th:value="${list.id}" class="text-center"/>
-                <td th:text="${list.senderName}" class="text-center"></td>
-                <td> <a th:text="${list.mailTitle}" th:href="@{/mail/detail(id=${list.id})}" class="text-center"></a></td>
-                <td th:text="${list.senderDate}" class="text-center"></td>
-                <td th:text="${employeeDto.empName}" class="text-center"></td> <!--임시 테스트용-->
-            </tr>
-            </tbody>
-        </table>
+                <button class="btn btn-primary mb-2" onclick="writeMail()">메일쓰기</button>
+                <button class="btn btn-secondary mb-4" onclick="writeToSelf()">내게쓰기</button>
+
+                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('all')">전체 메일함</button>
+                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('inbox')">받은 메일함</button>
+                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('sent')">보낸 메일함</button>
+                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('draft')">임시 저장 메일함</button>
+                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('toMe')">내게 쓴 메일함</button>
+                <hr>
+                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('important')">중요 메일함</button>
+                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('trash')">휴지통</button>
+            </div>
+        </div>
+
+        <!-- 우측 테이블 영역 -->
+        <div class="col-md-10">
+            <h2 class="text-center mb-4">받은 메일함</h2>
+            <div>
+                <table class="table table-header table-striped">
+                    <thead>
+                    <tr>
+                        <th class="text-center">체크 박스</th>
+                        <th class="text-center">즐겨 찾기</th>
+                        <th class="text-center">읽음 상태</th>
+                        <th class="text-center">보낸 사람</th>
+                        <th class="text-center">제목</th>
+                        <th class="text-center">받은 날짜</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- List<MailBoxDTO>를 mailBoxList로 처리 -->
+                    <tr th:each="mail : ${myMailBoxDto}">
+                        <input type="hidden" th:text="*{mail.mailBoxId}" class="text-center"/>
+
+                        <td> <!--체크 박스-->
+                            <input type="checkbox">
+                        </td>
+                        <td> <!--즐겨찾기-->
+                            <form method="post" action="/update-favorite" class="text-center">
+                                <input type="checkbox" name="isFavorite" value="true" id="favorite-checkbox"
+                                       onchange="this.form.submit()" />
+                                <label for="favorite-checkbox"></label>
+                            </form>
+                        </td>
+                        <td id="readType" name="readType" th:text="*{mail.readType}" class="text-center"> <!--읽음 상태-->
+                            <p ></p>
+                        </td>
+
+                        <td id="senderName" class="text-center" th:text="*{mail.senderName}"></td> <!--보낸 사람-->
+
+                        <td th:text="*{mail.mailTitle}" class="text-center">
+                            <a class="text-center"></a>
+                        </td>
+
+                        <td th:text="*{mail.mailDate}" class="text-center"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="pagination">
+                    <li th:if="${myMailBoxDto.hasPrevious()}">
+                        <a th:href="@{/mail/list(page=${myMailBoxDto.number - 1})}" class="btn btn-link">이전</a>
+                    </li>
+
+                    <li th:each="i : ${#numbers.sequence(myMailBoxDto.number - (myMailBoxDto.number % 5),
+            myMailBoxDto.number - (myMailBoxDto.number % 5) + 4)}" th:if="${i < myMailBoxDto.totalPages}">
+                        <a th:href="@{/mail/list(page=${i})}" class="btn btn-link" th:text="${i + 1}"></a>
+                    </li>
+
+                    <li th:if="${myMailBoxDto.hasNext()}">
+                        <a th:href="@{/mail/list(page=${myMailBoxDto.number + 1})}" class="btn btn-link">다음</a>
+                    </li>
+                </div>
+            </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const selectAllCheckbox = document.getElementById("selectAll");
-        const individualCheckboxes = document.querySelectorAll(".mailCheckbox");
+    function loadMailFolder(type) {
+        fetch(`/api/mail/folder/${type}`)
+            .then(response => response.json())
+            .then(data => {
+                updateMailTable(data);
+            })
+            .catch(error => console.log('error : ', error))
+    }
 
-        // 전체 선택/해제 체크박스 동작
-        selectAllCheckbox.addEventListener("change", function () {
-            const isChecked = selectAllCheckbox.checked;
-            individualCheckboxes.forEach(checkbox => {
-                checkbox.checked = isChecked;
-            });
+    function updateMailTable(mailList) {
+        const mailTableBody = document.getElementById('mailTableBody');
+        mailTableBody.innerHTML = '';
+
+        mailList.forEach(mail => {
+            const row = document.createElement('tr');
+            const senderDate = document.getElementById('senderDate').value;
+            row.innerHTML = `
+                <input type="hidden" value="${mail.id}" class="text-center">
+
+                <td class="text-center">${mail.empName}</td>
+
+                <td><a href="/mail/detail/${mail.id}" class="text-center">${mail.mailTitle}</a></td>
+
+                <td class="text-center">${mail.empId}</td>
+
+                <td class="text-center">${mail.receiverEmail}</td>
+            `;
+            mailTableBody.appendChild(row);
         });
 
-        // 개별 체크박스 상태 변경 시, 전체 선택 상태 업데이트
-        individualCheckboxes.forEach(checkbox => {
-            checkbox.addEventListener("change", function () {
-                if (!checkbox.checked) {
-                    selectAllCheckbox.checked = false;
-                } else {
-                    // 모든 체크박스가 선택된 경우 "전체 선택"도 체크
-                    const allChecked = Array.from(individualCheckboxes).every(cb => cb.checked);
-                    selectAllCheckbox.checked = allChecked;
-                }
-            });
-        });
-    });
+    }
 
-    // 메일쓰기 버튼 동작
     function writeMail() {
         window.location.href = '/mail/write'; // 메일쓰기 페이지로 이동
     }
 
-    // 내게쓰기 버튼 동작
     function writeToSelf() {
         window.location.href = '/mail/tome'; // 내게 쓰기 페이지로 이동
     }

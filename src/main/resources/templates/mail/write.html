@@ -10,27 +10,34 @@
     <h1 class="text-center mb-4">메일 작성</h1>
     <form th:action="@{/mail/writeProc}" th:object="${mailBoxDto}"  method="post" class="p-4 border rounded shadow-sm">
         <div class="mb-3">
-            <label for="receiverEmail" class="form-label">받는 사람</label>
-            <input type="email" id="receiverEmail" name="receiverEmail"  th:field="*{receiverEmail}" class="form-control" placeholder="받는 메일 주소를 입력하세요" required>
-        </div>
-
-        <!--TODO jwt 구현 전 임시 보낼 사람 id 를 지정-->
-        <div class="mb-3">
-            <label for="senderEmployeeId" class="form-label">보내는 사람</label>
-            <input type="text" id="senderEmployeeId" name="senderEmployeeId" th:field="*{senderEmployeeId}" class="form-control" placeholder="(임시) 보낼 사람 pk 입력">
+            <label for="receiverEmail" class="form-label">받는 사람
+            <input type="email" id="receiverEmail" name="receiverEmail"  th:field="*{receiverEmail}"
+                   class="form-control" placeholder="받는 메일 주소를 입력하세요" required>
+            </label>
         </div>
 
         <div class="mb-3">
-            <label for="mailTitle" class="form-label">제목</label>
-            <input type="text" id="mailTitle" name="mailTitle" th:field="*{mailTitle}" class="form-control" placeholder="메일 제목을 입력하세요" required>
+            <label for="senderEmployeeId" class="form-label">
+            <input type="hidden" id="senderEmployeeId" name="senderEmployeeId" th:value="${employeeDto.id}"
+                   class="form-control">
+            </label>
+        </div>
+
+        <div class="mb-3">
+            <label for="mailTitle" class="form-label">제목
+            <input type="text" id="mailTitle" name="mailTitle" th:field="*{mailTitle}"
+                   class="form-control" placeholder="메일 제목을 입력하세요" required>
+            </label>
         </div>
         <div class="mb-3">
-            <label for="mailContent" class="form-label">내용</label>
-            <textarea id="mailContent" name="mailContent" th:field="*{mailContent}" class="form-control" rows="5" placeholder="메일 내용을 입력하세요" required></textarea>
+            <label for="mailContent" class="form-label">내용
+            <textarea id="mailContent" name="mailContent" th:field="*{mailContent}"
+                      class="form-control" rows="5" placeholder="메일 내용을 입력하세요" required></textarea>
+            </label>
         </div>
 
         <div class="text-center">
-            <button type="submit" class="btn btn-primary w-50">메일 보내기</button>
+            <button type="submit" class="btn btn-primary w-50">메일 전송</button>
         </div>
     </form>
 </div>

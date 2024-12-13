@@ -3,6 +3,8 @@ package com.group.domain.board.entity;
 import com.group.domain.hr.entity.Employee;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,9 +30,11 @@ public class Board {
     @Column(name = "board_content")
     private String boardContent;
 
+    @CreatedDate
     @Column(name = "board_regdate", updatable = false)
     private LocalDateTime boardRegDate;
 
+    @LastModifiedDate
     @Column(name = "board_updatedate")
     private LocalDateTime boardUpdateDate;
 

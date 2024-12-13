@@ -26,4 +26,5 @@ public interface CommentBoardRepository extends JpaRepository<CommentBoard, Inte
             "and c.board.id = q.board.id " +
             "and c.board.id = :id ")
     Page<CommentDTO> findByQnaComment(@Param("id") Integer id, Pageable pageable);
+
 }

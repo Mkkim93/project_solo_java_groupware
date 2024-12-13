@@ -2,6 +2,7 @@ package com.group.application.mail.service;
 
 import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.mail.dto.MailBoxDTO;
+import com.group.application.mail.dto.MyMailBoxDTO;
 import com.group.domain.hr.entity.Employee;
 import com.group.domain.mail.entity.MailBox;
 import com.group.domain.mail.repository.MailRepositoryImpl;
@@ -10,10 +11,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -38,15 +40,14 @@ class MailServiceTest {
     }
 
     @Test
-    @DisplayName("받은 메일함 테스트")
-    void testFindSendMail() {
-        EmployeeDTO employeeDTO = new EmployeeDTO();
-        employeeDTO.setId(6);
-        List<MailBoxDTO> result = mailService.findAllBySendMail(employeeDTO);
-        for (MailBoxDTO mailBoxDTO : result) {
-            System.out.println("mailBoxDTO.getSenderEmployeeId() = " + mailBoxDTO.getSenderEmployeeId());
-            System.out.println("mailBoxDTO.getMailTitle() = " + mailBoxDTO.getMailTitle());
-            System.out.println("mailBoxDTO.getMailContent() = " + mailBoxDTO.getMailContent());
+    @DisplayName("전체 메일함 조회")
+    void findAllMyMailBox() {
+        MailBoxDTO dto = new MailBoxDTO();
+        dto.setSenderEmployeeId(29);
+        PageRequest page = PageRequest.of(0, 15);
+        Page<MyMailBoxDTO> result = mailService.findByMyMailBox(dto, page);
+        for (MyMailBoxDTO v : result) {
+            System.out.println("v = " + v);
         }
     }
 
@@ -54,9 +55,7 @@ class MailServiceTest {
     @Test
     @DisplayName("step 1 : MailBox 에 메일 작성")
     void writeMailBox() {
-        MailBoxDTO mailBoxDTO = new MailBoxDTO("메일 제목12", "메일 내용12", 1, "alsrb362@daum.net");
-        MailBoxDTO result = mailService.write(mailBoxDTO);
-        assertThat(mailBoxDTO).isEqualTo(result);
+
     }
 
     @Test

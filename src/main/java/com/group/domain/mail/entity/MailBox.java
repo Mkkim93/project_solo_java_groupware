@@ -1,12 +1,13 @@
 package com.group.domain.mail.entity;
 
-import com.group.application.mail.dto.MailBoxDTO;
 import com.group.domain.hr.entity.Employee;
+import com.group.domain.mail.entity.enums.MailType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -33,12 +34,13 @@ public class MailBox {
     @Column(name = "mail_content")
     private String mailContent; // 메일 내용
 
-    @Enumerated(STRING)
-    @Column(name = "mail_status")
-    private MailStatus mailStatus; // 메일 읽음 상태
-
+    @CreatedDate
     @Column(name = "mail_date", updatable = false) // 메일 생성 날짜
     private LocalDateTime mailDate;
+
+    @Enumerated(STRING)
+    @Column(name = "mail_type")
+    private MailType mailType;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "sender_emp_id")
@@ -60,19 +62,14 @@ public class MailBox {
     )
     private List<MailFile> mailFiles = new ArrayList<>();
 
-    @PrePersist void createMail() {
-        this.mailDate = LocalDateTime.now();
-        if (this.mailStatus == null) {
-            this.mailStatus = MailStatus.UNREAD;
-        }
-    }
-
     @Builder
-    public MailBox(Integer id, String mailTitle, String mailContent, LocalDateTime mailDate, Employee senderEmployee) {
+    public MailBox(Integer id, String mailTitle, String mailContent,
+                   LocalDateTime mailDate, Employee senderEmployee, MailType mailType) {
        this.id = id;
        this.mailTitle = mailTitle;
        this.mailContent = mailContent;
        this.mailDate = mailDate;
        this.senderEmployee = senderEmployee;
+       this.mailType = mailType;
     }
 }

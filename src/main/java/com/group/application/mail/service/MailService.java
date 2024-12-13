@@ -2,17 +2,18 @@ package com.group.application.mail.service;
 
 import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.mail.dto.MailBoxDTO;
+import com.group.application.mail.dto.MyMailBoxDTO;
 import com.group.domain.hr.entity.Employee;
 import com.group.domain.hr.repository.EmployeeRepository;
 import com.group.domain.mail.entity.MailBox;
+import com.group.domain.mail.entity.enums.MailType;
 import com.group.domain.mail.repository.MailRepository;
 import com.group.domain.mail.repository.MailRepositoryImpl;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.sql.Timestamp;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,21 +23,34 @@ public class MailService {
     private final EmployeeRepository employeeRepository;
     private final MailRepositoryImpl mailRepositoryImpl;
 
-    public List<MailBoxDTO> findAllBySendMail(EmployeeDTO dto) {
-        List<Object[]> receivedMails = mailRepository.findReceivedMails(dto.getId());
-
-       return receivedMails.stream()
-                .map(receivedMail -> new MailBoxDTO( // parameter 순서 맞춰서 바인딩
-                        (Integer) receivedMail [0], // 메일 ID
-                        (String) receivedMail [1], // 메일 내용
-                        (Integer) receivedMail[2], // 보낸 사람 ID
-                        (String) receivedMail [3],
-                        ((Timestamp) receivedMail[4]).toLocalDateTime() // sql 의 TimeStamp 타입과 자바의 LocalDateTime 매핑(캐스팅)
-                ))
-                .toList();
+    // 전체 메일함
+    public Page<MyMailBoxDTO> findByMyMailBox(MailBoxDTO mailBoxDto, Pageable pageable) {
+        return mailRepositoryImpl.findByMyMailBox(mailBoxDto, pageable);
     }
 
-    public MailBoxDTO write(MailBoxDTO mailBoxDTO) {
+    public MailBoxDTO sendMailTome(MailBoxDTO mailBoxDto) {
+
+        // step1 : mailBox 에 데이터 저장
+        MailBox mailBoxEntity = MailBox.builder()
+                .id(mailBoxDto.getId())
+                .mailTitle(mailBoxDto.getMailTitle())
+                .mailContent(mailBoxDto.getMailContent())
+                .mailDate(mailBoxDto.getSenderDate())
+                .mailType(MailType.TOME) // 내게 쓴 메일로 저장
+                .senderEmployee(Employee.builder()
+                        .id(mailBoxDto.getSenderEmployeeId())
+                        .build())
+                .build();
+        MailBox result = mailRepository.save(mailBoxEntity);
+
+        // step2 : mailrecvstore 에 데이터 저장
+        Integer empId = findByEmpId(mailBoxDto.getReceiverEmail());
+        mailRepository.saveReceiveStore(result.getId(), empId);
+
+        return mailBoxDto.toDTO(result);
+    }
+
+    public MailBoxDTO sendMailToRecipient(MailBoxDTO mailBoxDTO) {
 
         // step1 : mailBox 에 데이터 저장
         MailBox mailBoxEntity = MailBox.builder()
@@ -44,6 +58,7 @@ public class MailService {
                 .mailTitle(mailBoxDTO.getMailTitle())
                 .mailContent(mailBoxDTO.getMailContent())
                 .mailDate(mailBoxDTO.getSenderDate())
+                .mailType(MailType.SENT) // 보낸 메일로 저장
                 .senderEmployee(Employee.builder()
                         .id(mailBoxDTO.getSenderEmployeeId())
                         .build())

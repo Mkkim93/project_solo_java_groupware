@@ -52,13 +52,11 @@ public class BoardService {
                 Employee.builder()
                 .id(dto.getEmployee().getId())
                 .build());
-        board.setBoardRegDate(LocalDateTime.now());
         return boardRepository.save(board);
     }
 
     public BoardDTO update(BoardDTO dto) {
         Board entity = boardRepository.save(convertToBoard(dto));
-        entity.setBoardUpdateDate(LocalDateTime.now());
         return dto.toDto(entity);
     }
 
