@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,7 +25,12 @@ class TodoQueryRepositoryTest {
     @Test
     @DisplayName("회원의 일정 조회 단건")
     void findByOne() {
-
+        TodoDTO dto = new TodoDTO();
+        EmployeeDTO empDto = new EmployeeDTO();
+        empDto.setId(29);
+        dto.setEmployee(empDto);
+        List<TodoDTO> result = todoService.findByTodoOne(dto);
+        result.stream().forEach(System.out::println);
     }
 
     @Test

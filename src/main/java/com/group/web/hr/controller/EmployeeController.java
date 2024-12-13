@@ -20,37 +20,39 @@ public class EmployeeController {
     private final CookieService cookieService;
 
     @GetMapping("/home")
-    public String home(HttpServletRequest request, Model model, EmployeeDTO employeeDto) {
-        // TODO 인증된 사용자 정보 사용
-        String uuid = cookieService.getEmpUUIDFromCookies(request);
-        employeeDto.setEmpUUID(uuid);
-        model.addAttribute("employeeDto", employeeService.findByAll(employeeDto));
-        model.addAttribute("departmentDto", employeeService.findByIdDepartInfo(employeeDto));
-        model.addAttribute("attendanceDto", attendanceService.findByIdAttInfo(employeeDto));
+    public String home(@CookieValue("jwtToken") String token, Model model) {
+        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
+        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+        model.addAttribute("employeeDto", employeeService.findByAll(dto));
+        model.addAttribute("departmentDto", employeeService.findByIdDepartInfo(dto));
+        model.addAttribute("attendanceDto", attendanceService.findByIdAttInfo(dto));
         return "/hr/home";
     }
 
     @GetMapping("/detail")
-    public String detail(HttpServletRequest request, Model model, EmployeeDTO employeeDto) {
-        String uuid = cookieService.getEmpUUIDFromCookies(request);
+    public String detail(@CookieValue("jwtToken") String token, Model model, EmployeeDTO employeeDto) {
+        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
+        EmployeeDTO dto = employeeService.findByEmployee(uuid);
         employeeDto.setEmpUUID(uuid);
-        model.addAttribute("employeeDto", employeeService.findByAll(employeeDto));
+        model.addAttribute("employeeDto", employeeService.findByAll(dto));
         return "/hr/detail";
     }
 
     @GetMapping("/modify/{id}")
-    public String modify(Model model, EmployeeDTO employeeDto, HttpServletRequest request) {
-        String uuid = cookieService.getEmpUUIDFromCookies(request);
-        employeeDto.setEmpUUID(uuid);
-        model.addAttribute("employeeDto", employeeService.findByAll(employeeDto));
+    public String modify(Model model, EmployeeDTO employeeDto, @CookieValue("jwtToken") String token) {
+        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
+        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+        model.addAttribute("employeeDto", employeeService.findByAll(dto));
         return "/hr/modify";
     }
 
     @PostMapping("/modify/update/{id}")
     public String modifyProc(@ModelAttribute EmployeeDTO employeeDto,
-                             HttpServletRequest request) {
-        String uuid = cookieService.getEmpUUIDFromCookies(request);
-        employeeDto.setEmpUUID(uuid);
+                             @CookieValue("jwtToken") String token
+                             ) {
+        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
+        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+        employeeDto.setEmpUUID(dto.getEmpUUID());
         employeeService.updateProfile(employeeDto);
         return "redirect:/hr/detail";
     }

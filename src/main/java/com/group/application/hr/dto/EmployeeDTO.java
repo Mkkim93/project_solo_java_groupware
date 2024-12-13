@@ -32,6 +32,7 @@ public class EmployeeDTO {
     private Integer deptId;
     private Integer attId;
     private String roleType;
+
     private String empUUID;
 
     @QueryProjection
@@ -39,7 +40,7 @@ public class EmployeeDTO {
                        String empName, String empRegNo, String userEmail,
                        String empNickName, String empRank, String userTel,
                        String empNo, Integer empMileage, String empImg,
-                       String empTel, LocalDateTime empJoinDate, Integer deptId, Integer attId) {
+                       String empTel, LocalDateTime empJoinDate, Integer deptId, Integer attId, String empUUID) {
         this.id = id;
         this.empEmail = empEmail;
         this.empPass = empPass;
@@ -56,6 +57,7 @@ public class EmployeeDTO {
         this.empJoinDate = empJoinDate;
         this.deptId = deptId;
         this.attId = attId;
+        this.empUUID = empUUID;
     }
 
     // Entity -> DTO
@@ -72,6 +74,7 @@ public class EmployeeDTO {
         this.empNo = e.getEmpNo();
         this.empTel = e.getEmpTel();
         this.roleType = e.getRoleType();
+        this.empUUID = e.getEmpUUID();
         return this;
     }
 

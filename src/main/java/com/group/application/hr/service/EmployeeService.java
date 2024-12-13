@@ -15,16 +15,15 @@ import org.springframework.transaction.annotation.Transactional;
  * TODO EntityNotFoundException 처리 (컨트롤러 어드바이저에서 진행 ?)
  */
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final EmployeeRepositoryImpl employeeRepositoryImpl;
-    private final EntityManager entityManager;
 
     public EmployeeDTO findByAll(EmployeeDTO dto) {
-        EmployeeDTO findDto = employeeRepository.findByEmployee(dto.getEmpUUID());
-        return findDto;
+        return employeeRepository.findByEmployee(dto.getEmpUUID());
     }
 
     public void updateProfile(EmployeeDTO dto) {
@@ -56,7 +55,4 @@ public class EmployeeService {
         return employeeRepository.findByEmployee(empUUID);
     }
 
-    public Integer findByIDFromUUID(String empUUID) {
-        return employeeRepository.findByIdFromUUID(empUUID);
-    }
 }

@@ -102,28 +102,23 @@
             let popup = document.querySelector('dialog');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
-                googleCalendarApiKey: 'AIzaSyCKJnnpdvFJ084yB6JQC1H6xKJDkx7uPjg',
-                events: {
-                    googleCalendarId: '0a8501fe802b5aed64b9e51e8e32692932f74f4566e01204160a8725579ebb84@group.calendar.google.com'
-                },
+                timeZone: 'local',
+                events: '/todo/list?employee=[[${employeeDto.id}]]',
                 eventClick: function(info) {
                     info.jsEvent.preventDefault(); // 기본 동작 방지
 
                     const popup = document.querySelector('dialog'); // 다이얼로그 선택
                     const dataIdElement = document.getElementById('data-id'); // ID 요소 선택
-                    // info.event.id 값 확인 및 할당
                     if (info.event.id) {
                         dataIdElement.textContent = info.event.id.trim(); // 공백 제거
                     } else {
                         console.error("Event ID is undefined or null");
                         dataIdElement.textContent = ""; // 기본값 설정
                     }
-
-                    // 이벤트 클릭 시 아무 동작하지 않음
+                    // 이벤트 클릭 시 다이얼로그에 내용 업데이트
                     popup.querySelector('div').innerHTML = `
-                    <h3>${info.event.title}<h3>
-                    <div>${info.event.extendedProps.description}</div>`;
-
+                <h3>${info.event.title}</h3>
+                <div>${info.event.extendedProps.description}</div>`;
                     popup.setAttribute('open', 'open');
                 }
             });
@@ -146,7 +141,7 @@
                         });
                     });
                     calendar.render();
-                    popup.querySelector('button').addEventListener('click', ()=> {
+                    popup.querySelector('button').addEventListener('click', () => {
                         popup.removeAttribute('open');
                     })
                 })
@@ -158,21 +153,18 @@
                 var id = document.getElementById('data-id').value;
                 var todoType = document.getElementById('todoType').value;
                 var todoTitle = document.getElementById('todoTitle').value;
+                var todoContent = document.getElementById('todoContent').value;
                 var todoStartDate = document.getElementById('todoStartDate').value;
                 var todoEndDate = document.getElementById('todoEndDate').value;
-                var todoContent = document.getElementById('todoContent').value;
-                employee: { id: document.getElementById('employee').value };
                 var eventData = {
                     id: id,
-                    todoTitle: todoTitle,
                     todoType: todoType,
+                    todoTitle: todoTitle,
                     todoContent: todoContent,
-                    // todoStatus: 'scheduled',
                     todoStartDate: todoStartDate,
                     todoEndDate: todoEndDate,
                     employee: {id: document.getElementById('employee').value},
                 };
-
 
                 fetch(`/todo/add`, {
                     method: 'POST',
@@ -188,10 +180,9 @@
                             id: data.id,
                             todoType: data.todoType,
                             title: data.todoTitle,
+                            description: data.todoContent,
                             start: data.todoStartDate,
                             end: data.todoEndDate,
-                            description: data.todoContent,
-                            employee: data.employee.id,
                             extendedProps: {
                                 description: data.todoContent
                             },

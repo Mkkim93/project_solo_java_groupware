@@ -66,10 +66,11 @@ class EmployeeServiceTest {
     @DisplayName("회원 정보 조회")
     void findByAll() {
         EmployeeDTO employeeDTO = new EmployeeDTO();
-        employeeDTO.setEmpEmail("king00314@naver.com");
-        employeeDTO.setEmpPass("1234");
+        employeeDTO.setEmpUUID("f6c3bd62-9dd2-46a3-95ec-bcf760428acd");
 
-        employeeService.findByAll(employeeDTO);
+        EmployeeDTO result = employeeService.findByAll(employeeDTO);
+        System.out.println("result.getId() = " + result.getId());
+        System.out.println("result.getEmpEmail() = " + result.getEmpEmail());
     }
 
 
@@ -77,11 +78,19 @@ class EmployeeServiceTest {
     @DisplayName("uuid 로 회원 정보 조회하기")
     void findByUUID() {
         EmployeeDTO dto = new EmployeeDTO();
-        dto.setEmpUUID("f6c3bd62-9dd2-46a3-95ec-bcf760428acd");
+        dto.setEmpUUID("6103a7be-69ac-47f4-89ee-267997f87a64");
         EmployeeDTO result = employeeService.findByAll(dto);
         System.out.println("dto.getId() = " + result.getId());
         System.out.println("dto.getEmpEmail() = " + result.getEmpEmail());
         System.out.println("dto.getEmpName() = " + result.getEmpName());
         System.out.println("dto.getEmpUUID() = " + result.getEmpUUID());
+    }
+
+    @Test
+    void findByIdDepartInfo() {
+        EmployeeDTO dto = new EmployeeDTO();
+        dto.setEmpUUID("f6c3bd62-9dd2-46a3-95ec-bcf760428acd");
+        DepartmentDTO result = employeeService.findByIdDepartInfo(dto);
+
     }
 }

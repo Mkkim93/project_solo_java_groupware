@@ -101,22 +101,18 @@
             var calendarEl = document.getElementById('calendar');
             let popup = document.querySelector('dialog');
             var calendar = new FullCalendar.Calendar(calendarEl, {
-
                 initialView: 'dayGridMonth',
-                googleCalendarApiKey: 'AIzaSyCKJnnpdvFJ084yB6JQC1H6xKJDkx7uPjg',
-                events: {
-                    googleCalendarId: '0a8501fe802b5aed64b9e51e8e32692932f74f4566e01204160a8725579ebb84@group.calendar.google.com'
-                },
+                timeZone: 'local',
                 eventClick: function(info) {
                     info.jsEvent.preventDefault(); // 이벤트 클릭 시 아무 동작하지 않음
 
                     // dialog에 데이터 채우기
-                    document.getElementById('todoType').value = info.event.type;
-                    document.getElementById('todoTitle').value = info.event.title;
-                    document.getElementById('todoStartDate').value = info.event.start.toISOString().slice(0, 16); // 날짜 형식 맞추기
-                    document.getElementById('todoEndDate').value = info.event.end.toISOString().slice(0, 16);
-                    document.getElementById('todoContent').value = info.event.extendedProps.description;
-                    document.getElementById('employee').value = ${employeeDto}
+                    document.getElementById('todoType').value;
+                    document.getElementById('todoTitle').value;
+                    document.getElementById('todoStartDate').value; // 날짜 형식 맞추기
+                    document.getElementById('todoEndDate').value;
+                    document.getElementById('todoContent').value;
+                    document.getElementById('employee').value
 
                     popup.querySelector('div').innerHTML = `
                     <h3>일정 수정</h3>
@@ -126,7 +122,7 @@
                 }
             });
 
-            fetch('/todo/list?employee=1') //TODO 파라미터 1 은 jwt 구현시 회원 정보의 id로 변경
+            fetch(`/todo/list?employee=[[${employeeDto.id}]]`) //TODO 파라미터 1 은 jwt 구현시 회원 정보의 id로 변경
                 .then(response => response.json())
                 .then(data => {
                     data.forEach(todo => {

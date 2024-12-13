@@ -5,7 +5,9 @@ import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.hr.service.EmployeeService;
 import com.group.application.mail.dto.MailBoxDTO;
 import com.group.application.mail.service.MailService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.Banner;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -53,9 +55,10 @@ public class MailController {
     }
 
     @GetMapping("/sent")
-    public String sent() {
-        // TODO 보낸 메일함
-        return "/mail/sent";
+    public String sent(HttpServletRequest request, Model model) {
+
+        //TODO
+        return null;
     }
 
     @GetMapping("/tome")

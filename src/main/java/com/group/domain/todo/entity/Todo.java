@@ -1,11 +1,14 @@
 package com.group.domain.todo.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.group.application.todo.dto.TodoDTO;
 import com.group.domain.hr.entity.Employee;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "todo")
@@ -42,7 +45,7 @@ public class Todo {
     @Column(name = "todo_update")
     private LocalDateTime todoUpdate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "emp_id")
     private Employee employee;
 

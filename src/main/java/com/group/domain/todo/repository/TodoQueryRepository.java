@@ -50,8 +50,9 @@ public class TodoQueryRepository {
                 .employee(setEmpId)  // Employee 객체 전달
                 .build();
 
-        List resultList = em.createQuery("select t from Todo t where employee = :employee")
-                .setParameter("employee", todo.getEmployee())
+        List resultList = em.createQuery(
+                "select t from Todo t where employee = :employee", Todo.class)
+                .setParameter("employee", todo.getEmployee().getId())
                 .getResultList();
         em.flush();
 

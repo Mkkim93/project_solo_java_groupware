@@ -35,25 +35,23 @@
             var calendarEl = document.getElementById('calendar');
             let popup = document.querySelector('dialog');
             var calendar = new FullCalendar.Calendar(calendarEl, {
-
                 initialView: 'dayGridMonth',
-                googleCalendarApiKey: 'AIzaSyCKJnnpdvFJ084yB6JQC1H6xKJDkx7uPjg',
-                events: {
-                    googleCalendarId: '0a8501fe802b5aed64b9e51e8e32692932f74f4566e01204160a8725579ebb84@group.calendar.google.com'
-                },
+                timeZone: 'local',
                 eventClick: function(info) {
                     info.jsEvent.preventDefault(); // 이벤트 클릭 시 아무 동작하지 않음
                     popup.querySelector('div').innerHTML = `
                     <h3>${info.event.title}<h3>
                     <div>${info.event.extendedProps.description}</div>`;
                     popup.setAttribute('open', 'open');
-                }
+                },
+
             });
 
-            fetch(`/todo/list?employee=[[${employeeDto.id}]]`) //TODO 파라미터 1 은 jwt 구현시 회원 정보의 id로 변경
+            fetch(`/todo/list?employee=[[${employeeDto.id}]]`)//TODO 파라미터 1 은 jwt 구현시 회원 정보의 id로 변경
                 .then(response => response.json())
                 .then(data => {
                     data.forEach(todo => {
+                        console.log("Todo:", todo); // 각 todo 객체 출력
                         calendar.addEvent({
                             title: todo.todoTitle,
                             start: todo.todoStartDate,

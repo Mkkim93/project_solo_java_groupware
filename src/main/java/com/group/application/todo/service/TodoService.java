@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
@@ -35,7 +37,8 @@ public class TodoService {
 
     // 일정 조회 (리스트) / Controller
     public List<TodoDTO> findByTodoOne(TodoDTO todoDto) {
-        return todoRepositoryImpl.findByOneTodo(todoDto);
+        List<TodoDTO> resultDto = todoRepositoryImpl.findByOneTodo(todoDto);
+        return resultDto;
     }
 
     // 일정 조회 (회원 id 에 대한 리스트)

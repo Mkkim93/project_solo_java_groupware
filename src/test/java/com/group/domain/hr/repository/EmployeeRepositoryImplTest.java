@@ -29,4 +29,20 @@ class EmployeeRepositoryImplTest {
         System.out.println("employee.getEmpEmail() = " + employee.getEmpEmail());
         System.out.println("employee.getEmpPass() = " + employee.getEmpPass());
     }
+
+    @Test
+    @DisplayName("uuid 로 회원 정보 조회")
+    void findByUUIDForEmployeeDto() {
+        String uuid = "6103a7be-69ac-47f4-89ee-267997f87a64";
+        EmployeeDTO dto = employeeRepository.findByEmployee(uuid);
+        System.out.println("dto.getEmpUUID() = " + dto.getEmpUUID());
+        System.out.println("dto.getEmpEmail() = " + dto.getEmpEmail());
+    }
+
+    @Test
+    @DisplayName("id 로 사원의 부서 정보 조회")
+    void findByIdDepartment() {
+        DepartmentDTO result = employeeRepositoryImpl.findByEmpDepartInfo(29);
+        System.out.println("result.getEmpName() = " + result.getEmpName());
+    }
 }

@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @RestController
@@ -42,7 +43,7 @@ public class TodoApiController {
         todoDto.setEmployee(EmployeeDTO.builder()
                 .id(employee)
                 .build());
-        List<TodoDTO> todoResult = todoService.findByTodoList(todoDto);
+        List<TodoDTO> todoResult = todoService.findByTodoOne(todoDto);
         return ResponseEntity.ok(todoResult);
     }
 }
