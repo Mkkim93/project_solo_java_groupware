@@ -6,12 +6,14 @@ import com.group.application.hr.service.EmployeeService;
 import com.group.application.todo.dto.TodoDTO;
 import com.group.application.todo.service.TodoService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
+@Slf4j
 @Controller
 @RequestMapping("/todo")
 @RequiredArgsConstructor
@@ -42,12 +44,13 @@ public class TodoController {
         return "todo/readonly";
     }
 
-
     @GetMapping("/modify/{id}")
-    public String modify(@PathVariable("id") Integer id,
-                             Model model) {
-        TodoDTO todoDto = todoService.findByTodoId(id);
-        model.addAttribute("todoDto", todoDto);
+    public String modify(@CookieValue("jwtToken") String token,
+                         @PathVariable("id") Integer id, Model model) {
+        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
+        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+        model.addAttribute("employeeDto", dto);
+        model.addAttribute("todoDto", todoService.findByTodoId(id));
         return "/todo/modify";
     }
 
@@ -59,6 +62,7 @@ public class TodoController {
         EmployeeDTO dto = employeeService.findByEmployee(uuid);
         model.addAttribute("employeeDto", dto);
         TodoDTO todoTemp = todoService.findByTodoId(id);
+
         todoTemp.setEmployee(dto);
         todoTemp.setTodoType(todoDto.getTodoType());
         todoTemp.setTodoTitle(todoDto.getTodoTitle());

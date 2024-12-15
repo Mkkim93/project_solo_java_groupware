@@ -103,10 +103,8 @@
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 timeZone: 'local',
-                events: '/todo/list?employee=[[${employeeDto.id}]]',
                 eventClick: function(info) {
                     info.jsEvent.preventDefault(); // 기본 동작 방지
-
                     const popup = document.querySelector('dialog'); // 다이얼로그 선택
                     const dataIdElement = document.getElementById('data-id'); // ID 요소 선택
                     if (info.event.id) {
@@ -126,13 +124,26 @@
             fetch(`/todo/list?employee=[[${employeeDto.id}]]`) //TODO 파라미터 1 은 jwt 구현시 회원 정보의 id로 변경
                 .then(response => response.json())
                 .then(data => {
+                    console.log('fetch data', data)
                     data.forEach(todo => {
+
+                        let startDateArray = todo.todoStartDate;
+                        let endDateArray = todo.todoEndDate;
+
+                        // Date 객체로 변환할 때 월 값을 -1 해줌
+                        // fullCalender 의 날짜 타입을 배열로 가지고 오기 때문에 해당 날짜를 커스텀 하려면 배열에 해당하는 year, month 값을 꺼내서 직접 커스텀 해야됨
+                        // ex ) index[0] = year, index[1] = month 등등
+                        // 현재 날짜 데이터를 폼에 바인딩하여 조회할 때 month 값을 -1 하여 한달 밀리는 문제를 해결함
+                        let startDate = new Date(startDateArray[0], startDateArray[1] - 1, startDateArray[2], startDateArray[3], startDateArray[4]);
+                        let endDate = new Date(endDateArray[0], endDateArray[1] - 1, endDateArray[2], endDateArray[3], endDateArray[4]);
+                        console.log('startDate', startDate)
+                        console.log('endDate', endDate)
                         calendar.addEvent({
                             id: todo.id,
                             todoType: todo.todoType,
                             title: todo.todoTitle,
-                            start: todo.todoStartDate,
-                            end: todo.todoEndDate,
+                            start: startDate,
+                            end: endDate,
                             description: todo.todoContent,
                             extendedProps: {
                                 description: todo.todoContent,
@@ -156,6 +167,7 @@
                 var todoContent = document.getElementById('todoContent').value;
                 var todoStartDate = document.getElementById('todoStartDate').value;
                 var todoEndDate = document.getElementById('todoEndDate').value;
+
                 var eventData = {
                     id: id,
                     todoType: todoType,
@@ -188,6 +200,7 @@
                             },
                         });
                         alert("일정이 추가되었습니다");
+                        location.reload();
                     })
                     .catch(error => {
                         console.log('Error adding event:', error)

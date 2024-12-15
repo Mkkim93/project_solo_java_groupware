@@ -105,7 +105,6 @@
                 timeZone: 'local',
                 eventClick: function(info) {
                     info.jsEvent.preventDefault(); // 이벤트 클릭 시 아무 동작하지 않음
-
                     // dialog에 데이터 채우기
                     document.getElementById('todoType').value;
                     document.getElementById('todoTitle').value;
@@ -126,11 +125,17 @@
                 .then(response => response.json())
                 .then(data => {
                     data.forEach(todo => {
+                        let startDateArray = todo.todoStartDate;
+                        let endDateArray = todo.todoEndDate;
+
+                        // Date 객체로 변환할 때 월 값을 -1 해줌
+                        let startDate = new Date(startDateArray[0], startDateArray[1] - 1, startDateArray[2], startDateArray[3], startDateArray[4]);
+                        let endDate = new Date(endDateArray[0], endDateArray[1] - 1, endDateArray[2], endDateArray[3], endDateArray[4]);
                         calendar.addEvent({
                             todoType: todo.todoType,
                             title: todo.todoTitle,
-                            start: todo.todoStartDate,
-                            end: todo.todoEndDate,
+                            start: startDate,
+                            end: endDate,
                             description: todo.todoContent,
                             extendedProps: {
                                 description: todo.todoContent
@@ -146,6 +151,7 @@
             })
 
             document.getElementById('editButton').addEventListener('click', function () {
+                const id = document.getElementById('data-id').value;
                 const todoType = document.getElementById('todoType').value;
                 const todoTitle = document.getElementById('todoTitle').value;
                 const todoContent = document.getElementById('todoContent').value;
@@ -213,7 +219,7 @@
                 <form th:action="@{/todo/modify/update/{id}(id=${todoDto.id})}"
                       th:object="${todoDto}" method="post">
 
-                    <input type="hidden" th:value="*{id}" th:field="*{id}" />
+                    <input type="hidden" id="data-id" th:value="*{id}" th:field="*{id}" />
 
                     <label for="todoType">일정 종류</label>
                     <select name="todoType" id="todoType">
@@ -222,10 +228,10 @@
                         <option value="vacation">휴가</option>
                     </select>
 
-                    <label for="todoTitle">일정 제목</label>
+                    <label for="todoTitle">제목 수정</label>
                     <input type="text" id="todoTitle" name="todoTitle" th:text="*{todoTitle}" placeholder="제목" required />
 
-                    <label for="todoContent">일정 내용</label>
+                    <label for="todoContent">내용 수정</label>
                     <textarea id="todoContent" name="todoContent" th:text="*{todoContent}" placeholder="내용" required></textarea>
 
                     <label for="todoStartDate"></label>

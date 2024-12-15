@@ -55,15 +55,6 @@ class LoginServiceTest {
     }
 
     @Test
-    @DisplayName("findByUUID")
-    void findUUID() {
-        String empEmail = "222@naver.com";
-        String uuid = employeeRepository.findByEmpUUID(empEmail);
-        System.out.println("uuid.getEmpUUID() = " + uuid);
-
-    }
-
-    @Test
     @DisplayName("uuid 컬럼을 조건으로 회원의 정보 조회하기 (dtO)")
     void loginAuthDto() {
         String empUUID = "f7c9a645-c846-4219-a191-b742ef2161b1";
