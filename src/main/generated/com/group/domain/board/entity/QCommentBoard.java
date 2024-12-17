@@ -26,6 +26,8 @@ public class QCommentBoard extends EntityPathBase<CommentBoard> {
 
     public final StringPath comContent = createString("comContent");
 
+    public final StringPath comIsDeleted = createString("comIsDeleted");
+
     public final DateTimePath<java.time.LocalDateTime> comRegDate = createDateTime("comRegDate", java.time.LocalDateTime.class);
 
     public final DateTimePath<java.time.LocalDateTime> comUpdate = createDateTime("comUpdate", java.time.LocalDateTime.class);

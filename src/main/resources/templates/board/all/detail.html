@@ -5,92 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>detail</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-        h1 {
-            font-size: 24px;
-            color: #333;
-            margin-bottom: 20px;
-        }
-        p {
-            font-size: 16px;
-            line-height: 1.6;
-            color: #666;
-            margin-bottom: 20px;
-        }
-        .author {
-            font-size: 14px;
-            color: #999;
-            margin-bottom: 30px;
-            text-align: right;
-        }
-        .actions {
-            display: none;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-        .btn {
-            padding: 10px 20px;
-            font-size: 14px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .btn:hover {
-            background-color: #0056b3;
-        }
-        .btn.delete {
-            background-color: #dc3545;
-        }
-        .btn.delete:hover {
-            background-color: #c82333;
-        }
-        .pagination {
-            margin-top: 20px;
-        }
-        .pagination button {
-            margin: 0 5px;
-        }
-        /* 댓글 카드 스타일 */
-        .comment-card {
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 10px;
-            margin: 10px 0;
-        }
-        .comment-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-        }
-        .comment-content {
-            font-size: 14px;
-            color: #333;
-        }
-        .comment-date {
-            font-size: 12px;
-            color: #999;
-            text-align: right;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/comment.css">
 </head>
 <body>
 
@@ -109,20 +24,17 @@
 <div id="comment-write">
     <label for="empId">회원 id 가 들어갈 부분</label>
     <input type="hidden" name="empId" id="empId" th:value="${employeeDto.id}" placeholder="작성자">
-
-    <input type="hidden" name="empName" id="empName">
+    <input type="hidden" name="empName" id="empName" th:value="${employeeDto.empName}">
 
     <label>댓글 내용</label>
+    <input type="hidden" id="id" th:value="${boardDto.id}" />
     <input type="text" name="comContent" id="comContent" placeholder="내용을 입력하세요">
-
     <input type="hidden" name="comRegDate" id="comRegDate" placeholder="내용">
-
     <button id="comment-write-btn" onclick="commentWrite()">댓글작성</button>
 </div>
 
 <!-- 댓글 출력 및 페이지네이션 부분 -->
 <div id="comment-list"></div>
-
 <div class="pagination" id="pagination"></div>
 
 <script inline="javascript">
@@ -152,23 +64,78 @@
 
     // 댓글 목록 렌더링 함수
     const renderComments = (comments) => {
+        const empName = document.getElementById('empName').value; // 현재 로그인한 사용자의 empName
         let output = "";
+
         if (comments && comments.length > 0) {
             comments.forEach(comment => {
+                console.log('comment.empName:', comment.empName); // 디버깅용
+                console.log('empName:', empName);
+
                 output += `<div class="comment-card">
-                    <div class="comment-header">
-                        <span>댓글번호: ${comment.id}</span>
-                        <span class="comment-date">${comment.comRegDate}</span>
-                    </div>
-                    <div class="comment-content">${comment.comContent || comment.comContent}</div>
-                    <div><strong>작성자:</strong> ${comment.empName}</div>
+                <div class="comment-header">
+                    <span>댓글번호: ${comment.id}</span>
+                    <span class="comment-date">${comment.comRegDate}</span>
+                </div>
+                <div class="comment-content">${comment.comContent}</div>
+                <div><strong>작성자:</strong> ${comment.empName}</div>`;
+
+                // 조건 확인: 현재 로그인한 사용자가 댓글 작성자와 같으면 버튼 렌더링
+                if (comment.empName === empName) {
+                    output += `
+                <div class="comment-update" style="display: flex;">
+                    <button class="btn" onclick="showEditForm(${comment.id})">수정</button>
+                    <button class="btn" onclick="deleteComment(${comment.id})">삭제</button>
                 </div>`;
+                }
+                output += `
+                <div class="edit-form" id="edit-form-${comment.id}" style="display: none; margin-top: 10px;">
+                    <input type="text" id="content-${comment.id}" value="${comment.comContent}">
+                    <button class="btn" onclick="submitEdit(${comment.id})">저장</button>
+                    <button class="btn delete" onclick="cancelEdit(${comment.id})">취소</button>
+                </div>
+            </div>`;
             });
         } else {
             output += `<div class="comment-card" style="text-align: center;">댓글이 없습니다.</div>`;
         }
+
+        // 결과를 화면에 렌더링
         document.getElementById('comment-list').innerHTML = output;
     };
+
+    function showEditForm(commentId) {
+        document.getElementById(`edit-form-${commentId}`).style.display = "block";
+        document.getElementById(`content-${commentId}`).style.display = "block";  // 수정된 부분
+    }
+
+
+    function cancelEdit(commentId) {
+        document.getElementById(`edit-form-${commentId}`).style.display = "none";
+    }
+
+
+
+    function deleteComment(commentId) {
+        if (!confirm("정말 삭제하시겠습니까?")) return;
+
+        $.ajax({
+            type: "POST",
+            url: "/comment/delete",
+            data: {
+             commentId: commentId
+            },
+            success: function (res) {
+                console.log('댓글 삭제 성공')
+                alert('댓글 삭제 성공');
+                loadComments();
+            },
+            error: function (err) {
+                console.log('댓글 삭제 실패', err);
+                alert('댓글 삭제 실패');
+            }
+        })
+    }
 
     // 페이지네이션 렌더링 함수
     const renderPagination = (pageData) => {
@@ -192,6 +159,11 @@
         const comContent = document.getElementById("comContent").value;
         const comRegDate = document.getElementById("comRegDate").value;
 
+        console.log(boardId);
+        console.log(empId);
+        console.log(comContent);
+        console.log(comRegDate);
+
         $.ajax({
             type: "POST",
             url: "/comment/save",
@@ -211,6 +183,27 @@
             }
         });
     };
+
+    const submitEdit = (commentId) => {
+        const updatedContent = document.getElementById(`content-${commentId}`).value;
+        $.ajax({
+            type: "POST",
+            url: "/comment/update",
+            data: {
+                commentId: commentId,
+                comContent: updatedContent
+            },
+            success: function (res) {
+                console.log('댓글 수정 성공', res);
+                loadComments();
+            },
+            error: function (err) {
+              console.log('댓글 수정 실패', err);
+              alert("댓글 수정에 실패 하였습니다.");
+            }
+        })
+    }
+
     // 페이지 로드 시 댓글 목록 초기화
     $(document).ready(() => {
         loadComments();

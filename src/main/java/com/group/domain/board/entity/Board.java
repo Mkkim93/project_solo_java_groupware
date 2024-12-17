@@ -3,8 +3,12 @@ package com.group.domain.board.entity;
 import com.group.domain.hr.entity.Employee;
 import jakarta.persistence.*;
 import lombok.*;
+import net.bytebuddy.asm.Advice;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,8 +20,9 @@ import static jakarta.persistence.GenerationType.*;
 @Entity
 @Table(name = "board")
 @Getter @Setter
+@EntityListeners(AuditingEntityListener.class)
+@EnableJpaAuditing
 @NoArgsConstructor
-// @EntityListeners(AuditingEntityListener.class)
 public class Board {
 
     @Id @GeneratedValue(strategy = IDENTITY)
@@ -63,9 +68,9 @@ public class Board {
     @Builder
     public Board(String boardTitle, String boardContent, Employee employee, Integer id, LocalDateTime boardRegDate) {
         this.id = id;
+        this.employee = employee;
         this.boardTitle = boardTitle;
         this.boardContent = boardContent;
-        this.employee = employee;
         this.boardRegDate = boardRegDate;
     }
 }

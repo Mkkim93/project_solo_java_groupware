@@ -22,7 +22,6 @@ public class BoardService {
     private final BoardRepositoryImpl boardRepositoryImpl;
     private final BoardRepository boardRepository;
 
-
     public Page<BoardDTO> findAll(Pageable pageable) {
         return boardRepositoryImpl.findAllByBoard(pageable);
     }

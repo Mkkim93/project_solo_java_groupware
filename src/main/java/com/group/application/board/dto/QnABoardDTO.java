@@ -45,4 +45,11 @@ public class QnABoardDTO {
         this.isDeleted = isDeleted;
         this.boardSecret = boardSecret;
     }
+
+    public QnABoardDTO updateBoard(QnABoardDTO qnABoardDto,  EmployeeDTO employeeDto) {
+        this.boardTitle = qnABoardDto.getBoardTitle();
+        this.boardContent = qnABoardDto.getBoardContent();
+        this.employee = employeeDto;
+        return this;
+    }
 }

@@ -16,6 +16,7 @@ public interface CommentBoardRepository extends JpaRepository<CommentBoard, Inte
             "WHERE b.id = c.board.id " +
             "and c.employee.id = e.id " +
             "and b.id = :id " +
+            "and c.comIsDeleted = 'N' " +
             "ORDER BY c.id desc")
     Page<CommentDTO> findByAllComment(@Param("id") Integer id, Pageable pageable);
 
@@ -24,7 +25,9 @@ public interface CommentBoardRepository extends JpaRepository<CommentBoard, Inte
             "where e.id = b.employee.id " +
             "and b.id = c.board.id " +
             "and c.board.id = q.board.id " +
-            "and c.board.id = :id ")
+            "and c.board.id = :id " +
+            "and c.comIsDeleted = 'N' " +
+            "ORDER BY c.id desc")
     Page<CommentDTO> findByQnaComment(@Param("id") Integer id, Pageable pageable);
 
 }

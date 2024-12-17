@@ -29,7 +29,7 @@ public class FreeBoardController {
 
     @GetMapping("/list")
     public String view(@RequestParam(value = "page", defaultValue = "0") int page,
-                       @RequestParam(value = "size", defaultValue = "5") int size,
+                       @RequestParam(value = "size", defaultValue = "15") int size,
                        Model model) {
         Pageable pageRequest = PageRequest.of(page, size);
         Page<FreeBoardDTO> freeBoardDto = freeBoardService.findAll(pageRequest);
@@ -80,16 +80,10 @@ public class FreeBoardController {
     public String modifyProc(@PathVariable("id") Integer id,
                              @ModelAttribute FreeBoardDTO freeBoardDto,
                              @CookieValue(value = "jwtToken") String token) {
-
         String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
         EmployeeDTO dto = employeeService.findByEmployeeEntity(uuid);
-
         FreeBoardDTO freeBoardTemp = freeBoardService.findById(id);
-
-        freeBoardTemp.setBoardTitle(freeBoardDto.getBoardTitle());
-        freeBoardTemp.setBoardContent(freeBoardDto.getBoardContent());
-        freeBoardTemp.setEmployee(dto);
-
+        freeBoardTemp.updateBoard(freeBoardDto, dto);
         freeBoardService.update(freeBoardTemp);
         return "redirect:/board/free/list";
     }

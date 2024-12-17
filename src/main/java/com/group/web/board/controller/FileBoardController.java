@@ -46,7 +46,7 @@ public class FileBoardController {
 
     @GetMapping("/list")
     public String view(@RequestParam(value = "page", defaultValue = "0") int page,
-                       @RequestParam(value = "size", defaultValue = "10") int size,
+                       @RequestParam(value = "size", defaultValue = "15") int size,
                        Model model) {
         Pageable pageRequest = PageRequest.of(page, size);
         Page<FileBoardDTO> fileBoardDto = fileBoardService.findByAll(pageRequest);
@@ -114,9 +114,7 @@ public class FileBoardController {
         FileBoardDTO fileBoardTemp = fileBoardService.findById(id);
 
         // 파일 게시글 정보 업데이트
-        fileBoardTemp.setBoardTitle(fileBoardDto.getBoardTitle());
-        fileBoardTemp.setBoardContent(fileBoardDto.getBoardContent());
-        fileBoardTemp.setEmployee(dto);
+        fileBoardTemp.updateBoard(fileBoardDto, dto);
 
         List<FileBoardStoreDTO> fileStoreDto = fileStoreService.findByStoreId(id); // == id
         model.addAttribute("fileStoreDto", fileStoreDto);

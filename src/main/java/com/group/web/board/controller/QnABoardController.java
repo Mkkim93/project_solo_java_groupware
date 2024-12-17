@@ -14,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/board/qna")
@@ -29,7 +28,7 @@ public class QnABoardController {
 
     @GetMapping("/list")
     public String view(@RequestParam(value = "page", defaultValue = "0") int page,
-                       @RequestParam(value = "size", defaultValue = "5") int size,
+                       @RequestParam(value = "size", defaultValue = "15") int size,
                        Model model) {
         Pageable pageRequest = PageRequest.of(page, size);
         Page<QnABoardDTO> qnaBoardDto = qnABoardService.findAll(pageRequest);
@@ -92,12 +91,9 @@ public class QnABoardController {
 
         String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
         EmployeeDTO dto = employeeService.findByEmployee(uuid);
-
         QnABoardDTO qnaBoardTemp = qnABoardService.findByOnlyId(id);
-        qnaBoardTemp.setBoardTitle(qnaBoardDto.getBoardTitle());
-        qnaBoardTemp.setBoardContent(qnaBoardDto.getBoardContent());
-        qnaBoardTemp.setEmployee(dto);
 
+        qnaBoardTemp.updateBoard(qnaBoardDto, dto);
         qnABoardService.update(qnaBoardTemp);
         return "redirect:/board/qna/list";
     }

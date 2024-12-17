@@ -112,23 +112,78 @@
 
     // 댓글 목록 렌더링 함수
     const renderComments = (comments) => {
+        const empName = document.getElementById('empName').value; // 현재 로그인한 사용자의 empName
         let output = "";
+
         if (comments && comments.length > 0) {
             comments.forEach(comment => {
+                console.log('comment.empName:', comment.empName); // 디버깅용
+                console.log('empName:', empName);
+
                 output += `<div class="comment-card">
-                    <div class="comment-header">
-                        <span>댓글번호: ${comment.id}</span>
-                        <span class="comment-date">${comment.comRegDate}</span>
-                    </div>
-                    <div class="comment-content">${comment.comContent}</div>
-                    <div><strong>작성자:</strong> ${comment.empName}</div>
+                <div class="comment-header">
+                    <span>댓글번호: ${comment.id}</span>
+                    <span class="comment-date">${comment.comRegDate}</span>
+                </div>
+                <div class="comment-content">${comment.comContent}</div>
+                <div><strong>작성자:</strong> ${comment.empName}</div>`;
+
+                // 조건 확인: 현재 로그인한 사용자가 댓글 작성자와 같으면 버튼 렌더링
+                if (comment.empName === empName) {
+                    output += `
+                <div class="comment-update" style="display: flex;">
+                    <button class="btn" onclick="showEditForm(${comment.id})">수정</button>
+                    <button class="btn" onclick="deleteComment(${comment.id})">삭제</button>
                 </div>`;
+                }
+                output += `
+                <div class="edit-form" id="edit-form-${comment.id}" style="display: none; margin-top: 10px;">
+                    <input type="text" id="content-${comment.id}" value="${comment.comContent}">
+                    <button class="btn" onclick="submitEdit(${comment.id})">저장</button>
+                    <button class="btn delete" onclick="cancelEdit(${comment.id})">취소</button>
+                </div>
+            </div>`;
             });
         } else {
             output += `<div class="comment-card" style="text-align: center;">댓글이 없습니다.</div>`;
         }
+
+        // 결과를 화면에 렌더링
         document.getElementById('comment-list').innerHTML = output;
     };
+
+    function showEditForm(commentId) {
+        document.getElementById(`edit-form-${commentId}`).style.display = "block";
+        document.getElementById(`content-${commentId}`).style.display = "block";  // 수정된 부분
+    }
+
+
+    function cancelEdit(commentId) {
+        document.getElementById(`edit-form-${commentId}`).style.display = "none";
+    }
+
+
+
+    function deleteComment(commentId) {
+        if (!confirm("정말 삭제하시겠습니까?")) return;
+
+        $.ajax({
+            type: "POST",
+            url: "/comment/delete",
+            data: {
+                commentId: commentId
+            },
+            success: function (res) {
+                console.log('댓글 삭제 성공')
+                alert('댓글 삭제 성공');
+                loadComments();
+            },
+            error: function (err) {
+                console.log('댓글 삭제 실패', err);
+                alert('댓글 삭제 실패');
+            }
+        })
+    }
 
     // 페이지네이션 렌더링 함수
     const renderPagination = (pageData) => {
@@ -176,6 +231,26 @@
             }
         });
     };
+
+    const submitEdit = (commentId) => {
+        const updatedContent = document.getElementById(`content-${commentId}`).value;
+        $.ajax({
+            type: "POST",
+            url: "/comment/update",
+            data: {
+                commentId: commentId,
+                comContent: updatedContent
+            },
+            success: function (res) {
+                console.log('댓글 수정 성공', res);
+                loadComments();
+            },
+            error: function (err) {
+                console.log('댓글 수정 실패', err);
+                alert("댓글 수정에 실패 하였습니다.");
+            }
+        })
+    }
 
     // 페이지 로드 시 댓글 목록 초기화
     $(document).ready(() => {

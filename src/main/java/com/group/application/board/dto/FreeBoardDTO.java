@@ -38,4 +38,11 @@ public class FreeBoardDTO {
         this.boardViewCount = boardViewCount;
         this.isDeleted = isDeleted;
     }
+
+    public FreeBoardDTO updateBoard(FreeBoardDTO freeBoardDto, EmployeeDTO employeeDto) {
+        this.boardTitle = freeBoardDto.getBoardTitle();
+        this.boardContent = freeBoardDto.getBoardContent();
+        this.employee = employeeDto;
+        return this;
+    }
 }

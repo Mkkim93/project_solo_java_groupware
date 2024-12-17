@@ -5,6 +5,7 @@ import com.group.application.board.service.CommentService;
 import com.group.application.cookie.service.CookieService;
 import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.hr.service.EmployeeService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -44,7 +45,7 @@ public class CommentController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<Page<CommentDTO>> commentsAny(@RequestParam("boardId") Integer boardId,
+    public ResponseEntity<Page<CommentDTO>> commentsAny(@RequestParam("boardId") Integer boardId, Model model,
                                                         @RequestParam(value = "page", defaultValue = "0") int page,
                                                         @RequestParam(value = "size", defaultValue = "10") int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
@@ -59,5 +60,24 @@ public class CommentController {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<CommentDTO> CommentDto = commentService.findAllQna(boardId, pageRequest);
         return new ResponseEntity<>(CommentDto, HttpStatus.OK);
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity update(@RequestParam("commentId") Integer commentId,
+                                 @RequestParam("comContent") String comUpdateContent, CommentDTO commentDto) {
+        commentDto.setId(commentId);
+        commentDto.setComContent(comUpdateContent);
+        CommentDTO resultComment = commentService.update(commentDto);
+        return new ResponseEntity<>(resultComment, HttpStatus.OK);
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<?> delete(@RequestParam("commentId") Integer commentId) {
+        try {
+            commentService.delete(commentId);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("댓글 삭제 실패");
+        }
+        return ResponseEntity.ok("댓글이 삭제되었습니다.");
     }
 }

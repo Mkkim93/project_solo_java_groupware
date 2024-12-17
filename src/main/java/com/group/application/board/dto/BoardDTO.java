@@ -58,7 +58,7 @@ public class BoardDTO {
     }
 
     // 게시판 공용 사용을 위한 dto 생성
-    public BoardDTO(String boardTitle, String boardContent) {
+    public BoardDTO(String boardTitle, String boardContent, LocalDateTime boardRegDate) {
         this.boardTitle = boardTitle;
         this.boardContent = boardContent;
     }
@@ -102,5 +102,12 @@ public class BoardDTO {
 
     public EmployeeDTO setterEmpDto(EmployeeDTO dto) {
         return employee = dto;
+    }
+
+    public BoardDTO updateBoard(BoardDTO boardDto, EmployeeDTO employeeDto) {
+        this.boardTitle = boardDto.getBoardTitle();
+        this.boardContent = boardDto.getBoardContent();
+        this.employee = employeeDto;
+        return this;
     }
 }

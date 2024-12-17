@@ -4,6 +4,7 @@ import com.group.application.hr.dto.EmployeeDTO;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.aspectj.weaver.ast.Not;
 
 import java.time.LocalDateTime;
 
@@ -34,5 +35,12 @@ public class NoticeBoardDTO {
         this.boardRegDate = boardRegDate;
         this.boardViewCount = boardViewCount;
         this.isDeleted = isDeleted;
+    }
+
+    public NoticeBoardDTO updateBoard(NoticeBoardDTO noticeBoardDto, EmployeeDTO employeeDto) {
+        this.boardTitle = noticeBoardDto.getBoardTitle();
+        this.boardContent = noticeBoardDto.getBoardContent();
+        this.employee = employeeDto;
+        return this;
     }
 }

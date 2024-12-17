@@ -47,4 +47,11 @@ public class FileBoardDTO {
         this.isDeleted = isDeleted;
     }
 
+    public FileBoardDTO updateBoard(FileBoardDTO fileBoardDto, EmployeeDTO employeeDto) {
+        this.boardTitle = fileBoardDto.getBoardTitle();
+        this.boardContent = fileBoardDto.getBoardContent();
+        this.employee = employeeDto;
+        return this;
+    }
+
 }

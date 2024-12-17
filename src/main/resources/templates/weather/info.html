@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+        /* 기본적인 스타일링 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 30px;
+            color: #3b3b3b;
+        }
+
+        /* 폼 스타일 */
+        form {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            margin-right: 10px;
+            width: 200px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* 날씨 정보 표시 스타일 */
+        .weather-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin: 20px auto;
+        }
+
+        .city-name {
+            text-align: center;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .weather-details {
+            margin-top: 20px;
+        }
+
+        .weather-item {
+            margin-bottom: 15px;
+        }
+
+        .weather-item .label {
+            font-weight: bold;
+            color: #666;
+        }
+
+        .weather-item .value {
+            font-size: 18px;
+            color: #333;
+        }
+
+    </style>
+</head>
+<body>
+<h1>Weather Information</h1>
+
+<!-- 사용자로부터 도시 입력 받기 -->
+<form id="weatherForm">
+    <label for="city">Enter City:</label>
+    <input type="text" id="city" name="city" required>
+    <button type="submit">Get Weather</button>
+</form>
+
+<!-- 날씨 결과를 표시할 영역 -->
+<div id="weatherResult">
+    <!-- 날씨 데이터가 여기에 표시될 예정 -->
+</div>
+<script>
+    // script.js
+
+    // 폼 요소 가져오기
+    const weatherForm = document.getElementById("weatherForm");
+    const cityInput = document.getElementById("city");
+    const weatherResult = document.getElementById("weatherResult");
+
+    // 날씨 정보 요청 및 표시 함수
+    async function getWeather(city) {
+        const apiUrl = `/weather/current?city=${city}`;
+
+        try {
+            const response = await fetch(apiUrl);
+            if (!response.ok) {
+                throw new Error("Weather data not found");
+            }
+
+            // JSON 데이터 파싱
+            const data = await response.json();
+
+            // 날씨 정보를 이쁘게 꾸미기 위한 HTML 구성
+            const weatherInfo = `
+            <div class="weather-container">
+                <h2 class="city-name">Weather in ${data.name}</h2>
+                <div class="weather-details">
+                    <div class="weather-item">
+                        <p class="label">Temperature</p>
+                        <p class="value">${data.main.temp}°C</p>
+                    </div>
+
+                    <div class="weather-item">
+                        <p class="label">Weather</p>
+                        <p class="value">${data.weather[0].description}</p>
+                    </div>
+
+                    <div class="weather-item">
+                        <p class="label">Humidity</p>
+                        <p class="value">${data.main.humidity}%</p>
+                    </div>
+                </div>
+            </div>
+        `;
+            weatherResult.innerHTML = weatherInfo; // 결과 표시
+
+        } catch (error) {
+            weatherResult.innerHTML = `<p>Error: ${error.message}</p>`;
+        }
+    }
+
+    // 폼 제출 이벤트 처리
+    weatherForm.addEventListener("submit", (e) => {
+        e.preventDefault(); // 폼 제출 방지
+        const city = cityInput.value.trim();
+        if (city) {
+            getWeather(city); // 날씨 정보 가져오기
+        } else {
+            weatherResult.innerHTML = "<p>Please enter a city name.</p>";
+        }
+    });
+</script>
+</body>
+</html>

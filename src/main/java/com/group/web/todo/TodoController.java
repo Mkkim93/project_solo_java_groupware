@@ -72,7 +72,6 @@ public class TodoController {
         todoTemp.setTodoUpdate(LocalDateTime.now());
 
         todoService.updateTodo(todoTemp);
-
         return "redirect:/todo/detail";
     }
 }

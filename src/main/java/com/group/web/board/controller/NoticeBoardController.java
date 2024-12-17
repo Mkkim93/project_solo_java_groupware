@@ -28,7 +28,7 @@ public class NoticeBoardController {
 
     @GetMapping("/list")
     public String view(@RequestParam(value = "page", defaultValue = "0") int page,
-                       @RequestParam(value = "size", defaultValue = "5") int size,
+                       @RequestParam(value = "size", defaultValue = "15") int size,
                        Model model) {
         Pageable pageRequest = PageRequest.of(page, size);
         Page<NoticeBoardDTO> noticeBoardDto = noticeBoardService.findAll(pageRequest);
@@ -82,13 +82,8 @@ public class NoticeBoardController {
 
         String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
         EmployeeDTO dto = employeeService.findByEmployeeEntity(uuid);
-
         NoticeBoardDTO noticeBoardTemp = noticeBoardService.findByOnlyId(id);
-
-        noticeBoardTemp.setBoardTitle(noticeBoardDto.getBoardTitle());
-        noticeBoardTemp.setBoardContent(noticeBoardDto.getBoardContent());
-        noticeBoardTemp.setEmployee(dto);
-
+        noticeBoardTemp.updateBoard(noticeBoardDto, dto);
         noticeBoardService.update(noticeBoardTemp);
         return "redirect:/board/notice/list";
     }

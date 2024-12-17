@@ -28,7 +28,7 @@ public class BoardController {
 
     @GetMapping("/list")
     public String view(@RequestParam(value = "page", defaultValue = "0") int page,
-                       @RequestParam(value = "size", defaultValue = "5") int size,
+                       @RequestParam(value = "size", defaultValue = "15") int size,
                        Model model) {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<BoardDTO> boardDto = boardService.findAll(pageRequest);
@@ -59,7 +59,7 @@ public class BoardController {
     }
 
     @PostMapping("/write")
-    public String writeProc(@CookieValue(value = "jwtToken") String token, BoardDTO boardDto) {
+    public String writeProc(@CookieValue(value = "jwtToken") String token, @ModelAttribute BoardDTO boardDto) {
         String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
         EmployeeDTO dto = employeeService.findByEmployee(uuid);
         boardDto.setterEmpDto(dto);
@@ -83,13 +83,7 @@ public class BoardController {
         BoardDTO boardTemp = boardService.getBoardById(id);
         String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
         EmployeeDTO dto = employeeService.findByEmployeeEntity(uuid);
-
-        // 새로운 값으로 수정
-        boardTemp.setId(id);
-        boardTemp.setBoardTitle(boardDto.getBoardTitle());
-        boardTemp.setBoardContent(boardDto.getBoardContent());
-        boardTemp.setEmployee(dto);
-
+        boardTemp.updateBoard(boardDto, dto);
         boardService.update(boardTemp);
         return "redirect:/board/all/list";
     }
