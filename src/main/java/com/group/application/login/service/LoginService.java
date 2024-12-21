@@ -1,5 +1,6 @@
 package com.group.application.login.service;
 
+import com.group.application.cookie.CookieUtil;
 import com.group.application.hr.dto.EmployeeDTO;
 import com.group.domain.hr.entity.Employee;
 import com.group.domain.hr.repository.EmployeeRepository;
@@ -16,6 +17,7 @@ public class LoginService {
 
     private final EmployeeRepository employeeRepository;
     private final BCryptPasswordEncoder encoder;
+    private final CookieUtil cookieUtil;
 
     public EmployeeDTO login(EmployeeDTO dto) {
         Employee e = employeeRepository.findByEmpEmail(dto.getEmpEmail());
@@ -26,7 +28,11 @@ public class LoginService {
         if (!matches) {
             throw new BadCredentialsException("Invalid credentials");
         }
+
         log.info("Login Pass");
-        return new EmployeeDTO(e);
+        log.info("empPass={}", e.getEmpPass());
+        cookieUtil.saveCookie(dto.toDto(e));
+
+        return dto.toDto(e);
     }
 }

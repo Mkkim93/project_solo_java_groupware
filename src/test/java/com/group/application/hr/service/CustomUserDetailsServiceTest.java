@@ -23,6 +23,7 @@ class CustomUserDetailsServiceTest {
         UserDetails userDetails = service.loadUserByUsername(empEmail);
         System.out.println("userDetails.getUsername() = " + userDetails.getUsername());
         System.out.println("userDetails.getPassword() = " + userDetails.getPassword());
+        System.out.println("userDetails.getAuthorities().iterator().next().getAuthority() = " + userDetails.getAuthorities().iterator().next().getAuthority());
 
 
     }

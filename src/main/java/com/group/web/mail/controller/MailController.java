@@ -1,13 +1,11 @@
 package com.group.web.mail.controller;
 
-import com.group.application.cookie.service.CookieService;
 import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.hr.service.EmployeeService;
 import com.group.application.mail.dto.MailBoxDTO;
 import com.group.application.mail.service.MailService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.Banner;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,35 +18,36 @@ public class MailController {
 
     private final MailService mailService;
     private final EmployeeService employeeService;
-    private final CookieService cookieService;
 
     @GetMapping("/list")
-    public String sendMailBox(@CookieValue("jwtToken") String token, Model model, MailBoxDTO mailBoxDto,
+    public String sendMailBox(Model model, MailBoxDTO mailBoxDto, @CookieValue(value = "uuid") String empUUID, EmployeeDTO employeeDto,
                               @RequestParam(value = "size", defaultValue = "15") int size,
                               @RequestParam(value = "page", defaultValue = "0") int page) {
+
         PageRequest pageRequest = PageRequest.of(page, size);
-        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
-        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+        employeeDto.setEmpUUID(empUUID);
+        EmployeeDTO dto = employeeService.findByEmployee(employeeDto);
         mailBoxDto.setSenderEmployeeId(dto.getId());
 
         model.addAttribute("employeeDto", dto);
         model.addAttribute("myMailBoxDto", mailService.findByMyMailBox(mailBoxDto, pageRequest));
+
         return "/mail/list";
     }
 
     @GetMapping("/write")
-    public String writeMail(@CookieValue("jwtToken") String token, Model model) {
-        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
-        EmployeeDTO dto = employeeService.findByEmployee(uuid);
-        model.addAttribute("employeeDto", dto);
+    public String writeMail(Model model, @CookieValue("uuid") String empUUID, EmployeeDTO employeeDto) {
+        employeeDto.setEmpUUID(empUUID);
+        model.addAttribute("employeeDto", employeeService.findByEmployee(employeeDto));
         model.addAttribute("mailBoxDto", new MailBoxDTO());
         return "/mail/write";
     }
 
     @PostMapping("/writeProc")
-    public String writeProc(@CookieValue("jwtToken") String token, Model model, MailBoxDTO mailBoxDto) {
-        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
-        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+    public String writeProc(Model model, MailBoxDTO mailBoxDto, EmployeeDTO employeeDto,
+                            @CookieValue(value = "uuid") String empUUID) {
+        employeeDto.setEmpUUID(empUUID);
+        EmployeeDTO dto = employeeService.findByEmployee(employeeDto);
         mailBoxDto.setSenderEmployeeId(dto.getId());
         model.addAttribute("mailBoxDto", mailService.sendMailToRecipient(mailBoxDto));
         return "redirect:/mail/list";
@@ -62,10 +61,11 @@ public class MailController {
     }
 
     @GetMapping("/tome")
-    public String toMeWriteMail(@CookieValue("jwtToken") String token, Model model, MailBoxDTO mailBoxDTO) {
+    public String toMeWriteMail(@CookieValue(value = "uuid") String empUUID, EmployeeDTO employeeDto,
+                                Model model, MailBoxDTO mailBoxDTO) {
         model.addAttribute("mailBoxDto", new MailBoxDTO());
-        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
-        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+        employeeDto.setEmpUUID(empUUID);
+        EmployeeDTO dto = employeeService.findByEmployee(employeeDto);
         mailBoxDTO.setSenderEmployeeId(dto.getId());
         String myEmpMail = mailService.findByEmpMail(mailBoxDTO.getSenderEmployeeId());
         model.addAttribute("empMail", myEmpMail);
@@ -73,9 +73,11 @@ public class MailController {
     }
 
     @PostMapping("/tomeProc")
-    public String tomeProc(@CookieValue("jwtToken") String token, Model model, MailBoxDTO mailBoxDTO) {
-        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
-        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+    public String tomeProc(EmployeeDTO employeeDto,
+                           @CookieValue(value = "uuid") String empUUID,
+                           Model model, MailBoxDTO mailBoxDTO) {
+        employeeDto.setEmpUUID(empUUID);
+        EmployeeDTO dto = employeeService.findByEmployee(employeeDto);
         mailBoxDTO.setSenderEmployeeId(dto.getId());
         String myEmpMail = mailService.findByEmpMail(mailBoxDTO.getSenderEmployeeId());
         model.addAttribute("empMail", myEmpMail);
@@ -83,7 +85,7 @@ public class MailController {
         return "redirect:/mail/list";
     }
 
-    /*@GetMapping("/detail")*/
+    @GetMapping("/detail")
     public String detail(@RequestParam("id") Integer id, Model model) {
         model.addAttribute("mailBoxDto", mailService.detail(id));
         return "/mail/detail";

@@ -1,10 +1,10 @@
 package com.group.web.todo;
 
-import com.group.application.cookie.service.CookieService;
 import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.hr.service.EmployeeService;
 import com.group.application.todo.dto.TodoDTO;
 import com.group.application.todo.service.TodoService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -21,12 +21,12 @@ public class TodoController {
 
     private final TodoService todoService;
     private final EmployeeService employeeService;
-    private final CookieService cookieService;
+
 
     @GetMapping("/detail")
-    public String showCalendar(@CookieValue(value = "jwtToken") String token, Model model, TodoDTO todoDto) {
-        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
-        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+    public String showCalendar(EmployeeDTO employeeDto, Model model, TodoDTO todoDto, @CookieValue(value = "uuid") String empUUID) {
+        employeeDto.setEmpUUID(empUUID);
+        EmployeeDTO dto = employeeService.findByEmployee(employeeDto);
         todoDto.setEmployee(dto);
         model.addAttribute("todoDto", todoService.findByTodoOne(todoDto));
         model.addAttribute("employeeDto", dto);
@@ -34,10 +34,10 @@ public class TodoController {
     }
 
     @GetMapping("/readonly")
-    public String readOnlyCalender(@CookieValue(value = "jwtToken") String token,
-                                   Model model, TodoDTO todoDto) {
-        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
-        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+    public String readOnlyCalender(Model model, TodoDTO todoDto, EmployeeDTO employeeDto,
+                                   @CookieValue(value = "uuid") String empUUID) {
+        employeeDto.setEmpUUID(empUUID);
+        EmployeeDTO dto = employeeService.findByEmployee(employeeDto);
         todoDto.setEmployee(dto);
         model.addAttribute("todoDto", todoService.findByTodoOne(todoDto));
         model.addAttribute("employeeDto", dto);
@@ -45,11 +45,10 @@ public class TodoController {
     }
 
     @GetMapping("/modify/{id}")
-    public String modify(@CookieValue("jwtToken") String token,
+    public String modify(EmployeeDTO employeeDto, @CookieValue(value = "uuid") String empUUID,
                          @PathVariable("id") Integer id, Model model) {
-        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
-        EmployeeDTO dto = employeeService.findByEmployee(uuid);
-        model.addAttribute("employeeDto", dto);
+        employeeDto.setEmpUUID(empUUID);
+        model.addAttribute("employeeDto", employeeService.findByEmployee(employeeDto));
         model.addAttribute("todoDto", todoService.findByTodoId(id));
         return "/todo/modify";
     }
@@ -57,9 +56,10 @@ public class TodoController {
     @PostMapping("/modify/update/{id}")
     public String todoUpdateWriting(@PathVariable("id") Integer id,
                                     @ModelAttribute TodoDTO todoDto,
-                                    @CookieValue(value = "jwtToken") String token, Model model) {
-        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
-        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+                                    HttpServletRequest request, Model model, EmployeeDTO employeeDto,
+                                    @CookieValue(value = "uuid") String empUUID) {
+        employeeDto.setEmpUUID(empUUID);
+        EmployeeDTO dto = employeeService.findByEmployee(employeeDto);
         model.addAttribute("employeeDto", dto);
         TodoDTO todoTemp = todoService.findByTodoId(id);
 

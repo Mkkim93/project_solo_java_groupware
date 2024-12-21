@@ -21,6 +21,7 @@
                 <h3 type="text" id="empName" name="empName" th:text="*{empName}"></h3>
                 <h3 type="text" id="empRank" name="empRank" th:text="*{empRank}"></h3>
                 <h3 type="text" id="deptName" name="deptName" th:text="${departmentDto.deptName}"></h3>
+                <h3 type="text" id="roleType" name="roleType" th:text="${employeeDto.roleType}"></h3>
                 <button type="submit" class="btn">나의 정보</button>
             </form>
         </div>
@@ -30,10 +31,8 @@
             <li><a href="/todo/detail"><i class="fa-regular fa-calendar"></i> 일정</a></li>
             <li><a href="/mail/list"><i class="fa-solid fa-envelope"></i> 메일</a></li>
             <li><a href="#"><i class="fa-brands fa-signal-messenger"></i> 메신저</a></li>
-            <li><a href="#"><i class="fa-solid fa-cart-shopping"></i> 당근</a></li>
-            <li><a href="#"><i class="fa-solid fa-m"></i> 마일리지상점</a></li>
-            <li><a href="#"><i class="fa-solid fa-people-group"></i> 사내동호회</a></li>
             <li><a href="#"><i class="fa-solid fa-gear"></i> 설정</a></li>
+            <li><a href="/admin/view"><i class="fa-solid fa-gear"></i> 관리자 페이지</a></li>
         </ul>
     </div>
 
@@ -52,8 +51,8 @@
                 <button id="comment-attOff-btn" class="btn attOff" onclick="attOffLogic()">퇴근</button>
             </div>
             <div class="attendance-times">
-                <h3>출근 시간: <span id="checkInTime" th:text="${attendanceDto != null ? attendanceDto.attOn.toLocalTime() : ''}"></span></h3>
-                <h3>퇴근 시간: <span id="checkOutTime" th:text="${attendanceDto != null ? attendanceDto.attOff.toLocalTime() : ''}"></span></h3>
+                <h3>출근 시간: <span id="checkInTime" th:text="${attendanceDto != null ? attendanceDto.attOn : ''}"></span></h3>
+                <h3>퇴근 시간: <span id="checkOutTime" th:text="${attendanceDto != null ? attendanceDto.attOff : ''}"></span></h3>
                 <h3>금일 근무 시간: <span id="durationTime" th:text="${attendanceDto != null ? attendanceDto.attDuration : ''}"></span></h3>
             </div>
 
@@ -80,11 +79,11 @@
                     <button th:onclick="|location.href='@{/hr/atten}'|" class="btn btn-primary btn-create">나의 근태 상세</button>
                 </div>
                 <div class="stat-card">
-                    <h3 class="text-center">팀원별 프로젝트 진행 현황</h3>
+                    <h3 class="text-center">게시판</h3>
                     <canvas id="another-chart"></canvas>
                 </div>
                 <div class="stat-card">
-                    <h3 class="text-center">진행 중인 프로젝트 현황</h3>
+                    <h3 class="text-center">메일함</h3>
                     <canvas id="project-chart"></canvas>
                 </div>
                 <div class="stat-card">
@@ -104,10 +103,10 @@
                 </ul>
             </div>
             <div class="notification-card">
-                <h3>메일함</h3>
+                <h3>사내 공지</h3>
                 <ul>
-                    <li>메일 제목 test1: 메일 내용 test1</li>
-                    <li>메일 제목 test2: 메일 내용 test2</li>
+                    <li>공지 제목 test1: 공지가 들어갈 곳입니다1</li>
+                    <li>공지 제목 test2: 공지가 들어갈 곳입니다1</li>
                 </ul>
             </div>
         </section>
@@ -119,7 +118,7 @@
         const id = document.getElementById("id").value || 9;
         const attOn = document.getElementById("attOn").value || '';
         const employee = document.getElementById("employee").value || 29;
-        var currentTime = new Date(attOn).toLocaleTimeString();
+        var currentTime = new Date().toLocaleTimeString();
 
         if (attOn) {
             alert("이미 출근하셨습니다.");
@@ -227,6 +226,5 @@
         }
     });
 </script>
-
 </body>
 </html>

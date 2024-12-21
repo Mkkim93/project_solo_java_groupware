@@ -46,13 +46,9 @@ public class EmployeeService {
         return employeeRepositoryImpl.findByEmpDepartInfo(findDto.getId());
     }
 
-    public EmployeeDTO findByEmployeeEntity(String empUUID) {
-        Employee entity = employeeRepository.findByEmployeeEntity(empUUID);
-        return entity.toDto(entity);
-    }
-
-    public EmployeeDTO findByEmployee(String empUUID) {
-        return employeeRepository.findByEmployee(empUUID);
+    public EmployeeDTO findByEmployee(EmployeeDTO employeeDto) {
+        Employee employee = employeeRepository.findByEmpUUID(employeeDto.getEmpUUID());
+        return employeeDto.toDto(employee);
     }
 
 }

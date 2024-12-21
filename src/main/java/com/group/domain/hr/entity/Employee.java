@@ -56,7 +56,7 @@ public class Employee {
     @Column(name = "emp_joinyn")
     private String empJoinYN;
 
-    @Column(name = "role_type")
+    @Column(name = "role")
     private String roleType;
 
     @Column(name = "emp_no") // 사원 번호
@@ -91,10 +91,9 @@ public class Employee {
     @PrePersist void createInfo() {
         this.empJoinDate = LocalDateTime.now();
         this.empUUID = java.util.UUID.randomUUID().toString();
-        this.roleType = "USER";
     }
 
     public EmployeeDTO toDto(Employee e) {
-        return new EmployeeDTO(e.getId(), e.getRoleType(), e.getEmpUUID());
+        return new EmployeeDTO(e.getId(), e.getEmpUUID(), e.getRoleType(), e.getEmpUUID());
     }
 }

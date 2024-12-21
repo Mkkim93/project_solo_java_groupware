@@ -9,19 +9,23 @@ import com.group.domain.mail.entity.MailBox;
 import com.group.domain.mail.entity.enums.MailType;
 import com.group.domain.mail.repository.MailRepository;
 import com.group.domain.mail.repository.MailRepositoryImpl;
+import com.group.domain.mail.repository.MailTransRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MailService {
 
     private final MailRepository mailRepository;
     private final EmployeeRepository employeeRepository;
     private final MailRepositoryImpl mailRepositoryImpl;
+    private final MailTransService mailTransService;
 
     // 전체 메일함
     public Page<MyMailBoxDTO> findByMyMailBox(MailBoxDTO mailBoxDto, Pageable pageable) {
@@ -30,6 +34,7 @@ public class MailService {
 
     public MailBoxDTO sendMailTome(MailBoxDTO mailBoxDto) {
 
+        // TODO 여러 로직이 하나의 모듈에서 진행되고 있음
         // step1 : mailBox 에 데이터 저장
         MailBox mailBoxEntity = MailBox.builder()
                 .id(mailBoxDto.getId())
@@ -45,7 +50,10 @@ public class MailService {
 
         // step2 : mailrecvstore 에 데이터 저장
         Integer empId = findByEmpId(mailBoxDto.getReceiverEmail());
+
         mailRepository.saveReceiveStore(result.getId(), empId);
+
+        mailTransService.save(result.getId(), empId);
 
         return mailBoxDto.toDTO(result);
     }
@@ -68,6 +76,9 @@ public class MailService {
         // step2 : mailrecvstore 에 데이터 저장
         Integer empId = findByEmpId(mailBoxDTO.getReceiverEmail());
         mailRepository.saveReceiveStore(result.getId(), empId);
+
+        // step3 : mailtrans 에 데이터 저장
+        mailTransService.save(result.getId(), empId);
 
         return mailBoxDTO.toDTO(result);
     }
@@ -95,5 +106,9 @@ public class MailService {
         MailBox mailbox = mailRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("no id"));
         return mailRepositoryImpl.findByOne(mailbox.getId());
+    }
+
+    public Page<MyMailBoxDTO> searchByMailTypeList(MailBoxDTO mailBoxDto, Pageable pageable) {
+        return mailRepositoryImpl.findByMailType(mailBoxDto, pageable);
     }
 }

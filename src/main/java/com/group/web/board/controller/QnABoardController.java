@@ -4,7 +4,6 @@ import com.group.application.board.dto.QnABoardDTO;
 import com.group.application.board.service.BoardService;
 import com.group.application.board.service.CommentService;
 import com.group.application.board.service.QnABoardService;
-import com.group.application.cookie.service.CookieService;
 import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.hr.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,6 @@ public class QnABoardController {
     private final CommentService commentService;
     private final BoardService boardService;
     private final EmployeeService employeeService;
-    private final CookieService cookieService;
 
     @GetMapping("/list")
     public String view(@RequestParam(value = "page", defaultValue = "0") int page,
@@ -42,13 +40,10 @@ public class QnABoardController {
                          @RequestParam(value = "boardPass", required = false) String boardPass,
                          @RequestParam(value = "page", defaultValue = "0") int page,
                          @RequestParam(value = "size", defaultValue = "10") int size,
-                         @CookieValue(value = "jwtToken") String token,
+                         @CookieValue(value = "uuid") String empUUID, EmployeeDTO employeeDto,
                          Model model) {
-
-        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
-        EmployeeDTO dto = employeeService.findByEmployee(uuid);
-
-        model.addAttribute("employeeDto", dto);
+        employeeDto.setEmpUUID(empUUID);
+        model.addAttribute("employeeDto", employeeService.findByEmployee(employeeDto));
         QnABoardDTO qnaBoardDto = qnABoardService.findById(id, boardPass);
 
         // 댓글 관련 model & 페이징 객체
@@ -68,11 +63,10 @@ public class QnABoardController {
     }
 
     @PostMapping("/write")
-    public String writeProc(@CookieValue(value = "jwtToken") String token,
-                            QnABoardDTO qnaBoardDto) {
-        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
-        EmployeeDTO dto = employeeService.findByEmployee(uuid);
-        qnaBoardDto.setEmployee(dto);
+    public String writeProc(@CookieValue(value = "uuid") String empUUID,
+                            QnABoardDTO qnaBoardDto, EmployeeDTO employeeDto) {
+        employeeDto.setEmpUUID(empUUID);
+        qnaBoardDto.setEmployee(employeeService.findByEmployee(employeeDto));
         qnABoardService.save(qnaBoardDto);
         return "redirect:/board/qna/list";
     }
@@ -85,15 +79,12 @@ public class QnABoardController {
     }
 
     @PostMapping("/modify/update/{id}")
-    public String modifyProc(@CookieValue(value = "jwtToken") String token,
-                             @PathVariable("id") Integer id,
+    public String modifyProc(@CookieValue(value = "uuid") String empUUID,
+                             @PathVariable("id") Integer id, EmployeeDTO employeeDto,
                              @ModelAttribute QnABoardDTO qnaBoardDto) {
-
-        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
-        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+        employeeDto.setEmpUUID(empUUID);
         QnABoardDTO qnaBoardTemp = qnABoardService.findByOnlyId(id);
-
-        qnaBoardTemp.updateBoard(qnaBoardDto, dto);
+        qnaBoardTemp.updateBoard(qnaBoardDto, employeeService.findByEmployee(employeeDto));
         qnABoardService.update(qnaBoardTemp);
         return "redirect:/board/qna/list";
     }

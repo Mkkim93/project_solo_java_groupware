@@ -28,7 +28,6 @@ public class AttendanceService {
     private final LocalDateTime checkedTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(9, 0));
     private final Long WORK_HOURS_PER_DAY = 8L;
 
-
     private final AttendanceRepository attendanceRepository;
     private final EmployeeRepository employeeRepository;
     private final EmployeeRepositoryImpl employeeRepositoryImpl;

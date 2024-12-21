@@ -1,13 +1,10 @@
 package com.group.web.login.controller;
 
-import com.group.application.cookie.service.CookieService;
+import com.group.application.cookie.CookieUtil;
 import com.group.application.hr.dto.EmployeeDTO;
-import com.group.application.hr.service.EmployeeService;
+import com.group.application.hr.service.CustomUserDetailsService;
 import com.group.application.login.service.LoginService;
-import com.group.domain.hr.repository.EmployeeRepository;
-import com.group.jwt.JwtUtil;
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,18 +17,22 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class LoginController {
 
-    private final static String LOGIN_PATH = "/login";
     private final LoginService loginService;
+    private final CookieUtil cookieUtil;
 
-    @GetMapping(LOGIN_PATH)
-    public String login() {
-        return LOGIN_PATH;
+    @GetMapping("/login")
+    public String login(@ModelAttribute("employeeDto") EmployeeDTO employeeDto) {
+        return "/login";
     }
 
-    @PostMapping(LOGIN_PATH)
-    public String loginProc(EmployeeDTO dto, Model model) {
-        model.addAttribute("employeeDto", loginService.login(dto));
+    @PostMapping("/loginProc")
+    public String loginProc(Model model, EmployeeDTO employeeDto, HttpServletResponse response) {
+        EmployeeDTO dto = loginService.login(employeeDto);
+        model.addAttribute("employeeDto", dto);
+        Cookie cookie = cookieUtil.saveCookie(dto);
+        response.addCookie(cookie);
         return "redirect:/hr/home";
     }
+
 }
 

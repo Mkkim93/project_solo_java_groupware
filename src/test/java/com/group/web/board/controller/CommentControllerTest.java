@@ -15,15 +15,4 @@ class CommentControllerTest {
     @Autowired
     CommentController commentController;
 
-    @Test
-    @DisplayName("컨트롤러 댓글 수정")
-    void updateComment() {
-        CommentDTO commentDTO = new CommentDTO();
-        commentDTO.setId(365);
-        commentDTO.setBoardId(1);
-        commentDTO.setComContent("댓글 수정 comId : 365");
-        commentDTO.setEmpId(29);
-        ResponseEntity update = commentController.update(commentDTO);
-        System.out.println("update.toString() = " + update.toString());
-    }
 }

@@ -15,20 +15,20 @@
                 <button class="btn btn-primary mb-2" onclick="writeMail()">메일쓰기</button>
                 <button class="btn btn-secondary mb-4" onclick="writeToSelf()">내게쓰기</button>
 
-                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('all')">전체 메일함</button>
-                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('inbox')">받은 메일함</button>
-                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('sent')">보낸 메일함</button>
-                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('draft')">임시 저장 메일함</button>
-                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('toMe')">내게 쓴 메일함</button>
+                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('ALL')">전체 메일함</button>
+                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('INBOX')">받은 메일함</button>
+                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('SENT')">보낸 메일함</button>
+                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('DRAFT')">임시 저장 메일함</button>
+                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('TOME')">내게 쓴 메일함</button>
+                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('IMPORT')">중요 메일함</button>
                 <hr>
-                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('important')">중요 메일함</button>
-                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('trash')">휴지통</button>
+                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('TRASH')">휴지통</button>
             </div>
         </div>
 
         <!-- 우측 테이블 영역 -->
         <div class="col-md-10">
-            <h2 class="text-center mb-4">받은 메일함</h2>
+            <h2 class="text-center mb-4">전체 메일함</h2>
             <div>
                 <table class="table table-header table-striped">
                     <thead>
@@ -41,14 +41,16 @@
                         <th class="text-center">받은 날짜</th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="mailTableBody">
                     <!-- List<MailBoxDTO>를 mailBoxList로 처리 -->
                     <tr th:each="mail : ${myMailBoxDto}">
-                        <input type="hidden" th:text="*{mail.mailBoxId}" class="text-center"/>
+
+                        <input type="hidden" id="mailBoxId" th:text="*{mail.mailBoxId}" class="text-center"/>
 
                         <td> <!--체크 박스-->
                             <input type="checkbox">
                         </td>
+
                         <td> <!--즐겨찾기-->
                             <form method="post" action="/update-favorite" class="text-center">
                                 <input type="checkbox" name="isFavorite" value="true" id="favorite-checkbox"
@@ -56,17 +58,17 @@
                                 <label for="favorite-checkbox"></label>
                             </form>
                         </td>
-                        <td id="readType" name="readType" th:text="*{mail.readType}" class="text-center"> <!--읽음 상태-->
+
+                        <td id="readStatus" name="readStatus" th:text="*{mail.readStatus}" class="text-center"> <!--읽음 상태-->
                             <p ></p>
                         </td>
 
                         <td id="senderName" class="text-center" th:text="*{mail.senderName}"></td> <!--보낸 사람-->
 
-                        <td th:text="*{mail.mailTitle}" class="text-center">
-                            <a class="text-center"></a>
+                        <td class="text-center" id="mailTitle"><a th:text="*{mail.mailTitle}" th:href="@{/mail/detail(id=${mail.mailBoxId})}"></a>
                         </td>
 
-                        <td th:text="*{mail.mailDate}" class="text-center"></td>
+                        <td id="mailDate" th:text="*{mail.mailDate}" class="text-center"></td>
                     </tr>
                     </tbody>
                 </table>
@@ -91,37 +93,77 @@
 </div>
 
 <script>
-    function loadMailFolder(type) {
-        fetch(`/api/mail/folder/${type}`)
+    function loadMailFolder(mailType, page = 0) {
+        console.log('mailType', mailType);
+        const mailTableBody = document.getElementById('mailTableBody');
+        mailTableBody.innerHTML = '<tr><td colspan="6" class="text-center">Loading...</td></tr>'; // 로딩 표시
+
+        fetch(`/api/folder/${mailType}?page=${page}&size=10`)
             .then(response => response.json())
             .then(data => {
-                updateMailTable(data);
+                console.log('fetch to mailType', mailType);
+                updateMailTable(data.content); // 목록에는 data 의 content 를 넘겨서 실제 데이터 정보만 바인딩한다
+                renderPageNation(data); // 페이징을 처리할 function 에는 페이징 객체를 모두 넘긴다
+                console.log('fetch to data', data);
             })
-            .catch(error => console.log('error : ', error))
+            .catch(error => {
+                console.error('Error:', error);
+                mailTableBody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Failed to load data</td></tr>';
+            });
     }
 
     function updateMailTable(mailList) {
         const mailTableBody = document.getElementById('mailTableBody');
-        mailTableBody.innerHTML = '';
 
+        mailTableBody.innerHTML = ''; // 기존 데이터 삭제
+        if (!Array.isArray(mailList)) {
+            mailList = [mailList];
+        }
         mailList.forEach(mail => {
             const row = document.createElement('tr');
-            const senderDate = document.getElementById('senderDate').value;
             row.innerHTML = `
-                <input type="hidden" value="${mail.id}" class="text-center">
-
-                <td class="text-center">${mail.empName}</td>
-
-                <td><a href="/mail/detail/${mail.id}" class="text-center">${mail.mailTitle}</a></td>
-
-                <td class="text-center">${mail.empId}</td>
-
-                <td class="text-center">${mail.receiverEmail}</td>
+                <td class="text-center"><input type="checkbox"></td>
+                <td class="text-center"><input type="checkbox" name="isFavorite" ${mail.isFavorite ? 'checked' : ''}></td>
+                <td class="text-center">${mail.readStatus ? 'READ' : 'NOREAD'}</td>
+                <td class="text-center">${mail.senderName}</td>
+                <td class="text-center"><a href="/mail/detail/${mail.mailBoxId}">${mail.mailTitle}</a></td>
+                <td class="text-center">${mail.mailDate}</td>
             `;
             mailTableBody.appendChild(row);
         });
-
     }
+
+    function renderPageNation(data) {
+        const paginationElement = document.querySelector('.pagination');
+
+        paginationElement.innerHTML = '';
+
+        if (data.number > 0) {
+            const prevButton = document.createElement('li');
+            prevButton.innerHTML = `<a href="#" class="btn btn-link" onclick="fetchPage(${data.number - 1})">이전</a>`;
+            paginationElement.appendChild(prevButton);
+        }
+
+        const startPage = Math.max(data.number - (data.number % 5), 0);
+        const endPage = Math.min(startPage + 4, data.totalPages - 1);
+
+        for (let i = startPage; i <= endPage; i++) {
+            const pageButton = document.createElement('li');
+            pageButton.innerHTML = `<a href="#" class="btn btn-link ${i === data.number ? 'active' : ''}" onclick="fetchPage(${i})">${i + 1}</a>`;
+            paginationElement.appendChild(pageButton);
+        }
+
+        if (data.number < data.totalPages - 1) {
+            const nextButton = document.createElement('li');
+            nextButton.innerHTML = `<a href="#" class="btn btn-link" onclick="fetchPage(${data.number + 1})">다음</a>`;
+            paginationElement.appendChild(nextButton);
+        }
+    }
+
+    function fetchPage(page) {
+        loadMailFolder('mailType', page);
+    }
+
 
     function writeMail() {
         window.location.href = '/mail/write'; // 메일쓰기 페이지로 이동

@@ -9,8 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MailRepositoryCustom {
 
-    // 임시
-
     Page<MyMailBoxDTO> findByMyMailBox(MailBoxDTO mailBoxDto, Pageable pageable);
 
     MailBoxDTO findByOne(Integer id);

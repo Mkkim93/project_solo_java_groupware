@@ -5,6 +5,7 @@ import com.group.application.mail.dto.MailBoxDTO;
 import com.group.application.mail.dto.MyMailBoxDTO;
 import com.group.domain.hr.entity.Employee;
 import com.group.domain.mail.entity.MailBox;
+import com.group.domain.mail.entity.enums.MailType;
 import com.group.domain.mail.repository.MailRepositoryImpl;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
@@ -76,6 +77,17 @@ class MailServiceTest {
         Integer id = 9;
         MailBoxDTO byId = mailService.detail(id);
         System.out.println("byId.getId() = " + byId.getId());
+    }
+
+    @Test
+    @DisplayName("메일함 조회")
+    void searchByMailTypeList() {
+        MailBoxDTO dto = new MailBoxDTO();
+        dto.setSenderEmployeeId(29);
+        dto.setMailType(MailType.TOME);
+        PageRequest page = PageRequest.of(0, 15);
+        mailService.searchByMailTypeList(dto, page);
+
     }
 
 }

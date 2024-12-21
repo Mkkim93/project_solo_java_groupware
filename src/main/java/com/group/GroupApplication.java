@@ -11,15 +11,7 @@ import org.springframework.context.event.EventListener;
 @SpringBootApplication
 public class GroupApplication {
 
-	/*@Autowired
-	private MailService mailService;*/
-
 	public static void main(String[] args) {
 		SpringApplication.run(GroupApplication.class, args);
 	}
-
-	/*@EventListener(ApplicationReadyEvent.class)
-	public void sendEmail() throws MessagingException {
-		mailService.sendEmail("", "", "");
-	}*/
 }

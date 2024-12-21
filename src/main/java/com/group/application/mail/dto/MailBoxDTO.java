@@ -2,8 +2,7 @@ package com.group.application.mail.dto;
 
 import com.group.domain.mail.entity.MailBox;
 import com.group.domain.mail.entity.enums.FavoriteType;
-import com.group.domain.mail.entity.enums.MailType;
-import com.group.domain.mail.entity.enums.ReadType;
+import com.group.domain.mail.entity.enums.ReadStatus;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +15,7 @@ public class MailBoxDTO {
     private Integer id;
     private String mailTitle;
     private String mailContent;
-    private MailType mailType;
+    private String mailType;
 
     private LocalDateTime senderDate;
     private Integer senderEmployeeId;
@@ -25,7 +24,7 @@ public class MailBoxDTO {
     private String receiverEmail;
 
     private FavoriteType favoriteType;
-    private ReadType readType;
+    private ReadStatus readStatus;
 
 
     public MailBoxDTO(Integer id, String mailTitle,
@@ -62,7 +61,6 @@ public class MailBoxDTO {
         this.senderEmployeeId = senderEmployeeId;
         this.receiverEmail = receiverEmail;
         this.senderDate = senderDate;
-
     }
 
     public MailBoxDTO toDTO(MailBox mailBox) {

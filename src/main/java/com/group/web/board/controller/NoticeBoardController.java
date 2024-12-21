@@ -4,7 +4,6 @@ import com.group.application.board.dto.NoticeBoardDTO;
 import com.group.application.board.service.BoardService;
 import com.group.application.board.service.CommentService;
 import com.group.application.board.service.NoticeBoardService;
-import com.group.application.cookie.service.CookieService;
 import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.hr.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,6 @@ public class NoticeBoardController {
     private final NoticeBoardService noticeBoardService;
     private final CommentService commentService;
     private final BoardService boardService;
-    private final CookieService cookieService;
     private final EmployeeService employeeService;
 
     @GetMapping("/list")
@@ -40,10 +38,10 @@ public class NoticeBoardController {
     public String detail(@RequestParam("id") Integer id,
                          @RequestParam(value = "page", defaultValue = "0") int page,
                          @RequestParam(value = "size", defaultValue = "10") int size,
-                         @CookieValue("jwtToken") String token,
+                         @CookieValue("uuid") String empUUID, EmployeeDTO employeeDto,
                          Model model) {
-        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
-        EmployeeDTO dto = employeeService.findByEmployee(uuid);
+        employeeDto.setEmpUUID(empUUID);
+        EmployeeDTO dto = employeeService.findByEmployee(employeeDto);
         model.addAttribute("employeeDto", dto);
         PageRequest pageRequest = PageRequest.of(page, size);
         NoticeBoardDTO noticeboarddto = noticeBoardService.findByOnlyId(id);
@@ -60,10 +58,10 @@ public class NoticeBoardController {
     }
 
     @PostMapping("/write")
-    public String writeProc(NoticeBoardDTO noticeBoardDto,
-                            @CookieValue(value = "jwtToken") String token) {
-        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
-        EmployeeDTO dto = employeeService.findByEmployeeEntity(uuid);
+    public String writeProc(NoticeBoardDTO noticeBoardDto, EmployeeDTO employeeDto,
+                            @CookieValue(value = "uuid") String empUUID) {
+        employeeDto.setEmpUUID(empUUID);
+        EmployeeDTO dto = employeeService.findByEmployee(employeeDto);
         noticeBoardDto.setEmployee(dto);
         noticeBoardService.save(noticeBoardDto);
         return "redirect:/board/notice/list";
@@ -78,10 +76,10 @@ public class NoticeBoardController {
     @PostMapping("/modify/update/{id}")
     public String modifyProc(@PathVariable("id") Integer id,
                              @ModelAttribute NoticeBoardDTO noticeBoardDto,
-                             @CookieValue(value = "jwtToken") String token) {
-
-        String uuid = cookieService.getEmpUUIDFromCookiesV2(token);
-        EmployeeDTO dto = employeeService.findByEmployeeEntity(uuid);
+                             @CookieValue(value = "uuid") String empUUID,
+                             EmployeeDTO employeeDto) {
+        employeeDto.setEmpUUID(empUUID);
+        EmployeeDTO dto = employeeService.findByEmployee(employeeDto);
         NoticeBoardDTO noticeBoardTemp = noticeBoardService.findByOnlyId(id);
         noticeBoardTemp.updateBoard(noticeBoardDto, dto);
         noticeBoardService.update(noticeBoardTemp);

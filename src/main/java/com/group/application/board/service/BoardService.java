@@ -1,7 +1,6 @@
 package com.group.application.board.service;
 
 import com.group.application.board.dto.BoardDTO;
-import com.group.application.cookie.service.CookieService;
 import com.group.domain.board.entity.Board;
 import com.group.domain.board.repository.BoardRepository;
 import com.group.domain.board.repository.BoardRepositoryImpl;
@@ -11,8 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 @Service
 @Transactional

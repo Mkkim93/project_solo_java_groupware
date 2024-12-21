@@ -2,10 +2,7 @@ package com.group.web.board.controller;
 
 import com.group.application.board.dto.CommentDTO;
 import com.group.application.board.service.CommentService;
-import com.group.application.cookie.service.CookieService;
-import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.hr.service.EmployeeService;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
 
     private final CommentService commentService;
-    private final CookieService cookieService;
     private final EmployeeService employeeService;
 
     @PostMapping("/save")
@@ -45,12 +41,12 @@ public class CommentController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<Page<CommentDTO>> commentsAny(@RequestParam("boardId") Integer boardId, Model model,
+    public ResponseEntity<Page<CommentDTO>> commentsAny(@RequestParam("boardId") Integer boardId,
                                                         @RequestParam(value = "page", defaultValue = "0") int page,
                                                         @RequestParam(value = "size", defaultValue = "10") int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<CommentDTO> CommentDto = commentService.findAll(boardId, pageRequest);
-        return new ResponseEntity<>(CommentDto, HttpStatus.OK);
+        Page<CommentDTO> commentDto = commentService.findAll(boardId, pageRequest);
+        return new ResponseEntity<>(commentDto, HttpStatus.OK);
     }
 
     @GetMapping("/lists")

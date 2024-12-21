@@ -6,13 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.scheduling.support.SimpleTriggerContext;
 
 import java.time.LocalDateTime;
 
 @Data
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class EmployeeDTO {
 
     private Integer id;
@@ -40,7 +40,7 @@ public class EmployeeDTO {
                        String empName, String empRegNo, String userEmail,
                        String empNickName, String empRank, String userTel,
                        String empNo, Integer empMileage, String empImg,
-                       String empTel, LocalDateTime empJoinDate, Integer deptId, Integer attId, String empUUID) {
+                       String empTel, LocalDateTime empJoinDate, Integer deptId, Integer attId, String empUUID , String roleType) {
         this.id = id;
         this.empEmail = empEmail;
         this.empPass = empPass;
@@ -58,6 +58,7 @@ public class EmployeeDTO {
         this.deptId = deptId;
         this.attId = attId;
         this.empUUID = empUUID;
+        this.roleType = roleType;
     }
 
     // Entity -> DTO
@@ -100,8 +101,9 @@ public class EmployeeDTO {
         this.empUUID = e.getEmpUUID();
     }
 
-    public EmployeeDTO(Integer id, String roleType, String empUUID) {
+    public EmployeeDTO(Integer id, String empEmail, String roleType, String empUUID) {
         this.id = id;
+        this.empEmail = empEmail;
         this.roleType = roleType;
         this.empUUID = empUUID;
     }

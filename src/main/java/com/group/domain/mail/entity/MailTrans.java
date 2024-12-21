@@ -2,11 +2,14 @@ package com.group.domain.mail.entity;
 
 import com.group.domain.hr.entity.Employee;
 import com.group.domain.mail.entity.enums.FavoriteType;
-import com.group.domain.mail.entity.enums.ReadType;
+import com.group.domain.mail.entity.enums.ReadStatus;
 import com.group.domain.mail.entity.enums.ReceiveType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Persistent;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.time.LocalDateTime;
 
@@ -17,6 +20,8 @@ import static jakarta.persistence.GenerationType.*;
 @Entity
 @Table(name = "mailtrans")
 @Getter
+@EnableJpaAuditing
+@EntityListeners(AuditingEntityListener.class)
 public class MailTrans {
 
     @Id @GeneratedValue(strategy = IDENTITY)
@@ -24,7 +29,7 @@ public class MailTrans {
 
     @Enumerated(STRING)
     @Column(name = "read_status")
-    private ReadType readType;
+    private ReadStatus readStatue;
 
     // 메일 송/수신 저장 날짜
     @CreatedDate
@@ -46,4 +51,17 @@ public class MailTrans {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "emp_id")
     private Employee employee;
+
+    @PrePersist void createMailTrans() {
+        this.readStatue = ReadStatus.NOREAD;
+    }
+
+    public void setReceiveMail(Integer mailBoxId, Integer receiveEmpId) {
+        this.mailBox = MailBox.builder()
+                .id(mailBoxId)
+                .build();
+        this.employee = Employee.builder()
+                .id(receiveEmpId)
+                .build();
+    }
 }

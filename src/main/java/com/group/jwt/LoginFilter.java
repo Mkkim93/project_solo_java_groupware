@@ -15,11 +15,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
-import java.time.Duration;
+
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -39,11 +38,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
          * - username -> empEmail
          * - password -> empPass
          */
+        /*String username = obtainUsername(req);
+        String password = obtainPassword(req);*/
         String empEmail = req.getParameter("empEmail");
         String empPass = req.getParameter("empPass");
 
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                empEmail, empPass, null);
+        log.info("attemptAuthentication Method ?");
+        log.info("empEmail={}, empPass={}", empEmail, empPass);
+
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(empEmail, empPass);
 
         return authenticationManager.authenticate(authToken);
     }
@@ -55,41 +58,39 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
                                             FilterChain chain, Authentication authentication) throws IOException, ServletException {
 
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-        /*String empEmail = customUserDetails.getUsername();*/
-        String empUUID = customUserDetails.getUUID();
-
+        String empEmail = customUserDetails.getUsername();
+        log.info("empEmail={}", empEmail);
         // roleType 을 꺼내기 위해 authentication 인스턴스를 객체로 변환 후 iterator 를 실행하고 iterator 를 실행 된 인스턴스를 다시 next() 를 통해
         // 사용자에게 부여된 권한(권한 또는 역할)을 나타내는 인터페이스 GrantedAuthority 객체에서 생성된 auth 를 getAuthority() 메서드를 통해
         // 최종 roleType 을 받는다
+        String empUUID = customUserDetails.getUUID();
+        log.info("empUUID={}" ,empUUID);
         Collection<? extends GrantedAuthority> authorities =
                 authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
         String roleType = auth.getAuthority();
+        log.info("roleType={}", roleType);
 
         // expired time : 24 * 60 * 60 * 1000L (24 hours)
-        String token = jwtUtil.createJwt(empUUID, roleType,60 * 60 * 24 * 1000L); // 최종 토큰 발급
-        /*res.addHeader("Authorization", "Bearer " + token); // jwt 공식 형식*/
+        String access = jwtUtil.createJwt("access", empEmail,  empUUID, roleType, 60 * 60 * 24 * 100L); // 최종 토큰 발급
+        String refresh = jwtUtil.createJwt("refresh", empEmail, empUUID, roleType, 60 * 60 * 24 * 100L); // 최종 토큰 발급
 
-        ResponseCookie cookie = ResponseCookie
-                .from("jwtToken", token)
-                .httpOnly(true)
-                .path("/")
-                .secure(true)
-                .sameSite("Strict")
-                .build();
+        res.setHeader("access", access);
+        res.addCookie(createCookie("refresh", refresh));
 
-        /*Cookie jwtToken = new Cookie("jwtToken", token);
-        jwtToken.setHttpOnly(true);
-        jwtToken.setPath("/");
-        jwtToken.setMaxAge(60 * 60 * 24);
-        jwtToken.setSecure(true);
-        res.addCookie(jwtToken);*/
-
-        res.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-
-        res.sendRedirect("/hr/home");
         log.info("login success");
+        log.info("access Token={}", access);
+        log.info("refresh Token={}", refresh);
+    }
+
+    private Cookie createCookie(String key, String value) {
+        Cookie cookie = new Cookie(key, value);
+        cookie.setMaxAge(24*60*60);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false);
+        cookie.setPath("/");
+        return cookie;
     }
 
     // 로그인 실패
