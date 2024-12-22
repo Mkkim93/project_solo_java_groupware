@@ -1,7 +1,7 @@
 package com.group.domain.mail.entity;
 
 import com.group.domain.hr.entity.Employee;
-import com.group.domain.mail.entity.enums.MailType;
+import com.group.domain.mail.entity.enums.MailStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,9 +42,10 @@ public class MailBox {
     @Column(name = "mail_date", updatable = false) // 메일 생성 날짜
     private LocalDateTime mailDate;
 
+
     @Enumerated(STRING)
-    @Column(name = "mail_type")
-    private MailType mailType;
+    @Column(name = "mail_status")
+    private MailStatus mailStatus;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "sender_emp_id")
@@ -68,12 +69,11 @@ public class MailBox {
 
     @Builder
     public MailBox(Integer id, String mailTitle, String mailContent,
-                   LocalDateTime mailDate, Employee senderEmployee, MailType mailType) {
+                   LocalDateTime mailDate, Employee senderEmployee) {
        this.id = id;
        this.mailTitle = mailTitle;
        this.mailContent = mailContent;
        this.mailDate = mailDate;
        this.senderEmployee = senderEmployee;
-       this.mailType = mailType;
     }
 }

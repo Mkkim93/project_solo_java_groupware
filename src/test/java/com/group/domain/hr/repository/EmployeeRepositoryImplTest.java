@@ -28,9 +28,7 @@ class EmployeeRepositoryImplTest {
     @Test
     @DisplayName("e-mail 로 사원 객체 조회")
     void searchByEmployeeEntity() {
-        Employee employee = employeeRepository.findByEmpEmail("alsrb362@daum.net");
-        System.out.println("employee.getEmpEmail() = " + employee.getEmpEmail());
-        System.out.println("employee.getEmpPass() = " + employee.getEmpPass());
+
     }
 
     @Test

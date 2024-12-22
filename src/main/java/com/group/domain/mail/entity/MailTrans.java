@@ -2,10 +2,13 @@ package com.group.domain.mail.entity;
 
 import com.group.domain.hr.entity.Employee;
 import com.group.domain.mail.entity.enums.FavoriteType;
+import com.group.domain.mail.entity.enums.MailTypes;
 import com.group.domain.mail.entity.enums.ReadStatus;
 import com.group.domain.mail.entity.enums.ReceiveType;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Persistent;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -22,6 +25,7 @@ import static jakarta.persistence.GenerationType.*;
 @Getter
 @EnableJpaAuditing
 @EntityListeners(AuditingEntityListener.class)
+@NoArgsConstructor
 public class MailTrans {
 
     @Id @GeneratedValue(strategy = IDENTITY)
@@ -44,6 +48,10 @@ public class MailTrans {
     @Column(name = "is_favorite")
     private FavoriteType isFavorite;
 
+    @Enumerated(STRING)
+    @Column(name = "mail_types")
+    private MailTypes mailTypes;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "mailbox_id")
     private MailBox mailBox;
@@ -56,12 +64,14 @@ public class MailTrans {
         this.readStatue = ReadStatus.NOREAD;
     }
 
-    public void setReceiveMail(Integer mailBoxId, Integer receiveEmpId) {
+    public void setReceiveMail(Integer mailBoxId, Integer receiveEmpId, String mailTypes) {
         this.mailBox = MailBox.builder()
                 .id(mailBoxId)
                 .build();
         this.employee = Employee.builder()
                 .id(receiveEmpId)
                 .build();
+        this.mailTypes = MailTypes.valueOf(mailTypes);
     }
+
 }

@@ -7,9 +7,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Transactional
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
+
+    @Query("select e.id from Employee e where e.empEmail IN :empEmails")
+    List<Integer> findByEmpEmails(List<String> empEmails);
 
     Employee findByEmpEmail(String empEmail);
 

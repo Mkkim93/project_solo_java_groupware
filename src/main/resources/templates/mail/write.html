@@ -11,8 +11,8 @@
     <form th:action="@{/mail/writeProc}" th:object="${mailBoxDto}"  method="post" class="p-4 border rounded shadow-sm">
         <div class="mb-3">
             <label for="receiverEmail" class="form-label">받는 사람
-            <input type="email" id="receiverEmail" name="receiverEmail"  th:field="*{receiverEmail}"
-                   class="form-control" placeholder="받는 메일 주소를 입력하세요" required>
+            <input type="text" id="receiverEmail" name="receiverEmail"  th:field="*{receiverEmail}"
+                   class="form-control" placeholder="받는 메일 주소를 입력하세요 (쉼표를 사용하여 여러명의 메일 주소 입력하세요)" required>
             </label>
         </div>
 

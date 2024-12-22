@@ -1,11 +1,10 @@
 package com.group.application.mail.service;
 
-import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.mail.dto.MailBoxDTO;
 import com.group.application.mail.dto.MyMailBoxDTO;
 import com.group.domain.hr.entity.Employee;
 import com.group.domain.mail.entity.MailBox;
-import com.group.domain.mail.entity.enums.MailType;
+import com.group.domain.mail.repository.MailQueryRepository;
 import com.group.domain.mail.repository.MailRepositoryImpl;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
@@ -29,6 +28,8 @@ class MailServiceTest {
     EntityManager entityManager;
 
     @Autowired MailService mailService;
+    @Autowired
+    private MailQueryRepository mailQueryRepository;
 
 
     @Test
@@ -80,14 +81,36 @@ class MailServiceTest {
     }
 
     @Test
-    @DisplayName("메일함 조회")
-    void searchByMailTypeList() {
+    @DisplayName("여러명의 사용자에게 메일 전송")
+    void sendMails() {
         MailBoxDTO dto = new MailBoxDTO();
+        dto.setReceiverEmail("alsrb362@daum.net");
+        dto.setReceiverEmail("rainbow213@nate.com");
+        dto.setMailTitle("여러명 메일 전송 제목");
+        dto.setMailContent("여러명 메일 전송 내용");
         dto.setSenderEmployeeId(29);
-        dto.setMailType(MailType.TOME);
-        PageRequest page = PageRequest.of(0, 15);
-        mailService.searchByMailTypeList(dto, page);
-
+        mailService.sendMailToRecipient(dto);
     }
 
+    @Test
+    @DisplayName("여러명 사용자에게 메일 전송 (쉼표)")
+    void sendMailV2() {
+        MailBoxDTO dto = new MailBoxDTO();
+        dto.setReceiverEmail("alsrb362@daum.net, rainbow213@nate.com");
+        dto.setMailTitle("여러명 메일 전송 제목2 (쉼표)");
+        dto.setMailContent("여러명 메일 전송 내용2 (쉼표)");
+        dto.setSenderEmployeeId(29);
+        mailService.sendMailToRecipient(dto);
+    }
+
+    @Test
+    @DisplayName("여러명 사용자에게 메일 전송 (쉼표 + endpoint 까지 테스트, mailtrans)")
+    void sendMailV3() {
+        MailBoxDTO dto = new MailBoxDTO();
+        dto.setReceiverEmail("alsrb362@daum.net, rainbow213@nate.com");
+        dto.setMailTitle("여러명 메일 전송 제목2 (쉼표)");
+        dto.setMailContent("여러명 메일 전송 내용2 (쉼표)");
+        dto.setSenderEmployeeId(29);
+        mailService.sendMailToRecipient(dto);
+    }
 }

@@ -2,10 +2,9 @@ package com.group.domain.mail.repository;
 
 import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.mail.dto.MailBoxDTO;
-import com.group.application.mail.dto.MyMailBoxDTO;
+import com.group.application.mail.dto.MailTransDTO;
 import com.group.domain.hr.repository.EmployeeRepository;
 import com.group.domain.mail.entity.MailBox;
-import com.group.domain.mail.entity.enums.MailType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-
-import java.util.List;
 
 @SpringBootTest
 class MailRepositoryTest {
@@ -27,6 +24,7 @@ class MailRepositoryTest {
 
     @Autowired
     EmployeeRepository employeeRepository;
+
 
     @Test
     void findAll() {
@@ -58,21 +56,29 @@ class MailRepositoryTest {
     }
 
     @Test
-    @DisplayName("메일 타입으로 조회하기 (SENT, TOME, INBOX)")
-    void findMailType() {
-        Integer empId = 29;
-        PageRequest pageable = PageRequest.of(0, 5);
-        MailBoxDTO dto = new MailBoxDTO();
-        dto.setSenderEmployeeId(empId);
-        dto.setMailType(MailType.TOME);
-        Page<MyMailBoxDTO> byMailType = mailRepositoryImpl.findByMailType(dto, pageable);
+    @DisplayName("메일 조회 (INBOX, TOME)")
+    void findMailTome() {
+        MailTransDTO mailTransDto = new MailTransDTO();
+        // mailTransDto.setMailTypes("TOME");
+        mailTransDto.setMailTypes("INBOX");
+        mailTransDto.setReceiveEmpId(29);
+        PageRequest page = PageRequest.of(0, 5);
+        Page<MailTransDTO> results = mailRepositoryImpl.findByMailTypeSearch(mailTransDto, page);
 
-        List<MyMailBoxDTO> list = byMailType.stream().toList();
-        for (MyMailBoxDTO myMailBoxDTO : list) {
-            System.out.println("myMailBoxDTO. = " + myMailBoxDTO.getMailTitle());
-            System.out.println("myMailBoxDTO.getMailTitle() = " + myMailBoxDTO.getMailTitle());
-        }
+        results.stream().toList().forEach(System.out::println);
     }
 
+    @Test
+    @DisplayName("메일 조회 (TRASH, IMPORT)")
+    void findMailTrashAndImport() {
+        MailTransDTO mailTransDTO = new MailTransDTO();
+        mailTransDTO.setReceiveType("TRASH");
+        mailTransDTO.setReceiveEmpId(29);
+        PageRequest page = PageRequest.of(0, 5);
+        Page<MailTransDTO> results = mailRepositoryImpl.findByMailReceiveType(mailTransDTO, page);
 
+        results.stream().toList().forEach(System.out::println);
+    }
 }
+
+

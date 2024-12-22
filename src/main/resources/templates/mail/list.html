@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>전체 메일함</title>
+    <title>메일함</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
 </head>
 <body>
@@ -15,14 +15,15 @@
                 <button class="btn btn-primary mb-2" onclick="writeMail()">메일쓰기</button>
                 <button class="btn btn-secondary mb-4" onclick="writeToSelf()">내게쓰기</button>
 
-                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('ALL')">전체 메일함</button>
+                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolderAll('ALL')">전체 메일함</button>
                 <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('INBOX')">받은 메일함</button>
-                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('SENT')">보낸 메일함</button>
-                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('DRAFT')">임시 저장 메일함</button>
                 <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('TOME')">내게 쓴 메일함</button>
-                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('IMPORT')">중요 메일함</button>
+                <button class="btn btn-outline-primary mb-2" onclick="loadMailReceiveFolder('IMPORT')">중요 메일함</button>
+                <button class="btn btn-outline-primary mb-2" onclick="loadMailReceiveFolder('TRASH')">휴지통</button>
+                <!--TODO-->
                 <hr>
-                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('TRASH')">휴지통</button>
+                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolderStatus('SENDED')">보낸 메일함</button>
+                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolderStatus('DRAFT')">임시 저장 메일함</button>
             </div>
         </div>
 
@@ -112,6 +113,44 @@
             });
     }
 
+    function loadMailReceiveFolder(receiveType, page = 0) {
+        console.log('receiveType', receiveType);
+        const mailTableBody = document.getElementById('mailTableBody');
+        mailTableBody.innerHTML = '<tr><td colspan="6" class="text-center">Loading...</td></tr>'; // 로딩 표시
+
+        fetch(`/api/folder2/${receiveType}?page=${page}&size=10`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('fetch to mailType', receiveType);
+                updateMailTable(data.content); // 목록에는 data 의 content 를 넘겨서 실제 데이터 정보만 바인딩한다
+                renderPageNation(data); // 페이징을 처리할 function 에는 페이징 객체를 모두 넘긴다
+                console.log('fetch to data', data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                mailTableBody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Failed to load data</td></tr>';
+            });
+    }
+
+    function loadMailFolderStatus(mailStatus, page = 0) {
+        console.log('mailStatus', mailStatus);
+        const mailTableBody = document.getElementById('mailTableBody');
+        mailTableBody.innerHTML = '<tr><td colspan="6" class="text-center">Loading...</td></tr>'; // 로딩 표시
+
+        fetch(`/api/folder3/${mailStatus}?page=${page}&size=10`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('fetch to mailType', mailStatus);
+                updateMailTable(data.content); // 목록에는 data 의 content 를 넘겨서 실제 데이터 정보만 바인딩한다
+                renderPageNation(data); // 페이징을 처리할 function 에는 페이징 객체를 모두 넘긴다
+                console.log('fetch to data', data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                mailTableBody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Failed to load data</td></tr>';
+            });
+    }
+
     function updateMailTable(mailList) {
         const mailTableBody = document.getElementById('mailTableBody');
 
@@ -171,6 +210,10 @@
 
     function writeToSelf() {
         window.location.href = '/mail/tome'; // 내게 쓰기 페이지로 이동
+    }
+
+    function loadMailFolderAll() {
+        window.location.href = '/mail/list';
     }
 </script>
 </body>
