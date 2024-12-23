@@ -6,6 +6,7 @@ import com.group.application.mail.dto.MyMailBoxDTO;
 import com.group.domain.hr.entity.Employee;
 import com.group.domain.hr.repository.EmployeeRepository;
 import com.group.domain.mail.entity.MailBox;
+import com.group.domain.mail.entity.enums.MailStatus;
 import com.group.domain.mail.repository.MailQueryRepository;
 import com.group.domain.mail.repository.MailRepository;
 import com.group.domain.mail.repository.MailRepositoryImpl;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +32,7 @@ public class MailService {
     private final MailRepositoryImpl mailRepositoryImpl;
     private final MailTransService mailTransService;
     private final MailQueryRepository mailQueryRepository;
+
     // 전체 메일함
     public Page<MyMailBoxDTO> findByMyMailBox(MailBoxDTO mailBoxDto, Pageable pageable) {
         return mailRepositoryImpl.findByMyMailBox(mailBoxDto, pageable);
@@ -60,35 +63,40 @@ public class MailService {
         return mailBoxDto.toDTO(result);
     }
 
-    public MailBoxDTO sendMailToRecipient(MailBoxDTO mailBoxDTO) {
+    public void sendMailToRecipient(MailBoxDTO mailBoxDto) {
 
-        // step1 : mailBox 에 데이터 저장
+        // logic 1 : mailBox 에 데이터 저장
         MailBox mailBoxEntity = MailBox.builder()
-                .id(mailBoxDTO.getId())
-                .mailTitle(mailBoxDTO.getMailTitle())
-                .mailContent(mailBoxDTO.getMailContent())
-                .mailDate(mailBoxDTO.getSenderDate())
+                .id(mailBoxDto.getId())
+                .mailTitle(mailBoxDto.getMailTitle())
+                .mailContent(mailBoxDto.getMailContent())
+                .mailDate(mailBoxDto.getSenderDate())
+                .mailStatus(mailBoxDto.getMailStatus())
                 .senderEmployee(Employee.builder()
-                        .id(mailBoxDTO.getSenderEmployeeId())
+                        .id(mailBoxDto.getSenderEmployeeId())
                         .build())
                 .build();
         MailBox result = mailRepository.save(mailBoxEntity);
 
-        String receiverEmails = mailBoxDTO.getReceiverEmail();
+        String receiverEmails = mailBoxDto.getReceiverEmail();
 
         List<String> empEmails = Arrays.stream(receiverEmails.split(","))
                 .map(String::trim)
                 .collect(Collectors.toList());
 
-        // step2 : mailrecvstore 에 데이터 저장
+        // logic 2 : mailrecvstore 에 데이터 저장
         List<Integer> byEmpId = findByEmpId(empEmails);
-
         mailQueryRepository.saveMailBoxIdAndReceiveId(result.getId(), byEmpId);
 
-        // step3 : mailtrans 에 데이터 저장
-        mailTransService.saveV2(result.getId(), byEmpId);
+        // logic 3-1) 임시 저장
+        if (mailBoxDto.getMailStatus().name().equals("DRAFT")) {
+            return;
+        }
 
-        return mailBoxDTO.toDTO(result);
+        // logic 3-2) 최종 메일 발송
+        if (mailBoxDto.getMailStatus().name().equals("SENDED")) {
+            mailTransService.saveV2(result.getId(), byEmpId);
+        }
     }
 
     /*
@@ -116,11 +124,33 @@ public class MailService {
      */
     public MailBoxDTO detail(Integer id) {
         MailBox mailbox = mailRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("no id"));
+                .orElseThrow(() -> new EntityNotFoundException("no mailBox id"));
         return mailRepositoryImpl.findByOne(mailbox.getId());
     }
 
-    public Page<MyMailBoxDTO> searchByMailTypeList(MailBoxDTO mailBoxDto, Pageable pageable) {
-        return mailRepositoryImpl.findByMailType(mailBoxDto, pageable);
+    public Page<MailBoxDTO> findReceiveTypeBySend(MailBoxDTO mailBoxDto, Pageable pageable) {
+
+        Page<Object[]> result = mailRepository.findMailboxesWithReceiveTypeBySend(mailBoxDto.getSenderEmployeeId(), pageable);
+
+        return result.map(row -> new MailBoxDTO(
+                (Integer) row[0],
+                (String) row[1],
+                (Integer) row[2],
+                (String) row[3],
+                ((Timestamp) row[4]).toLocalDateTime()
+        ));
+    }
+
+    public Page<MailBoxDTO> findReceiveTypeByDraft(MailBoxDTO mailBoxDto, Pageable pageable) {
+
+        Page<Object[]> result = mailRepository.findMailBoxesWithReceiveTypeByDraft(mailBoxDto.getSenderEmployeeId(), pageable);
+
+        return result.map(row -> new MailBoxDTO(
+                (Integer) row[0],
+                (String) row[1], // 메일 저장 시 여러명의 사용자의 메일 주소 또는 이름을 (,)로 구분하여 저장
+                (Integer) row[2],
+                (String) row[3],
+                ((Timestamp) row[4]).toLocalDateTime()
+        ));
     }
 }

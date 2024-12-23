@@ -4,13 +4,16 @@ import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.hr.service.EmployeeService;
 import com.group.application.mail.dto.MailBoxDTO;
 import com.group.application.mail.service.MailService;
+import com.group.domain.mail.entity.enums.MailStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @Controller
 @RequestMapping("/mail")
 @RequiredArgsConstructor
@@ -44,20 +47,17 @@ public class MailController {
     }
 
     @PostMapping("/writeProc")
-    public String writeProc(Model model, MailBoxDTO mailBoxDto, EmployeeDTO employeeDto,
+    public String writeProc(@RequestParam("action") String actionBtn,
+                            @ModelAttribute MailBoxDTO mailBoxDto, EmployeeDTO employeeDto,
                             @CookieValue(value = "uuid") String empUUID) {
         employeeDto.setEmpUUID(empUUID);
         EmployeeDTO dto = employeeService.findByEmployee(employeeDto);
         mailBoxDto.setSenderEmployeeId(dto.getId());
-        model.addAttribute("mailBoxDto", mailService.sendMailToRecipient(mailBoxDto));
+        mailBoxDto.setMailStatus(MailStatus.valueOf(actionBtn));
+        log.info("actionBtn", actionBtn);
+        mailService.sendMailToRecipient(mailBoxDto);
+
         return "redirect:/mail/list";
-    }
-
-    @GetMapping("/sent")
-    public String sent(HttpServletRequest request, Model model) {
-
-        //TODO
-        return null;
     }
 
     @GetMapping("/tome")

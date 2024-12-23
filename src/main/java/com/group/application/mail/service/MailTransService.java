@@ -1,5 +1,6 @@
 package com.group.application.mail.service;
 
+import com.group.application.mail.dto.MailBoxDTO;
 import com.group.application.mail.dto.MailTransDTO;
 import com.group.domain.mail.entity.MailTrans;
 import com.group.domain.mail.repository.MailRepositoryImpl;
@@ -43,7 +44,4 @@ public class MailTransService {
         return mailRepositoryImpl.findByMailReceiveType(mailTransDto, pageable);
     }
 
-    public Page<MailTransDTO> findByMailStatus(MailTransDTO mailTransDto, Pageable pageable) {
-        return mailRepositoryImpl.findByMailStatus(mailTransDto, pageable);
-    }
 }

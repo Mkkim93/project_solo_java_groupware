@@ -2,6 +2,7 @@ package com.group.application.mail.dto;
 
 import com.group.domain.mail.entity.MailTrans;
 import com.group.domain.mail.entity.enums.FavoriteType;
+import com.group.domain.mail.entity.enums.MailStatus;
 import com.group.domain.mail.entity.enums.ReadStatus;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
@@ -26,7 +27,7 @@ public class MailTransDTO {
     private String receiveType;
 
     // 외부 entity 사용 메일 발송 상태 :
-    private String mailStatus;
+    private MailStatus mailStatus;
 
     @QueryProjection
     public MailTransDTO(Integer mailBoxId, FavoriteType favoriteType, ReadStatus readStatus,

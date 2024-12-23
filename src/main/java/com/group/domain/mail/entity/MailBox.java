@@ -69,11 +69,12 @@ public class MailBox {
 
     @Builder
     public MailBox(Integer id, String mailTitle, String mailContent,
-                   LocalDateTime mailDate, Employee senderEmployee) {
+                   LocalDateTime mailDate, Employee senderEmployee, MailStatus mailStatus) {
        this.id = id;
        this.mailTitle = mailTitle;
        this.mailContent = mailContent;
        this.mailDate = mailDate;
        this.senderEmployee = senderEmployee;
+       this.mailStatus = mailStatus;
     }
 }

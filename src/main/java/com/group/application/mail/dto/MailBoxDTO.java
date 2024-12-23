@@ -2,12 +2,13 @@ package com.group.application.mail.dto;
 
 import com.group.domain.mail.entity.MailBox;
 import com.group.domain.mail.entity.enums.FavoriteType;
+import com.group.domain.mail.entity.enums.MailStatus;
 import com.group.domain.mail.entity.enums.ReadStatus;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -23,10 +24,12 @@ public class MailBoxDTO {
     private String empName;
     private String senderName;
     private String receiverEmail;
+    private String receiveEmpNames;
+    private LocalDateTime senderMailDate;
 
     private FavoriteType favoriteType;
     private ReadStatus readStatus;
-
+    private MailStatus mailStatus;
 
     public MailBoxDTO(Integer id, String mailTitle,
                       Integer senderEmployeeId, String senderName,
@@ -50,13 +53,13 @@ public class MailBoxDTO {
     }
 
     /**
-     * 메일 작성 dto
-     * @param mailTitle
-     * @param mailContent
+     * 메일 조회 데이터
+     * @param mailTitle 메일 제목
      * @param senderEmployeeId
      */
-    public MailBoxDTO(String mailTitle, String mailContent, Integer senderEmployeeId, String receiverEmail,
+    public MailBoxDTO(Integer id, String mailTitle, String mailContent, Integer senderEmployeeId, String receiverEmail,
                       LocalDateTime senderDate) {
+        this.id = id;
         this.mailTitle = mailTitle;
         this.mailContent = mailContent;
         this.senderEmployeeId = senderEmployeeId;

@@ -4,7 +4,6 @@ import com.group.application.mail.dto.MailBoxDTO;
 import com.group.application.mail.dto.MyMailBoxDTO;
 import com.group.domain.hr.entity.Employee;
 import com.group.domain.mail.entity.MailBox;
-import com.group.domain.mail.repository.MailQueryRepository;
 import com.group.domain.mail.repository.MailRepositoryImpl;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
@@ -28,8 +27,24 @@ class MailServiceTest {
     EntityManager entityManager;
 
     @Autowired MailService mailService;
-    @Autowired
-    private MailQueryRepository mailQueryRepository;
+
+
+    @Test
+    void sendMailBox() {
+        MailBoxDTO mailBoxDTO = new MailBoxDTO();
+        mailBoxDTO.setSenderEmployeeId(29);
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        Page<MailBoxDTO> results = mailService.findReceiveTypeBySend(mailBoxDTO, pageRequest);
+        results.stream().toList().forEach(System.out::println);
+    }
+
+    @Test
+    void sendMail() {
+        MailBoxDTO mailBoxDTO = new MailBoxDTO();
+        mailBoxDTO.setSenderEmployeeId(29);
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        mailService.findReceiveTypeBySend(mailBoxDTO, pageRequest);
+    }
 
 
     @Test
@@ -75,9 +90,7 @@ class MailServiceTest {
     @Test
     @DisplayName("메일 상세 페이지 조회 시 id 값 (service)")
     void mailDetailId() {
-        Integer id = 9;
-        MailBoxDTO byId = mailService.detail(id);
-        System.out.println("byId.getId() = " + byId.getId());
+
     }
 
     @Test
@@ -112,5 +125,16 @@ class MailServiceTest {
         dto.setMailContent("여러명 메일 전송 내용2 (쉼표)");
         dto.setSenderEmployeeId(29);
         mailService.sendMailToRecipient(dto);
+    }
+
+    @Test
+    @DisplayName("보낸 메일함 조회 시 데이터 누락 검증")
+    void sendMailV4() {
+        MailBoxDTO dto = new MailBoxDTO();
+        dto.setMailStatus("SENDED");
+        dto.setSenderEmployeeId(29);
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        Page<MailBoxDTO> results = mailService.findReceiveTypeBySend(dto, pageRequest);
+        results.stream().toList().forEach(System.out::println);
     }
 }

@@ -33,7 +33,7 @@ public class MailRepositoryImpl extends QuerydslRepositorySupport implements Mai
         jpaQueryFactory = new JPAQueryFactory(entityManager);
     }
 
-    @Override
+   /* @Override
     public Page<MailTransDTO> findByMailStatus(MailTransDTO mailTransDto, Pageable pageable) {
 
         List<MailTransDTO> results = jpaQueryFactory.select(new QMailTransDTO(
@@ -41,11 +41,11 @@ public class MailRepositoryImpl extends QuerydslRepositorySupport implements Mai
                         mailTrans.readStatue, employee.empName, mailBox.mailTitle,
                         mailBox.mailDate))
                 .from(mailTrans)
-                .join(mailTrans.mailBox, mailBox)
-                .join(mailBox.senderEmployee, employee)
+                .leftJoin(mailTrans.mailBox, mailBox)
+                .leftJoin(mailBox.senderEmployee, employee)
                 .where(
                         mailTrans.employee.id.eq(mailTransDto.getReceiveEmpId())
-                                .and(mailBox.mailStatus.eq(MailStatus.valueOf(mailTransDto.getMailStatus())))
+                                .and(mailBox.mailStatus.eq(mailTransDto.getMailStatus()))
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -58,7 +58,7 @@ public class MailRepositoryImpl extends QuerydslRepositorySupport implements Mai
 
         return PageableExecutionUtils.getPage(results, pageable, () -> count.fetchCount());
 
-    }
+    }*/
 
     /**
      * receiveTypes(IMPORT, TRASH) 조건에 따라 데이터를 조회
@@ -101,9 +101,12 @@ public class MailRepositoryImpl extends QuerydslRepositorySupport implements Mai
                 .join(mailBox.senderEmployee, employee)
                 .where(
                         mailTrans.employee.id.eq(mailTransDto.getReceiveEmpId())
-                                .and(mailTrans.mailTypes.eq(MailTypes.valueOf(mailTransDto.getMailTypes())))
-                                .and(mailTrans.receiveType.isNull())
-                                .or(mailTrans.receiveType.ne(ReceiveType.valueOf("TRASH")))
+                                .and(
+                                        mailTrans.mailTypes.eq(MailTypes.valueOf(mailTransDto.getMailTypes())))
+                                .and((
+                                        mailTrans.receiveType.isNull())
+                                .or(
+                                        mailTrans.receiveType.ne(ReceiveType.valueOf("TRASH"))))
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -186,6 +189,5 @@ public class MailRepositoryImpl extends QuerydslRepositorySupport implements Mai
                 .join(mailTrans.mailBox, mailBox)
                 .join(mailBox.senderEmployee, employee);
         return PageableExecutionUtils.getPage(results, pageable, () -> count.fetchCount());
-
     }
 }

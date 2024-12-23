@@ -61,7 +61,6 @@
                         </td>
 
                         <td id="readStatus" name="readStatus" th:text="*{mail.readStatus}" class="text-center"> <!--읽음 상태-->
-                            <p ></p>
                         </td>
 
                         <td id="senderName" class="text-center" th:text="*{mail.senderName}"></td> <!--보낸 사람-->
@@ -94,15 +93,18 @@
 </div>
 
 <script>
-    function loadMailFolder(mailType, page = 0) {
+    function loadMailFolder(mailType) {
         console.log('mailType', mailType);
         const mailTableBody = document.getElementById('mailTableBody');
         mailTableBody.innerHTML = '<tr><td colspan="6" class="text-center">Loading...</td></tr>'; // 로딩 표시
-
-        fetch(`/api/folder/${mailType}?page=${page}&size=10`)
+        var page = 0;
+        var size = 10;
+        const url = `/api/folder/${mailType}?page=${page}&size=${size}`;
+        fetch(url)
             .then(response => response.json())
             .then(data => {
                 console.log('fetch to mailType', mailType);
+                console.log(data.content)
                 updateMailTable(data.content); // 목록에는 data 의 content 를 넘겨서 실제 데이터 정보만 바인딩한다
                 renderPageNation(data); // 페이징을 처리할 function 에는 페이징 객체를 모두 넘긴다
                 console.log('fetch to data', data);
@@ -113,15 +115,18 @@
             });
     }
 
-    function loadMailReceiveFolder(receiveType, page = 0) {
+    function loadMailReceiveFolder(receiveType) {
         console.log('receiveType', receiveType);
+        var page = 0;
+        var size = 10;
         const mailTableBody = document.getElementById('mailTableBody');
         mailTableBody.innerHTML = '<tr><td colspan="6" class="text-center">Loading...</td></tr>'; // 로딩 표시
-
-        fetch(`/api/folder2/${receiveType}?page=${page}&size=10`)
+        const url = `/api/folder2/${receiveType}?page=${page}&${size}`;
+        fetch(url)
             .then(response => response.json())
             .then(data => {
                 console.log('fetch to mailType', receiveType);
+                console.log(data.content)
                 updateMailTable(data.content); // 목록에는 data 의 content 를 넘겨서 실제 데이터 정보만 바인딩한다
                 renderPageNation(data); // 페이징을 처리할 function 에는 페이징 객체를 모두 넘긴다
                 console.log('fetch to data', data);
@@ -132,15 +137,20 @@
             });
     }
 
-    function loadMailFolderStatus(mailStatus, page = 0) {
+    function loadMailFolderStatus(mailStatus) {
         console.log('mailStatus', mailStatus);
+        var page = 0;
+        var size = 10;
+        const url = `/api/folder3/${mailStatus}?page=${page}&size=${size}`;
         const mailTableBody = document.getElementById('mailTableBody');
         mailTableBody.innerHTML = '<tr><td colspan="6" class="text-center">Loading...</td></tr>'; // 로딩 표시
 
-        fetch(`/api/folder3/${mailStatus}?page=${page}&size=10`)
+        fetch(url)
             .then(response => response.json())
             .then(data => {
-                console.log('fetch to mailType', mailStatus);
+                console.log('fetch to mailStatus', mailStatus);
+                console.log(data.content)
+                console.log(data)
                 updateMailTable(data.content); // 목록에는 data 의 content 를 넘겨서 실제 데이터 정보만 바인딩한다
                 renderPageNation(data); // 페이징을 처리할 function 에는 페이징 객체를 모두 넘긴다
                 console.log('fetch to data', data);
@@ -153,19 +163,23 @@
 
     function updateMailTable(mailList) {
         const mailTableBody = document.getElementById('mailTableBody');
+        console.log('mailList', mailList);
+        console.log('mailList', mailList.forEach);
 
         mailTableBody.innerHTML = ''; // 기존 데이터 삭제
         if (!Array.isArray(mailList)) {
             mailList = [mailList];
         }
         mailList.forEach(mail => {
+            console.log('mail', mail);
+
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td class="text-center"><input type="checkbox"></td>
                 <td class="text-center"><input type="checkbox" name="isFavorite" ${mail.isFavorite ? 'checked' : ''}></td>
                 <td class="text-center">${mail.readStatus ? 'READ' : 'NOREAD'}</td>
                 <td class="text-center">${mail.senderName}</td>
-                <td class="text-center"><a href="/mail/detail/${mail.mailBoxId}">${mail.mailTitle}</a></td>
+                <td class="text-center"><a href="/mail/detail?id=${mail.mailBoxId}">${mail.mailTitle}</a></td>
                 <td class="text-center">${mail.mailDate}</td>
             `;
             mailTableBody.appendChild(row);
@@ -173,8 +187,9 @@
     }
 
     function renderPageNation(data) {
+        console.log(data.number)
+        console.log(data)
         const paginationElement = document.querySelector('.pagination');
-
         paginationElement.innerHTML = '';
 
         if (data.number > 0) {
@@ -188,7 +203,7 @@
 
         for (let i = startPage; i <= endPage; i++) {
             const pageButton = document.createElement('li');
-            pageButton.innerHTML = `<a href="#" class="btn btn-link ${i === data.number ? 'active' : ''}" onclick="fetchPage(${i})">${i + 1}</a>`;
+            pageButton.innerHTML = `<a th:href="#" class="btn btn-link ${i === data.number ? 'active' : ''}" onclick="fetchPage(${i})">${i + 1}</a>`;
             paginationElement.appendChild(pageButton);
         }
 
@@ -200,9 +215,9 @@
     }
 
     function fetchPage(page) {
-        loadMailFolder('mailType', page);
+          // 여기에서 페이지 크기를 설정 (10으로 설정)
+        loadMailFolder(page);  // page와 size를 함께 전달
     }
-
 
     function writeMail() {
         window.location.href = '/mail/write'; // 메일쓰기 페이지로 이동

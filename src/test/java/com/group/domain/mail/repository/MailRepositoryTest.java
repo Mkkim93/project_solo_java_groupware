@@ -1,6 +1,5 @@
 package com.group.domain.mail.repository;
 
-import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.mail.dto.MailBoxDTO;
 import com.group.application.mail.dto.MailTransDTO;
 import com.group.domain.hr.repository.EmployeeRepository;
@@ -25,15 +24,12 @@ class MailRepositoryTest {
     @Autowired
     EmployeeRepository employeeRepository;
 
-
     @Test
-    void findAll() {
-        EmployeeDTO employeeDTO = new EmployeeDTO();
-        employeeDTO.setId(6);
-        mailRepository.findReceivedMails(employeeDTO.getId());
+    @DisplayName("보낸 메일 조회")
+    void findSendMail() {
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        mailRepository.findMailboxesWithReceiveTypeBySend(29, pageRequest);
     }
-
-
 
     @Test
     @DisplayName("나의 id 조회하기")
@@ -45,15 +41,6 @@ class MailRepositoryTest {
     }
 
 
-    @Test
-    @DisplayName("메일 상세 페이지 조회 시 id 값 (repository)")
-    void mailDetailId() {
-        Integer id = 9;
-        MailBoxDTO byOne = mailRepositoryImpl.findByOne(id);
-        System.out.println("byOne = " + byOne.getId());
-        System.out.println("byOne.getMailTitle() = " + byOne.getMailTitle());
-        System.out.println("byOne.getMailContent() = " + byOne.getMailContent());
-    }
 
     @Test
     @DisplayName("메일 조회 (INBOX, TOME)")
