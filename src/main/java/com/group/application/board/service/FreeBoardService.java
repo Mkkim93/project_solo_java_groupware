@@ -17,12 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class FreeBoardService {
 
+    private final BoardReplayService boardReplayService;
     private final BoardService boardService;
     private final FreeBoardRepository freeBoardRepository;
     private final BoardRepositoryImpl boardRepositoryImpl;
 
-    public Page<FreeBoardDTO> findAll(Pageable pageable) {
-        return boardRepositoryImpl.findAllByFreeBoard(pageable);
+    public Page<FreeBoardDTO> findAll(String searchKeyword, Pageable pageable) {
+        return boardRepositoryImpl.findAllByFreeBoard(searchKeyword, pageable);
     }
 
     public FreeBoardDTO findByOne(Integer id) {
@@ -65,5 +66,22 @@ public class FreeBoardService {
         return FreeBoard.builder()
                 .board(board)
                 .build();
+    }
+
+    public Page<FreeBoardDTO> searchKeyword(String searchKeyword, Pageable pageRequest) {
+        Page<BoardDTO> boardDtoPage = boardReplayService.relaySearchKeyword(searchKeyword, pageRequest);
+
+        Page<FreeBoardDTO> freeBoardDtoPage = boardDtoPage
+                .map(boardDto -> new FreeBoardDTO(
+                        boardDto.getId(),
+                        boardDto.getBoardId(),
+                        boardDto.getBoardTitle(),
+                        boardDto.getEmpName(),
+                        boardDto.getBoardContent(),
+                        boardDto.getBoardRegDate(),
+                        boardDto.getBoardViewCount(),
+                        boardDto.getIsDeleted()
+        ));
+        return freeBoardDtoPage;
     }
 }

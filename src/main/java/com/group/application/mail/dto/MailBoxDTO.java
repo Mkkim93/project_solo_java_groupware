@@ -5,6 +5,7 @@ import com.group.domain.mail.entity.enums.FavoriteType;
 import com.group.domain.mail.entity.enums.MailStatus;
 import com.group.domain.mail.entity.enums.ReadStatus;
 import com.querydsl.core.annotations.QueryProjection;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,7 +20,7 @@ public class MailBoxDTO {
     private String mailContent;
     private String mailType;
 
-    private LocalDateTime senderDate;
+    private LocalDateTime mailDate;
     private Integer senderEmployeeId;
     private String empName;
     private String senderName;
@@ -27,29 +28,39 @@ public class MailBoxDTO {
     private String receiveEmpNames;
     private LocalDateTime senderMailDate;
 
-    private FavoriteType favoriteType;
-    private ReadStatus readStatus;
+    private String favoriteType;
+    private String readStatus;
     private MailStatus mailStatus;
+
+    private Integer receiveEmpId;
+    private String receiveType;
+
+    /*mailBox.id,
+    mailTrans.isFavorite,
+    mailTrans.readStatue,
+    employee.empName,
+    mailBox.mailTitle,
+    mailBox.mailDate*/
 
     public MailBoxDTO(Integer id, String mailTitle,
                       Integer senderEmployeeId, String senderName,
-                      LocalDateTime senderDate) {
+                      LocalDateTime mailDate) {
         this.id = id;
         this.mailTitle = mailTitle;
         this.senderEmployeeId = senderEmployeeId;
         this.senderName = senderName;
-        this.senderDate = senderDate;
+        this.mailDate = mailDate;
     }
 
     @QueryProjection
     public MailBoxDTO(Integer id, Integer senderEmployeeId,
-                      String mailTitle, String mailContent, String senderName, LocalDateTime senderDate) {
+                      String mailTitle, String mailContent, String senderName, LocalDateTime mailDate) {
         this.id = id;
         this.senderEmployeeId = senderEmployeeId;
         this.mailTitle = mailTitle;
         this.mailContent = mailContent;
         this.senderName = senderName;
-        this.senderDate = senderDate;
+        this.mailDate = mailDate;
     }
 
     /**
@@ -58,20 +69,20 @@ public class MailBoxDTO {
      * @param senderEmployeeId
      */
     public MailBoxDTO(Integer id, String mailTitle, String mailContent, Integer senderEmployeeId, String receiverEmail,
-                      LocalDateTime senderDate) {
+                      LocalDateTime mailDate) {
         this.id = id;
         this.mailTitle = mailTitle;
         this.mailContent = mailContent;
         this.senderEmployeeId = senderEmployeeId;
         this.receiverEmail = receiverEmail;
-        this.senderDate = senderDate;
+        this.mailDate = mailDate;
     }
 
     public MailBoxDTO toDTO(MailBox mailBox) {
         this.id = mailBox.getId();
         this.mailTitle = mailBox.getMailTitle();
         this.mailContent = mailBox.getMailContent();
-        this.senderDate = mailBox.getMailDate();
+        this.mailDate = mailBox.getMailDate();
         this.senderEmployeeId = mailBox.getSenderEmployee().getId();
         return this;
     }

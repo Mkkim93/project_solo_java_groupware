@@ -62,7 +62,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="list : ${noticeBoardList.content}">
+            <tr th:each="list : ${noticeBoardList}">
                 <td th:text="${list.id}" class="text-center"></td>
                 <td class="text-center"><a th:text="${list.boardTitle}"
                                            th:href="@{/board/notice/detail(id=${list.id})}"
@@ -76,18 +76,22 @@
     </div>
 
     <nav>
-        <ul class="pagination">
+        <div class="pagination">
             <li class="page-item" th:if="${noticeBoardList.hasPrevious()}">
-                <a class="page-link" th:href="@{/board/notice/list(page=${noticeBoardList.number - 1})}">Previous</a>
+                <a class="page-link" th:href="@{/board/notice/list(page=${noticeBoardList.number - 1}, searchKeyword=${param.searchKeyword})}">Previous</a>
             </li>
             <li class="page-item" th:each="i : ${#numbers.sequence(noticeBoardList.number - (noticeBoardList.number % 5),
             noticeBoardList.number - (noticeBoardList.number % 5) + 4)}" th:if="${i < noticeBoardList.totalPages}">
-                <a class="page-link" th:href="@{/board/notice/list(page=${i})}" th:text="${i + 1}"></a>
+                <a class="page-link" th:href="@{/board/notice/list(page=${i}, searchKeyword=${param.searchKeyword})}" th:text="${i + 1}"></a>
             </li>
             <li class="page-item" th:if="${noticeBoardList.hasNext()}">
-                <a class="page-link" th:href="@{/board/notice/list(page=${noticeBoardList.number + 1})}">Next</a>
+                <a class="page-link" th:href="@{/board/notice/list(page=${noticeBoardList.number + 1}, searchKeyword=${param.searchKeyword})}">Next</a>
             </li>
-        </ul>
+            <form th:action="@{/board/notice/list}" method="get">
+                <input type="text" name="searchKeyword" th:value="${param.searchKeyword}" placeholder="검색">
+                <button type="submit">검색</button>
+            </form>
+        </div>
     </nav>
 
     <button class="btn btn-primary btn-write" th:onclick="|location.href='@{/board/notice/write}'|">글 작성</button>

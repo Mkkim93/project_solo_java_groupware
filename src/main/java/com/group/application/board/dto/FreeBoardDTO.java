@@ -5,6 +5,7 @@ import com.group.domain.board.entity.Board;
 import com.group.domain.board.entity.FreeBoard;
 import com.group.domain.hr.entity.Employee;
 import com.querydsl.core.annotations.QueryProjection;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class FreeBoardDTO {
 
     private Integer id;

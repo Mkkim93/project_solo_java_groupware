@@ -4,6 +4,7 @@ import com.group.application.mail.dto.MailBoxDTO;
 import com.group.application.mail.dto.MyMailBoxDTO;
 import com.group.domain.hr.entity.Employee;
 import com.group.domain.mail.entity.MailBox;
+import com.group.domain.mail.entity.enums.MailStatus;
 import com.group.domain.mail.repository.MailRepositoryImpl;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
@@ -131,10 +132,14 @@ class MailServiceTest {
     @DisplayName("보낸 메일함 조회 시 데이터 누락 검증")
     void sendMailV4() {
         MailBoxDTO dto = new MailBoxDTO();
-        dto.setMailStatus("SENDED");
+        dto.setMailStatus(MailStatus.valueOf("SENDED"));
         dto.setSenderEmployeeId(29);
         PageRequest pageRequest = PageRequest.of(0, 10);
         Page<MailBoxDTO> results = mailService.findReceiveTypeBySend(dto, pageRequest);
-        results.stream().toList().forEach(System.out::println);
+        List<MailBoxDTO> list = results.stream().toList();
+        for (MailBoxDTO mailBoxDTO : list) {
+            System.out.println("mailBoxDTO.getSenderDate().getClass() = " + mailBoxDTO.getMailDate().getClass());
+        }
+
     }
 }

@@ -67,8 +67,11 @@ public class MailRepositoryImpl extends QuerydslRepositorySupport implements Mai
     public Page<MailTransDTO> findByMailReceiveType(MailTransDTO mailTransDto, Pageable pageable) {
 
         List<MailTransDTO> results = jpaQueryFactory.select(new QMailTransDTO(
-                        mailBox.id, mailTrans.isFavorite,
-                        mailTrans.readStatue, employee.empName, mailBox.mailTitle,
+                        mailBox.id,
+                        mailTrans.isFavorite,
+                        mailTrans.readStatue,
+                        employee.empName,
+                        mailBox.mailTitle,
                         mailBox.mailDate))
                 .from(mailTrans)
                 .join(mailTrans.mailBox, mailBox)

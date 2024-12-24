@@ -1,11 +1,13 @@
 package com.group.web.board.controller;
 
 import com.group.application.board.dto.BoardDTO;
+import com.group.application.board.service.BoardReplayService;
 import com.group.application.board.service.BoardService;
 import com.group.application.board.service.CommentService;
 import com.group.application.cookie.CookieUtil;
 import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.hr.service.EmployeeService;
+import com.group.domain.board.entity.Board;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class BoardController {
 
+    private final BoardReplayService boardReplayService;
     private final BoardService boardService;
     private final CommentService commentService;
     private final EmployeeService employeeService;
@@ -25,10 +28,16 @@ public class BoardController {
     @GetMapping("/list")
     public String view(@RequestParam(value = "page", defaultValue = "0") int page,
                        @RequestParam(value = "size", defaultValue = "15") int size,
-                       Model model) {
+                       Model model, String searchKeyword) {
+
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<BoardDTO> boardDto = boardService.findAll(pageRequest);
-        model.addAttribute("allBoardList", boardDto);
+        Page<BoardDTO> list = null;
+        if (searchKeyword != null) {
+             list = boardReplayService.relaySearchKeyword(searchKeyword, pageRequest);
+        } else {
+             list = boardService.findAll(pageRequest);
+        }
+        model.addAttribute("allBoardList", list);
         return "/board/all/list";
     }
 

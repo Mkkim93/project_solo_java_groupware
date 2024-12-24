@@ -5,6 +5,8 @@ import com.group.domain.board.entity.Board;
 import com.group.domain.hr.entity.Employee;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.*;
+import net.bytebuddy.asm.Advice;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 
@@ -51,6 +53,7 @@ public class BoardDTO {
         this.boardRegDate = boardRegDate;
         this.boardViewCount = boardViewCount;
         this.isDeleted = isDeleted;
+
     }
 
     public BoardDTO(String boardPass) {
@@ -110,4 +113,5 @@ public class BoardDTO {
         this.employee = employeeDto;
         return this;
     }
+
 }

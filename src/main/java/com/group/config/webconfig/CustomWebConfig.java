@@ -21,9 +21,9 @@ public class CustomWebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/assets/**")
                 .addResourceLocations("classpath:/static/assets/");
         registry.addResourceHandler("/files/**")
-                .addResourceLocations("classpath:/static/files");
+                .addResourceLocations("classpath:/static/files/");
         registry.addResourceHandler("/images/**")
-                .addResourceLocations("classpath:/static/images");
+                .addResourceLocations("classpath:/static/images/");
     }
 
 }

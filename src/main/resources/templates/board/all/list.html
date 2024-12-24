@@ -54,6 +54,7 @@
     <button type="submit"><a href="/board/notice/list">공지 게시판</a></button>
     <button type="submit"><a href="/board/qna/list">질문 게시판</a></button>
     <button type="submit"><a href="/board/file/list">자료 게시판</a></button>
+
     <div>
         <table class="table table-header table-striped">
             <thead>
@@ -67,7 +68,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="list : ${allBoardList.content}">
+            <tr th:each="list : ${allBoardList}">
                 <td th:text="${list.id}" class="text-center"></td>
                 <td class="text-center"><a th:text="${list.boardTitle}" th:href="@{/board/all/detail(id=${list.id})}" class="text-decoration-none" ></a></td>
                 <td th:text="${list.empName}" class="text-center"></td>
@@ -78,18 +79,31 @@
             </tbody>
         </table>
         <div class="pagination">
+            <!-- 이전 버튼 -->
             <li th:if="${allBoardList.hasPrevious()}">
-                <a th:href="@{/board/all/list(page=${allBoardList.number - 1})}" class="btn btn-link">이전</a>
+                <a th:href="@{/board/all/list(page=${allBoardList.number - 1}, searchKeyword=${param.searchKeyword})}"
+                   class="btn btn-link">이전</a>
             </li>
 
+            <!-- 페이지 번호 -->
             <li th:each="i : ${#numbers.sequence(allBoardList.number - (allBoardList.number % 5),
-            allBoardList.number - (allBoardList.number % 5) + 4)}" th:if="${i < allBoardList.totalPages}">
-                <a th:href="@{/board/all/list(page=${i})}" class="btn btn-link" th:text="${i + 1}"></a>
+            allBoardList.number - (allBoardList.number % 5) + 4)}"
+                th:if="${i < allBoardList.totalPages}">
+                <a th:href="@{/board/all/list(page=${i}, searchKeyword=${param.searchKeyword})}"
+                   class="btn btn-link" th:text="${i + 1}"></a>
             </li>
 
+            <!-- 다음 버튼 -->
             <li th:if="${allBoardList.hasNext()}">
-                <a th:href="@{/board/all/list(page=${allBoardList.number + 1})}" class="btn btn-link">다음</a>
+                <a th:href="@{/board/all/list(page=${allBoardList.number + 1}, searchKeyword=${param.searchKeyword})}"
+                   class="btn btn-link">다음</a>
             </li>
+
+
+            <form th:action="@{/board/all/list}" method="get">
+                <input type="text" name="searchKeyword" th:value="${param.searchKeyword}" placeholder="검색어 입력">
+                <button type="submit">검색</button>
+            </form>
         </div>
     </div>
     <button th:onclick="|location.href='@{/board/all/write}'|" class="btn btn-primary btn-create">글 작성</button>

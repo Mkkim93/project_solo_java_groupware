@@ -4,6 +4,7 @@ import com.group.application.board.dto.BoardDTO;
 import com.group.application.board.dto.CommentDTO;
 import com.group.application.board.dto.FreeBoardDTO;
 import com.group.domain.board.repository.FreeBoardRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -124,5 +125,13 @@ class FreeBoardServiceTest {
         BoardDTO boardDTO = boardService.findByOne(byId.getBoardId());
         System.out.println("boardDTO.getId() = " + boardDTO.getId());
         System.out.println("boardDTO.getBoardId() = " + boardDTO.getBoardId());
+    }
+
+    @Test
+    @DisplayName("게시글 조회")
+    void searchKeywordTest() {
+        String searchKeyword = "자유";
+        PageRequest page = PageRequest.of(0, 10);
+        freeBoardService.searchKeyword(searchKeyword, page);
     }
 }

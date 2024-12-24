@@ -23,7 +23,8 @@ public class MailController {
     private final EmployeeService employeeService;
 
     @GetMapping("/list")
-    public String sendMailBox(Model model, MailBoxDTO mailBoxDto, @CookieValue(value = "uuid") String empUUID, EmployeeDTO employeeDto,
+    public String sendMailBox(Model model, MailBoxDTO mailBoxDto, EmployeeDTO employeeDto,
+                              @CookieValue(value = "uuid") String empUUID,
                               @RequestParam(value = "size", defaultValue = "15") int size,
                               @RequestParam(value = "page", defaultValue = "0") int page) {
 

@@ -1,6 +1,7 @@
 package com.group.web.board.controller;
 
 import com.group.application.board.dto.NoticeBoardDTO;
+import com.group.application.board.service.BoardReplayService;
 import com.group.application.board.service.BoardService;
 import com.group.application.board.service.CommentService;
 import com.group.application.board.service.NoticeBoardService;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class NoticeBoardController {
 
+    private final BoardReplayService boardReplayService;
     private final NoticeBoardService noticeBoardService;
     private final CommentService commentService;
     private final BoardService boardService;
@@ -27,10 +29,10 @@ public class NoticeBoardController {
     @GetMapping("/list")
     public String view(@RequestParam(value = "page", defaultValue = "0") int page,
                        @RequestParam(value = "size", defaultValue = "15") int size,
-                       Model model) {
+                       Model model, String searchKeyword) {
         Pageable pageRequest = PageRequest.of(page, size);
-        Page<NoticeBoardDTO> noticeBoardDto = noticeBoardService.findAll(pageRequest);
-        model.addAttribute("noticeBoardList", noticeBoardDto);
+        Page<NoticeBoardDTO> list = noticeBoardService.findAll(searchKeyword, pageRequest);
+        model.addAttribute("noticeBoardList", list);
         return "/board/notice/list";
     }
 

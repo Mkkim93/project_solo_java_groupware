@@ -8,13 +8,13 @@ public interface BoardRepositoryCustom {
 
     Page<BoardDTO> findAllByBoard(Pageable pageable);
 
-    Page<FreeBoardDTO> findAllByFreeBoard(Pageable pageable);
+    Page<FreeBoardDTO> findAllByFreeBoard(String searchKeyword, Pageable pageable);
 
-    Page<NoticeBoardDTO> findAllByNoticeBoard(Pageable pageable);
+    Page<NoticeBoardDTO> findAllByNoticeBoard(String searchKeyword, Pageable pageable);
 
-    Page<FileBoardDTO> findAllByFileBoard(Pageable pageable);
+    Page<FileBoardDTO> findAllByFileBoard(String searchKeyword, Pageable pageable);
 
-    Page<QnABoardDTO> findAllByQnABoard(Pageable pageable);
+    Page<QnABoardDTO> findAllByQnABoard(String searchKeyword, Pageable pageable);
 
     BoardDTO findByOneBoard(Integer id);
 
@@ -27,4 +27,5 @@ public interface BoardRepositoryCustom {
     QnABoardDTO findByOneQnABoard(Integer id, String boardPass);
 
     QnABoardDTO findByOneQnABoardNotPass(Integer id);
+
 }

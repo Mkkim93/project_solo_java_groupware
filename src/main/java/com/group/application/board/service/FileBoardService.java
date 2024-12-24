@@ -28,8 +28,8 @@ public class FileBoardService {
     private final FileStoreService fileStoreService;
     private final FileBoardRepository fileBoardRepository;
 
-    public Page<FileBoardDTO> findByAll(Pageable pageable) {
-        return boardRepositoryImpl.findAllByFileBoard(pageable);
+    public Page<FileBoardDTO> findByAll(String searchKeyword, Pageable pageable) {
+        return boardRepositoryImpl.findAllByFileBoard(searchKeyword, pageable);
     }
 
     public FileBoardDTO findByOne(Integer id) {

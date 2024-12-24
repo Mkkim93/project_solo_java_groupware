@@ -27,10 +27,9 @@ public class QnABoardController {
     @GetMapping("/list")
     public String view(@RequestParam(value = "page", defaultValue = "0") int page,
                        @RequestParam(value = "size", defaultValue = "15") int size,
-                       Model model) {
+                       Model model, String searchKeyword) {
         Pageable pageRequest = PageRequest.of(page, size);
-        Page<QnABoardDTO> qnaBoardDto = qnABoardService.findAll(pageRequest);
-
+        Page<QnABoardDTO> qnaBoardDto = qnABoardService.findAll(searchKeyword, pageRequest);
         model.addAttribute("qnaBoardList", qnaBoardDto);
         return "board/qna/list";
     }
@@ -46,10 +45,10 @@ public class QnABoardController {
         model.addAttribute("employeeDto", employeeService.findByEmployee(employeeDto));
         QnABoardDTO qnaBoardDto = qnABoardService.findById(id, boardPass);
 
-        // 댓글 관련 model & 페이징 객체
         model.addAttribute("qnaBoardDto", qnABoardService.findByOne(id, boardPass));
         model.addAttribute("boardDto", boardService.findByOnlyId(qnaBoardDto.getBoardId()));
 
+        // 댓글 관련 model & 페이징 객체
         PageRequest pageRequest = PageRequest.of(page, size);
         model.addAttribute("commentDto", commentService.findAll(qnaBoardDto.getBoardId(), pageRequest));
 

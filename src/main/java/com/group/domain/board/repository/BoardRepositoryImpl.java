@@ -3,6 +3,7 @@ package com.group.domain.board.repository;
 import com.group.application.board.dto.*;
 import com.group.domain.board.entity.*;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -33,6 +34,10 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
     public BoardRepositoryImpl(EntityManager entityManager) {
         super(Board.class);
         jpaQueryFactory = new JPAQueryFactory(entityManager);
+    }
+
+    private BooleanExpression checkedKeyword(String searchKeyword) {
+        return board.boardTitle.containsIgnoreCase(searchKeyword);
     }
 
     @Override
@@ -69,7 +74,15 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
     }
 
     @Override
-    public Page<FreeBoardDTO> findAllByFreeBoard(Pageable pageable) {
+    public Page<FreeBoardDTO> findAllByFreeBoard(String searchKeyword, Pageable pageable) {
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+        booleanBuilder.and(board.boardIsDeleted.eq("N"));
+
+        if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            booleanBuilder.and(checkedKeyword(searchKeyword));
+        }
+
         List<FreeBoardDTO> results = jpaQueryFactory
                 .select(new QFreeBoardDTO(
                         freeBoard.id, freeBoard.board.id,
@@ -80,7 +93,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                 .from(freeBoard)
                 .innerJoin(freeBoard.board, board)
                 .innerJoin(board.employee, employee)
-                .where(board.boardIsDeleted.eq("N"))
+                .where(booleanBuilder)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -89,9 +102,12 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                 .select(freeBoard.count())
                 .from(freeBoard)
                 .innerJoin(freeBoard.board, board)
-                .innerJoin(board.employee, employee);
+                .innerJoin(board.employee, employee)
+                .where(booleanBuilder);
         return PageableExecutionUtils.getPage(results, pageable, () -> count.fetchCount());
     }
+
+
 
     @Override
     public FreeBoardDTO findByOneFreeBoard(Integer id) {
@@ -109,7 +125,16 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
     }
 
     @Override
-    public Page<NoticeBoardDTO> findAllByNoticeBoard(Pageable pageable) {
+    public Page<NoticeBoardDTO> findAllByNoticeBoard(String searchKeyword, Pageable pageable) {
+
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+        booleanBuilder.and(board.boardIsDeleted.eq("N"));
+
+        if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            booleanBuilder.and(checkedKeyword(searchKeyword));
+        }
+
         List<NoticeBoardDTO> results = jpaQueryFactory
                 .select(new QNoticeBoardDTO(
                         noticeBoard.id, noticeBoard.board.id,
@@ -119,7 +144,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                 .from(noticeBoard)
                 .innerJoin(noticeBoard.board, board)
                 .innerJoin(board.employee, employee)
-                .where(board.boardIsDeleted.eq("N"))
+                .where(booleanBuilder)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -128,7 +153,8 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                 .select(noticeBoard.count())
                 .from(noticeBoard)
                 .innerJoin(noticeBoard.board, board)
-                .innerJoin(board.employee, employee);
+                .innerJoin(board.employee, employee)
+                .where(booleanBuilder);
         return PageableExecutionUtils.getPage(results, pageable, () -> count.fetchCount());
     }
 
@@ -149,7 +175,16 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
     }
 
     @Override
-    public Page<FileBoardDTO> findAllByFileBoard(Pageable pageable) {
+    public Page<FileBoardDTO> findAllByFileBoard(String searchKeyword, Pageable pageable) {
+
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+        booleanBuilder.and(board.boardIsDeleted.eq("N"));
+
+        if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            booleanBuilder.and(checkedKeyword(searchKeyword));
+        }
+
         List<FileBoardDTO> results = jpaQueryFactory
                 .select(new QFileBoardDTO(
                         fileBoard.id, fileBoard.board.id,
@@ -159,7 +194,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                 .from(fileBoard)
                 .innerJoin(fileBoard.board, board)
                 .innerJoin(board.employee, employee)
-                .where(board.boardIsDeleted.eq("N"))
+                .where(booleanBuilder)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -168,7 +203,8 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                 .select(fileBoard.count())
                 .from(fileBoard)
                 .innerJoin(fileBoard.board, board)
-                .innerJoin(board.employee, employee);
+                .innerJoin(board.employee, employee)
+                .where(booleanBuilder);
         return PageableExecutionUtils.getPage(results, pageable, () -> count.fetchCount());
     }
 
@@ -193,7 +229,16 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
     }
 
     @Override
-    public Page<QnABoardDTO> findAllByQnABoard(Pageable pageable) {
+    public Page<QnABoardDTO> findAllByQnABoard(String searchKeyword, Pageable pageable) {
+
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+        booleanBuilder.and(board.boardIsDeleted.eq("N"));
+
+        if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            booleanBuilder.and(checkedKeyword(searchKeyword));
+        }
+
         List<QnABoardDTO> results = jpaQueryFactory
                 .select(new QQnABoardDTO(
                         qnABoard.id, qnABoard.board.id,
@@ -205,7 +250,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                 )).from(qnABoard)
                 .innerJoin(qnABoard.board, board)
                 .innerJoin(board.employee, employee)
-                .where(board.boardIsDeleted.eq("N"))
+                .where(booleanBuilder)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -214,6 +259,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
                 .from(qnABoard)
                 .innerJoin(qnABoard.board, board)
                 .innerJoin(board.employee, employee)
+                .where(booleanBuilder)
                 .fetchOne();
         return new PageImpl<>(results, pageable, count);
     }
@@ -226,7 +272,7 @@ public class BoardRepositoryImpl extends QuerydslRepositorySupport implements Bo
     }
 
     public QnABoardDTO findByOneBuilder(Integer id, String boardPass) {
-        if (boardPass == null) {
+        if (boardPass == null || boardPass.isEmpty()) {
             return findByOneQnABoardNotPass(id);
         }
         return findByOneQnABoard(id, boardPass);

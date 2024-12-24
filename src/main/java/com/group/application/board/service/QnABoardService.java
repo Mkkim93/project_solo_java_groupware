@@ -25,8 +25,8 @@ public class QnABoardService {
     private final BoardRepositoryImpl boardRepositoryImpl;
     private final QnABoardRepository qnABoardRepository;
 
-    public Page<QnABoardDTO> findAll(Pageable pageable) {
-        return boardRepositoryImpl.findAllByQnABoard(pageable);
+    public Page<QnABoardDTO> findAll(String searchKeyword, Pageable pageable) {
+        return boardRepositoryImpl.findAllByQnABoard(searchKeyword, pageable);
     }
 
     public QnABoardDTO findByOne(Integer id, String boardPass) {

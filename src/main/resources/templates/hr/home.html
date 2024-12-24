@@ -11,8 +11,10 @@
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
     <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.15/index.global.min.js'></script>
     <script src="https://apis.google.com/js/api.js"></script>
+    <script src="/js/current.js"></script>
 </head>
 <body>
+
 <div class="dashboard">
     <!-- 사이드바 -->
     <div class="sidebar">
@@ -24,6 +26,7 @@
                 <h3 type="text" id="roleType" name="roleType" th:text="${employeeDto.roleType}"></h3>
                 <button type="submit" class="btn">나의 정보</button>
             </form>
+
         </div>
         <ul class="menu">
             <li><a href="/hr/home"><i class="fa-solid fa-house"></i> 홈</a></li>
@@ -35,7 +38,6 @@
             <li><a href="/admin/view"><i class="fa-solid fa-gear"></i> 관리자 페이지</a></li>
         </ul>
     </div>
-
     <!-- 메인 대시보드 -->
     <div class="main-content">
         <header class="header">
@@ -47,9 +49,11 @@
             <input type="hidden" id="employee" name="employee" th:value="${attendanceDto != null ? attendanceDto.employee : 0}">
 
             <div class="attendance-buttons">
+                <h3>현재 시간 : <span id="current-time"></span></h3>
                 <button id="comment-attOn-btn" class="btn attOn" onclick="attOnLogic()">출근</button>
                 <button id="comment-attOff-btn" class="btn attOff" onclick="attOffLogic()">퇴근</button>
             </div>
+
             <div class="attendance-times">
                 <h3>출근 시간: <span id="checkInTime" th:text="${attendanceDto != null ? attendanceDto.attOn : ''}"></span></h3>
                 <h3>퇴근 시간: <span id="checkOutTime" th:text="${attendanceDto != null ? attendanceDto.attOff : ''}"></span></h3>
@@ -224,6 +228,12 @@
                 }
             }
         }
+    });
+</script>
+<script>
+    // DOMContentLoaded 이벤트로 HTML 로드가 완료된 후 함수를 호출
+    document.addEventListener("DOMContentLoaded", function() {
+        updateTime();  // 페이지 로드시 시간을 갱신하는 함수 호출
     });
 </script>
 </body>

@@ -129,7 +129,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="list : ${qnaBoardList.content}">
+        <tr th:each="list : ${qnaBoardList}">
             <td th:text="${list.id}" class="text-center"></td>
             <td class="text-center">
                 <a th:if="${list.boardSecret == 'N'}"
@@ -148,14 +148,18 @@
     </table>
 
     <div class="pagination">
-        <a th:if="${qnaBoardList.hasPrevious()}" th:href="@{/board/qna/list(page=${qnaBoardList.number - 1})}">이전</a>
+        <a th:if="${qnaBoardList.hasPrevious()}" th:href="@{/board/qna/list(page=${qnaBoardList.number - 1}, searchKeyword=${param.searchKeyword})}">이전</a>
 
         <span th:each="i : ${#numbers.sequence(qnaBoardList.number - (qnaBoardList.number % 5),
         qnaBoardList.number - (qnaBoardList.number % 5) + 4)}" th:if="${i < qnaBoardList.totalPages}">
-            <a th:href="@{/board/qna/list(page=${i})}" th:text="${i + 1}"></a>
+            <a th:href="@{/board/qna/list(page=${i}, searchKeyword=${param.searchKeyword})}" th:text="${i + 1}"></a>
         </span>
 
-        <a th:if="${qnaBoardList.hasNext()}" th:href="@{/board/qna/list(page=${qnaBoardList.number + 1})}">다음</a>
+        <a th:if="${qnaBoardList.hasNext()}" th:href="@{/board/qna/list(page=${qnaBoardList.number + 1}, searchKeyword=${param.searchKeyword})}">다음</a>
+        <form th:action="@{/board/qna/list}" method="get">
+            <input type="text" name="searchKeyword" th:value="${param.searchKeyword}">
+            <button type="submit">검색</button>
+        </form>
     </div>
 
     <a class="btn" th:onclick="|location.href='@{/board/qna/write}'|">글 작성</a>

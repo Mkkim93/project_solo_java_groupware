@@ -16,14 +16,14 @@
                 <button class="btn btn-secondary mb-4" onclick="writeToSelf()">내게쓰기</button>
 
                 <button class="btn btn-outline-primary mb-2" onclick="loadMailFolderAll('ALL')">전체 메일함</button>
-                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('INBOX')">받은 메일함</button>
-                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('TOME')">내게 쓴 메일함</button>
-                <button class="btn btn-outline-primary mb-2" onclick="loadMailReceiveFolder('IMPORT')">중요 메일함</button>
-                <button class="btn btn-outline-primary mb-2" onclick="loadMailReceiveFolder('TRASH')">휴지통</button>
+                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('INBOX',0)">받은 메일함</button>
+                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolder('TOME',0)">내게 쓴 메일함</button>
+                <button class="btn btn-outline-primary mb-2" onclick="loadMailReceiveFolder('IMPORT',0)">중요 메일함</button>
+                <button class="btn btn-outline-primary mb-2" onclick="loadMailReceiveFolder('TRASH',0)">휴지통</button>
                 <!--TODO-->
                 <hr>
-                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolderStatus('SENDED')">보낸 메일함</button>
-                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolderStatus('DRAFT')">임시 저장 메일함</button>
+                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolderStatus('SENDED', 0)">보낸 메일함</button>
+                <button class="btn btn-outline-primary mb-2" onclick="loadMailFolderStatus('DRAFT', 0)">임시 저장 메일함</button>
             </div>
         </div>
 
@@ -60,12 +60,12 @@
                             </form>
                         </td>
 
-                        <td id="readStatus" name="readStatus" th:text="*{mail.readStatus}" class="text-center"> <!--읽음 상태-->
-                        </td>
+                        <td id="readStatus" name="readStatus" th:text="*{mail.readStatus}" class="text-center"></td>
 
-                        <td id="senderName" class="text-center" th:text="*{mail.senderName}"></td> <!--보낸 사람-->
+                        <td id="senderName" class="text-center" th:text="*{mail.senderName}"></td>
 
-                        <td class="text-center" id="mailTitle"><a th:text="*{mail.mailTitle}" th:href="@{/mail/detail(id=${mail.mailBoxId})}"></a>
+                        <td class="text-center" id="mailTitle">
+                            <a th:text="*{mail.mailTitle}" th:href="@{/mail/detail(id=${mail.mailBoxId})}"></a>
                         </td>
 
                         <td id="mailDate" th:text="*{mail.mailDate}" class="text-center"></td>
@@ -78,7 +78,7 @@
                     </li>
 
                     <li th:each="i : ${#numbers.sequence(myMailBoxDto.number - (myMailBoxDto.number % 5),
-            myMailBoxDto.number - (myMailBoxDto.number % 5) + 4)}" th:if="${i < myMailBoxDto.totalPages}">
+                        myMailBoxDto.number - (myMailBoxDto.number % 5) + 4)}" th:if="${i < myMailBoxDto.totalPages}">
                         <a th:href="@{/mail/list(page=${i})}" class="btn btn-link" th:text="${i + 1}"></a>
                     </li>
 
@@ -93,20 +93,19 @@
 </div>
 
 <script>
-    function loadMailFolder(mailType) {
+    function loadMailFolder(mailType, page) {
         console.log('mailType', mailType);
+        var size = 10;
         const mailTableBody = document.getElementById('mailTableBody');
         mailTableBody.innerHTML = '<tr><td colspan="6" class="text-center">Loading...</td></tr>'; // 로딩 표시
-        var page = 0;
-        var size = 10;
-        const url = `/api/folder/${mailType}?page=${page}&size=${size}`;
+        const url = `/api/folder1/${mailType}?page=${page}&size=${size}`;
         fetch(url)
             .then(response => response.json())
             .then(data => {
                 console.log('fetch to mailType', mailType);
                 console.log(data.content)
                 updateMailTable(data.content); // 목록에는 data 의 content 를 넘겨서 실제 데이터 정보만 바인딩한다
-                renderPageNation(data); // 페이징을 처리할 function 에는 페이징 객체를 모두 넘긴다
+                renderPageNation(mailType, data); // 페이징을 처리할 function 에는 페이징 객체를 모두 넘긴다
                 console.log('fetch to data', data);
             })
             .catch(error => {
@@ -115,20 +114,19 @@
             });
     }
 
-    function loadMailReceiveFolder(receiveType) {
+    function loadMailReceiveFolder(receiveType, page) {
         console.log('receiveType', receiveType);
-        var page = 0;
         var size = 10;
         const mailTableBody = document.getElementById('mailTableBody');
         mailTableBody.innerHTML = '<tr><td colspan="6" class="text-center">Loading...</td></tr>'; // 로딩 표시
-        const url = `/api/folder2/${receiveType}?page=${page}&${size}`;
+        const url = `/api/folder2/${receiveType}?page=${page}&size=${size}`;
         fetch(url)
             .then(response => response.json())
             .then(data => {
                 console.log('fetch to mailType', receiveType);
                 console.log(data.content)
                 updateMailTable(data.content); // 목록에는 data 의 content 를 넘겨서 실제 데이터 정보만 바인딩한다
-                renderPageNation(data); // 페이징을 처리할 function 에는 페이징 객체를 모두 넘긴다
+                renderPageNation(receiveType, data); // 페이징을 처리할 function 에는 페이징 객체를 모두 넘긴다
                 console.log('fetch to data', data);
             })
             .catch(error => {
@@ -137,10 +135,9 @@
             });
     }
 
-    function loadMailFolderStatus(mailStatus) {
-        console.log('mailStatus', mailStatus);
-        var page = 0;
+    function loadMailFolderStatus(mailStatus, page) {
         var size = 10;
+        console.log('mailStatus', mailStatus);
         const url = `/api/folder3/${mailStatus}?page=${page}&size=${size}`;
         const mailTableBody = document.getElementById('mailTableBody');
         mailTableBody.innerHTML = '<tr><td colspan="6" class="text-center">Loading...</td></tr>'; // 로딩 표시
@@ -149,10 +146,10 @@
             .then(response => response.json())
             .then(data => {
                 console.log('fetch to mailStatus', mailStatus);
-                console.log(data.content)
-                console.log(data)
+                console.log('data.content', data.content)
+                console.log('data', data);
                 updateMailTable(data.content); // 목록에는 data 의 content 를 넘겨서 실제 데이터 정보만 바인딩한다
-                renderPageNation(data); // 페이징을 처리할 function 에는 페이징 객체를 모두 넘긴다
+                renderPageNation(mailStatus, data); // 페이징을 처리할 function 에는 페이징 객체를 모두 넘긴다
                 console.log('fetch to data', data);
             })
             .catch(error => {
@@ -172,6 +169,8 @@
         }
         mailList.forEach(mail => {
             console.log('mail', mail);
+            console.log('mail.id', mail.id)
+            console.log('mail.mailBoxId', mail.mailBoxId);
 
             const row = document.createElement('tr');
             row.innerHTML = `
@@ -179,22 +178,30 @@
                 <td class="text-center"><input type="checkbox" name="isFavorite" ${mail.isFavorite ? 'checked' : ''}></td>
                 <td class="text-center">${mail.readStatus ? 'READ' : 'NOREAD'}</td>
                 <td class="text-center">${mail.senderName}</td>
-                <td class="text-center"><a href="/mail/detail?id=${mail.mailBoxId}">${mail.mailTitle}</a></td>
+                <td class="text-center"><a href="/mail/detail?id=${mail.id}">${mail.mailTitle}</a></td>
                 <td class="text-center">${mail.mailDate}</td>
             `;
             mailTableBody.appendChild(row);
         });
     }
 
-    function renderPageNation(data) {
-        console.log(data.number)
-        console.log(data)
+    function renderPageNation(mailStatus, data) {
+        console.log('data.number(현재페이지)', data.number);
+        console.log('data.totalPages(전체페이지)', data.totalPages);
+        console.log('mailStatus', mailStatus);
+        console.log('data.number', data.number);
+        console.log('data.size', data.size);
+
         const paginationElement = document.querySelector('.pagination');
         paginationElement.innerHTML = '';
 
         if (data.number > 0) {
             const prevButton = document.createElement('li');
-            prevButton.innerHTML = `<a href="#" class="btn btn-link" onclick="fetchPage(${data.number - 1})">이전</a>`;
+            prevButton.innerHTML = `<a href="#" class="btn btn-link">이전</a>`;
+            prevButton.addEventListener('click', function () {
+                fetchPage(mailStatus, data.number -1);
+                console.log('fetchPage()', mailStatus)
+            })
             paginationElement.appendChild(prevButton);
         }
 
@@ -203,20 +210,43 @@
 
         for (let i = startPage; i <= endPage; i++) {
             const pageButton = document.createElement('li');
-            pageButton.innerHTML = `<a th:href="#" class="btn btn-link ${i === data.number ? 'active' : ''}" onclick="fetchPage(${i})">${i + 1}</a>`;
+            pageButton.innerHTML = `<a href="#" class="btn btn-link ${i === data.number ? 'active' : ''}">${i + 1}</a>`;
+            pageButton.addEventListener('click', function () {
+                fetchPage(mailStatus, i);
+            })
             paginationElement.appendChild(pageButton);
         }
 
         if (data.number < data.totalPages - 1) {
             const nextButton = document.createElement('li');
-            nextButton.innerHTML = `<a href="#" class="btn btn-link" onclick="fetchPage(${data.number + 1})">다음</a>`;
+            nextButton.innerHTML = `<a href="#" class="btn btn-link")">다음</a>`;
+            nextButton.addEventListener('click', function ()  {
+                fetchPage(mailStatus.toString(), data.number + 1);
+            })
             paginationElement.appendChild(nextButton);
         }
     }
 
-    function fetchPage(page) {
-          // 여기에서 페이지 크기를 설정 (10으로 설정)
-        loadMailFolder(page);  // page와 size를 함께 전달
+    function fetchPage(mailStatus, page) {
+        console.log(page);
+        console.log('fetch By mailStatus', mailStatus);
+        /*if (mailStatus === 'TOME' || mailStatus === 'INBOX') {
+            loadMailFolder(mailStatus, page);
+        }
+        if (mailStatus === 'DRAFT' || mailStatus === 'SENDED') {
+            loadMailFolderStatus(mailStatus, page);
+        }
+        if (mailStatus === 'IMPORT' || mailStatus === 'TRASH') {
+            loadMailReceiveFolder(mailStatus, page);
+        }*/
+
+        if (['TOME', 'INBOX'].includes(mailStatus)) {
+            loadMailFolder(mailStatus, page);
+        } else if (['DRAFT', 'SENDED'].includes(mailStatus)) {
+            loadMailFolderStatus(mailStatus, page);
+        } else if (['IMPORT', 'TRASH'].includes(mailStatus)) {
+            loadMailReceiveFolder(mailStatus, page);
+        }
     }
 
     function writeMail() {

@@ -23,7 +23,7 @@ public class MailApiController {
     private final EmployeeService employeeService;
     private final MailTransService mailTransService;
 
-    @GetMapping("/api/folder/{mailType}")
+    @GetMapping("/api/folder1/{mailType}")
     public ResponseEntity<Page<MailTransDTO>> findByMyMailTypeBox(MailTransDTO mailTransDto,
                                                                   @PathVariable("mailType") String mailType, EmployeeDTO employeeDto,
                                                                   @RequestParam(value = "size", defaultValue = "15") int size,
@@ -56,19 +56,20 @@ public class MailApiController {
     }
 
     @GetMapping("/api/folder3/{mailStatus}")
-    public ResponseEntity<Page<MailBoxDTO>> findByMyMailStatusTypeBox(MailBoxDTO mailBoxDto,
-                                                                        @PathVariable("mailStatus") String mailStatus, EmployeeDTO employeeDto,
-                                                                        @RequestParam(value = "size", defaultValue = "15") int size,
-                                                                        @RequestParam(value = "page", defaultValue = "0") int page,
-                                                                        @CookieValue(value = "uuid") String empUUID) {
+    public ResponseEntity<Page<MailBoxDTO>> findByMyMailStatusTypeBox(@ModelAttribute MailBoxDTO mailBoxDto,
+                                                                      @PathVariable("mailStatus") String mailStatus, EmployeeDTO employeeDto,
+                                                                      @RequestParam(value = "size", defaultValue = "15") int size,
+                                                                      @RequestParam(value = "page", defaultValue = "0") int page,
+                                                                      @CookieValue(value = "uuid") String empUUID) {
         employeeDto.setEmpUUID(empUUID);
         EmployeeDTO dto = employeeService.findByEmployee(employeeDto);
         mailBoxDto.setSenderEmployeeId(dto.getId());
+
         mailBoxDto.setMailStatus(MailStatus.valueOf(mailStatus));
         PageRequest pageRequest = PageRequest.of(page, size);
 
         if (mailStatus.equals("SENDED")) {
-            Page<MailBoxDTO> results = mailService.findReceiveTypeBySend(mailBoxDto, pageRequest);
+            Page<MailBoxDTO> results = mailService.findReceiveTypeBySend(mailBoxDto, pageRequest); // mailboxId = null
             return ResponseEntity.ok(results);
         }
 

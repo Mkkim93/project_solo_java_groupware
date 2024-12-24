@@ -65,7 +65,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="list : ${fileBoardList.content}">
+                <tr th:each="list : ${fileBoardList}">
                     <td th:text="${list.id}" class="text-center"></td>
                     <td class="text-center">
                         <a th:text="${list.boardTitle}" th:href="@{/board/file/detail(id=${list.id})}"></a>
@@ -80,26 +80,28 @@
     </div>
     <button th:onclick="|location.href='@{/board/file/write}'|" class="btn btn-primary btn-create">글 작성</button>
     <!-- Pagination -->
-    <nav class="mt-4">
-        <ul class="pagination justify-content-center">
+        <div class="pagination">
             <li class="page-item" th:if="${fileBoardList.hasPrevious()}">
-                <a class="page-link" th:href="@{/board/file/list(page=${fileBoardList.number - 1})}">
+                <a class="page-link" th:href="@{/board/file/list(page=${fileBoardList.number - 1}, searchKeyword=${param.searchKeyword})}">
                     <i class="fas fa-chevron-left"></i> 이전
                 </a>
             </li>
 
             <li class="page-item" th:each="i : ${#numbers.sequence(fileBoardList.number - (fileBoardList.number % 5),
             fileBoardList.number - (fileBoardList.number % 5) + 4)}" th:if="${i < fileBoardList.totalPages}">
-                <a class="page-link" th:href="@{/board/file/list(page=${i})}" th:text="${i + 1}"></a>
+                <a class="page-link" th:href="@{/board/file/list(page=${i}, searchKeyword=${param.searchKeyword})}" th:text="${i + 1}"></a>
             </li>
 
             <li class="page-item" th:if="${fileBoardList.hasNext()}">
-                <a class="page-link" th:href="@{/board/file/list(page=${fileBoardList.number + 1})}">
+                <a class="page-link" th:href="@{/board/file/list(page=${fileBoardList.number + 1}, searchKeyword=${param.searchKeyword})}">
                     다음 <i class="fas fa-chevron-right"></i>
                 </a>
             </li>
-        </ul>
-    </nav>
+            <form th:action="@{/board/file/list}" method="get">
+                <input type="text" name="searchKeyword" th:value="${param.searchKeyword}" placeholder="검색어 입력">
+                <button type="submit">검색</button>
+            </form>
+        </div>
 </div>
 
 <!-- Bootstrap JS -->

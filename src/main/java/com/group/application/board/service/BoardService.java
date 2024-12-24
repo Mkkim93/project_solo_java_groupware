@@ -74,4 +74,20 @@ public class BoardService {
                 .boardContent(dto.getBoardContent())
                 .build();
     }
+
+    /*public Page<BoardDTO> searchKeyWord(String searchKeyWord, Pageable pageable) {
+
+        Page<Board> result = boardRepository.findByBoardTitleContaining(searchKeyWord, pageable);
+
+        Page<BoardDTO> boardDtoPage = result.map(board -> new BoardDTO(
+                board.getId(),
+                board.getBoardTitle(),
+                board.getBoardContent(),
+                board.getEmployee().getEmpName(),
+                board.getBoardRegDate(),
+                board.getBoardViewCount(),
+                board.getBoardIsDeleted()
+        ));
+        return boardDtoPage;
+    }*/
 }

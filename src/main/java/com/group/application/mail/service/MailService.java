@@ -6,7 +6,6 @@ import com.group.application.mail.dto.MyMailBoxDTO;
 import com.group.domain.hr.entity.Employee;
 import com.group.domain.hr.repository.EmployeeRepository;
 import com.group.domain.mail.entity.MailBox;
-import com.group.domain.mail.entity.enums.MailStatus;
 import com.group.domain.mail.repository.MailQueryRepository;
 import com.group.domain.mail.repository.MailRepository;
 import com.group.domain.mail.repository.MailRepositoryImpl;
@@ -46,7 +45,7 @@ public class MailService {
                 .id(mailBoxDto.getId())
                 .mailTitle(mailBoxDto.getMailTitle())
                 .mailContent(mailBoxDto.getMailContent())
-                .mailDate(mailBoxDto.getSenderDate())
+                .mailDate(mailBoxDto.getMailDate())
                 .senderEmployee(Employee.builder()
                         .id(mailBoxDto.getSenderEmployeeId())
                         .build())
@@ -70,7 +69,7 @@ public class MailService {
                 .id(mailBoxDto.getId())
                 .mailTitle(mailBoxDto.getMailTitle())
                 .mailContent(mailBoxDto.getMailContent())
-                .mailDate(mailBoxDto.getSenderDate())
+                .mailDate(mailBoxDto.getMailDate())
                 .mailStatus(mailBoxDto.getMailStatus())
                 .senderEmployee(Employee.builder()
                         .id(mailBoxDto.getSenderEmployeeId())
@@ -134,7 +133,7 @@ public class MailService {
 
         return result.map(row -> new MailBoxDTO(
                 (Integer) row[0],
-                (String) row[1],
+                (String) row[1], // 메일 저장 시 여러명의 사용자의 메일 주소 또는 이름을 (,)로 구분하여 저장
                 (Integer) row[2],
                 (String) row[3],
                 ((Timestamp) row[4]).toLocalDateTime()

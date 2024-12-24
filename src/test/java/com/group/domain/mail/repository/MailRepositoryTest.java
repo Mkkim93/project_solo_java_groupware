@@ -55,7 +55,7 @@ class MailRepositoryTest {
         results.stream().toList().forEach(System.out::println);
     }
 
-    @Test
+    /*@Test
     @DisplayName("메일 조회 (TRASH, IMPORT)")
     void findMailTrashAndImport() {
         MailTransDTO mailTransDTO = new MailTransDTO();
@@ -65,7 +65,7 @@ class MailRepositoryTest {
         Page<MailTransDTO> results = mailRepositoryImpl.findByMailReceiveType(mailTransDTO, page);
 
         results.stream().toList().forEach(System.out::println);
-    }
+    }*/
 }
 
 

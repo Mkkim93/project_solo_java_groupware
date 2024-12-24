@@ -70,6 +70,9 @@
     </style>
 </head>
 <body>
+<div>
+    <button type="submit"><a href="/hr/home">홈으로 이동</a></button>
+</div>
 <div class="container">
     <h2 class="text-center mb-4">자유 게시판</h2>
     <!--임시 게시판 링크-->
@@ -89,7 +92,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="list : ${freeBoardList.content}">
+        <tr th:each="list : ${freeBoardList}">
             <td th:text="${list.id}" class="text-center"></td>
             <td class="text-center">
                 <a th:text="${list.boardTitle}"
@@ -104,17 +107,22 @@
 
     <div class="pagination">
         <li th:if="${freeBoardList.hasPrevious()}">
-            <a class="btn btn-outline-primary" th:href="@{/board/free/list(page=${freeBoardList.number - 1})}">이전</a>
+            <a class="btn btn-outline-primary" th:href="@{/board/free/list(page=${freeBoardList.number - 1}, searchKeyword=${param.searchKeyword})}">이전</a>
         </li>
 
         <li th:each="i : ${#numbers.sequence(freeBoardList.number - (freeBoardList.number % 5),
         freeBoardList.number - (freeBoardList.number % 5) + 4)}" th:if="${i < freeBoardList.totalPages}">
-            <a class="btn btn-outline-secondary" th:href="@{/board/free/list(page=${i})}" th:text="${i + 1}"></a>
+            <a class="btn btn-outline-secondary" th:href="@{/board/free/list(page=${i}, searchKeyword=${param.searchKeyword})}" th:text="${i + 1}"></a>
         </li>
 
         <li th:if="${freeBoardList.hasNext()}">
-            <a class="btn btn-outline-primary" th:href="@{/board/free/list(page=${freeBoardList.number + 1})}">다음</a>
+            <a th:href="@{/board/free/list(page=${freeBoardList.number + 1}, searchKeyword=${param.searchKeyword})}"
+               class="btn btn-outline-primary">다음</a>
         </li>
+        <form th:action="@{/board/free/list}" method="get">
+            <input type="text" name="searchKeyword" th:value="${param.searchKeyword}" placeholder="검색어 입력">
+            <button type="submit">검색</button>
+        </form>
     </div>
 
     <div class="text-center">

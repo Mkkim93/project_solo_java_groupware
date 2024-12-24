@@ -45,15 +45,15 @@ public class FileBoardController {
     @GetMapping("/list")
     public String view(@RequestParam(value = "page", defaultValue = "0") int page,
                        @RequestParam(value = "size", defaultValue = "15") int size,
-                       Model model) {
+                       Model model, String searchKeyword) {
         Pageable pageRequest = PageRequest.of(page, size);
-        Page<FileBoardDTO> fileBoardDto = fileBoardService.findByAll(pageRequest);
+        Page<FileBoardDTO> fileBoardDto = fileBoardService.findByAll(searchKeyword, pageRequest);
         model.addAttribute("fileBoardList", fileBoardDto);
         return "board/file/list";
     }
 
     @GetMapping("/detail")
-    public String detail(@RequestParam Integer id,
+    public String detail(@RequestParam("id") Integer id,
                          @RequestParam(value = "page", defaultValue = "0") int page,
                          @RequestParam(value = "size", defaultValue = "10") int size,
                          @CookieValue(value = "uuid") String empUUID, EmployeeDTO employeeDto,

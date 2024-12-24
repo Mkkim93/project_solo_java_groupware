@@ -1,5 +1,6 @@
 package com.group.web.board.controller;
 
+import com.group.application.board.dto.BoardDTO;
 import com.group.application.board.dto.FreeBoardDTO;
 import com.group.application.board.service.BoardService;
 import com.group.application.board.service.CommentService;
@@ -27,10 +28,10 @@ public class FreeBoardController {
     @GetMapping("/list")
     public String view(@RequestParam(value = "page", defaultValue = "0") int page,
                        @RequestParam(value = "size", defaultValue = "15") int size,
-                       Model model) {
+                       Model model, String searchKeyword) {
         Pageable pageRequest = PageRequest.of(page, size);
-        Page<FreeBoardDTO> freeBoardDto = freeBoardService.findAll(pageRequest);
-        model.addAttribute("freeBoardList", freeBoardDto);
+        Page<FreeBoardDTO> list = freeBoardService.findAll(searchKeyword, pageRequest);
+        model.addAttribute("freeBoardList", list);
         return "/board/free/list";
     }
 
@@ -42,10 +43,11 @@ public class FreeBoardController {
                          Model model) {
         employeeDto.setEmpUUID(empUUID);
         model.addAttribute("employeeDto", employeeService.findByEmployee(employeeDto));
-        PageRequest pageRequest = PageRequest.of(page, size);
         FreeBoardDTO freeBoardDto = freeBoardService.findById(id);
         model.addAttribute("freeBoardDto", freeBoardService.findByOne(id));
         model.addAttribute("boardDto", boardService.findByOnlyId(freeBoardDto.getBoardId()));
+
+        PageRequest pageRequest = PageRequest.of(page, size);
         model.addAttribute("commentDto", commentService.findAll(freeBoardDto.getBoardId(), pageRequest));
         return "/board/free/detail";
     }
