@@ -6,13 +6,20 @@ import com.group.application.mail.dto.MailBoxDTO;
 import com.group.application.mail.dto.MailTransDTO;
 import com.group.application.mail.service.MailService;
 import com.group.application.mail.service.MailTransService;
+import com.group.application.mailfile.dto.MailFileDTO;
+import com.group.application.mailfile.service.MailFileStoreService;
 import com.group.domain.mail.entity.enums.MailStatus;
+import com.group.domain.mailfile.entity.MailFileStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -20,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 public class MailApiController {
 
     private final MailService mailService;
+    private final MailFileStoreService mailFileStoreService;
     private final EmployeeService employeeService;
     private final MailTransService mailTransService;
 
@@ -80,5 +88,13 @@ public class MailApiController {
             return ResponseEntity.ok(results);
         }
         return ResponseEntity.badRequest().body(Page.empty());
+    }
+
+    @PostMapping("/api/uploadFiles")
+    public ResponseEntity<List<MailFileDTO>> uploadMailFile(@RequestParam(value = "file", required = false) List<MultipartFile> mailFiles,
+                                                            @RequestParam("mailBoxId") Integer mailBoxId) throws IOException {
+        List<MailFileDTO> result = mailFileStoreService.save(mailBoxId, mailFiles);
+
+        return ResponseEntity.ok(result);
     }
 }

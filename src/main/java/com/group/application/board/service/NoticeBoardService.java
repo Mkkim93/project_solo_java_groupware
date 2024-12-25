@@ -22,7 +22,6 @@ public class NoticeBoardService {
     private final BoardService boardService;
     private final BoardRepositoryImpl boardRepositoryImpl;
     private final NoticeBoardRepository noticeBoardRepository;
-    private final MailApiController mailApiController;
 
     public Page<NoticeBoardDTO> findAll(String searchKeyword, Pageable pageable) {
         return boardRepositoryImpl.findAllByNoticeBoard(searchKeyword, pageable);

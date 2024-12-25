@@ -19,5 +19,4 @@ public interface MailRepositoryCustom {
 
     Page<MailTransDTO> findByMailReceiveType(MailTransDTO mailTransDto, Pageable pageable);
 
-    // Page<MailTransDTO> findByMailStatus(MailTransDTO mailTransDto, Pageable pageable);
 }

@@ -29,4 +29,5 @@ public class FileBoardStoreDTO {
         this.fileBoardId = fileBoardId;
         this.originFileName = originFileName;
     }
+
 }

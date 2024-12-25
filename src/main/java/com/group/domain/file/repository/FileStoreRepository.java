@@ -10,10 +10,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
 public interface FileStoreRepository extends JpaRepository<FileStore, Integer> {
 
-    @Query("select new com.group.application.file.FileBoardStoreDTO(s.id, s.fileName, " +
+    @Query("select new com.group.application.file.FileBoardStoreDTO(" +
+            "s.id, s.fileName, " +
             "s.fileSize, s.fileType, s.filePath, " +
             "s.fileRegDate, s.fileBoardId.id, s.OriginFileName) " +
             "from FileStore s, FileBoard f " +

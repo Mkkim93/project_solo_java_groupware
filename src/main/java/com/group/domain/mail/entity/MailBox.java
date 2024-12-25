@@ -59,14 +59,6 @@ public class MailBox {
     )
     private List<Employee> receiverEmployees;
 
-    @ManyToMany
-    @JoinTable(
-            name = "mailstore",
-            joinColumns = @JoinColumn(name = "mailbox_id"), // 현재 엔티티 mailBox 와 중간 테이블 mailstore 와의 관계 정의
-            inverseJoinColumns = @JoinColumn(name = "mailfile_id") // 반대쪽 엔티티 mailFile 와 중간테이블 mailstore 와의 관계 정의
-    )
-    private List<MailFile> mailFiles = new ArrayList<>();
-
     @Builder
     public MailBox(Integer id, String mailTitle, String mailContent,
                    LocalDateTime mailDate, Employee senderEmployee, MailStatus mailStatus) {

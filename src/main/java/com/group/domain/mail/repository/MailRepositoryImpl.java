@@ -5,6 +5,7 @@ import com.group.domain.mail.entity.MailBox;
 import com.group.domain.mail.entity.enums.MailStatus;
 import com.group.domain.mail.entity.enums.MailTypes;
 import com.group.domain.mail.entity.enums.ReceiveType;
+import com.group.domain.mailfile.entity.QMailFileStore;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -20,6 +21,7 @@ import java.util.List;
 import static com.group.domain.hr.entity.QEmployee.*;
 import static com.group.domain.mail.entity.QMailBox.*;
 import static com.group.domain.mail.entity.QMailTrans.*;
+import static com.group.domain.mailfile.entity.QMailFileStore.*;
 
 
 @Repository
@@ -32,33 +34,6 @@ public class MailRepositoryImpl extends QuerydslRepositorySupport implements Mai
         super(MailBox.class);
         jpaQueryFactory = new JPAQueryFactory(entityManager);
     }
-
-   /* @Override
-    public Page<MailTransDTO> findByMailStatus(MailTransDTO mailTransDto, Pageable pageable) {
-
-        List<MailTransDTO> results = jpaQueryFactory.select(new QMailTransDTO(
-                        mailBox.id, mailTrans.isFavorite,
-                        mailTrans.readStatue, employee.empName, mailBox.mailTitle,
-                        mailBox.mailDate))
-                .from(mailTrans)
-                .leftJoin(mailTrans.mailBox, mailBox)
-                .leftJoin(mailBox.senderEmployee, employee)
-                .where(
-                        mailTrans.employee.id.eq(mailTransDto.getReceiveEmpId())
-                                .and(mailBox.mailStatus.eq(mailTransDto.getMailStatus()))
-                )
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        JPAQuery<Long> count = jpaQueryFactory.select(mailTrans.count())
-                .from(mailTrans)
-                .join(mailTrans.mailBox, mailBox)
-                .join(mailBox.senderEmployee, employee);
-
-        return PageableExecutionUtils.getPage(results, pageable, () -> count.fetchCount());
-
-    }*/
 
     /**
      * receiveTypes(IMPORT, TRASH) 조건에 따라 데이터를 조회
@@ -160,6 +135,7 @@ public class MailRepositoryImpl extends QuerydslRepositorySupport implements Mai
                 mailBox.mailTitle, mailBox.mailContent, employee.empName, mailBox.mailDate))
                 .from(mailBox)
                 .join(mailBox.senderEmployee, employee)
+                .join(mailFileStore.mailBoxFileId, mailBox)
                 .where(mailBox.id.eq(id)).fetchOne();
     }
     /**
@@ -168,7 +144,7 @@ public class MailRepositoryImpl extends QuerydslRepositorySupport implements Mai
      * @param pageable
      * @return
      */
-    public Page<MyMailBoxDTO> findByMailType(MailBoxDTO mailBoxDto, Pageable pageable) {
+    /*public Page<MyMailBoxDTO> findByMailType(MailBoxDTO mailBoxDto, Pageable pageable) {
 
         List<MyMailBoxDTO> results = jpaQueryFactory.select(new QMyMailBoxDTO(
                         mailTrans.mailBox.id,
@@ -192,5 +168,5 @@ public class MailRepositoryImpl extends QuerydslRepositorySupport implements Mai
                 .join(mailTrans.mailBox, mailBox)
                 .join(mailBox.senderEmployee, employee);
         return PageableExecutionUtils.getPage(results, pageable, () -> count.fetchCount());
-    }
+    }*/
 }

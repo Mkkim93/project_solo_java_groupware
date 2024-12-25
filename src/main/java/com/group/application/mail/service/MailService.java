@@ -3,6 +3,7 @@ package com.group.application.mail.service;
 import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.mail.dto.MailBoxDTO;
 import com.group.application.mail.dto.MyMailBoxDTO;
+import com.group.application.mailfile.service.MailFileStoreService;
 import com.group.domain.hr.entity.Employee;
 import com.group.domain.hr.repository.EmployeeRepository;
 import com.group.domain.mail.entity.MailBox;
@@ -11,21 +12,28 @@ import com.group.domain.mail.repository.MailRepository;
 import com.group.domain.mail.repository.MailRepositoryImpl;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class MailService {
 
+    private final MailFileStoreService mailFileStoreService;
     private final MailRepository mailRepository;
     private final EmployeeRepository employeeRepository;
     private final MailRepositoryImpl mailRepositoryImpl;
@@ -62,7 +70,7 @@ public class MailService {
         return mailBoxDto.toDTO(result);
     }
 
-    public void sendMailToRecipient(MailBoxDTO mailBoxDto) {
+    public void sendMailToRecipient(MailBoxDTO mailBoxDto, List<MultipartFile> file) {
 
         // logic 1 : mailBox 에 데이터 저장
         MailBox mailBoxEntity = MailBox.builder()
@@ -75,7 +83,21 @@ public class MailService {
                         .id(mailBoxDto.getSenderEmployeeId())
                         .build())
                 .build();
+
         MailBox result = mailRepository.save(mailBoxEntity);
+
+        Integer mailBoxId = result.getId();
+        mailBoxDto.setId(mailBoxId);
+
+        boolean existFile = file.stream().allMatch(MultipartFile::isEmpty);
+
+        file.stream().toList().forEach(System.out::println);
+        log.info("existFile", existFile);
+
+        // 전송 메일이 파일 존재 여부 확인
+
+        saveFile(mailBoxDto.getId(), file);
+
 
         String receiverEmails = mailBoxDto.getReceiverEmail();
 
@@ -98,7 +120,19 @@ public class MailService {
         }
     }
 
+    // 메일을 전송할 때 메일 저장에 실패하면 예외를 던진다
+    // 메일에 파일이 첨부되었을 때 파일 전송에 실패해도 메일을 전송 요청을 거부하도록 로직을 구성해야될듯
+    private void saveFile(Integer mailBoxId, List<MultipartFile> file) {
+        try {
+            mailFileStoreService.save(mailBoxId, file);
+        } catch (IOException e) {
+            // TODO 예외처리 좀더 상세하게
+            log.info("메일 전송/저장에 실패하였습니다.");
+        }
+    }
+
     /*
+    //TODO Employee service 로 분리 직접 repository 에 접근하지 말것
         메일 작성폼에서 받는 사원의 e-mail 을 입력하여 해당 사운의 id 를 조회하고
         id 를 mailrecvstore 에 해당 mailbox pk 와 저장
         email 을 리턴하는 것이 아니라 email 로 조회한 회원의 pk 를 리턴
@@ -124,7 +158,7 @@ public class MailService {
     public MailBoxDTO detail(Integer id) {
         MailBox mailbox = mailRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("no mailBox id"));
-        return mailRepositoryImpl.findByOne(mailbox.getId());
+            return mailRepositoryImpl.findByOne(mailbox.getId());
     }
 
     public Page<MailBoxDTO> findReceiveTypeBySend(MailBoxDTO mailBoxDto, Pageable pageable) {

@@ -1,7 +1,6 @@
 package com.group.application.board.service;
 
 import com.group.application.board.dto.BoardDTO;
-import com.group.application.board.dto.FreeBoardDTO;
 import com.group.domain.board.entity.Board;
 import com.group.domain.board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;

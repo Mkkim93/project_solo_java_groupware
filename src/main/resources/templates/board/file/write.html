@@ -27,10 +27,11 @@
     <div class="layout">
         <form th:action="@{/board/file/write}" th:object="${fileBoardDto}" method="post" enctype="multipart/form-data">
 
-            <label for="boardTitle"></label>
+            <label for="boardTitle">제목</label>
             <input type="text" id="boardTitle" th:field="*{boardTitle}">
 
-            <label for="boardContent"></label>
+
+            <label for="boardContent">내용</label>
             <textarea id="boardContent" th:field="*{boardContent}"></textarea>
 
             <div class="form-group">

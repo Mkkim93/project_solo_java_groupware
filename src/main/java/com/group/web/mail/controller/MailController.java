@@ -4,6 +4,8 @@ import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.hr.service.EmployeeService;
 import com.group.application.mail.dto.MailBoxDTO;
 import com.group.application.mail.service.MailService;
+import com.group.application.mailfile.dto.MailFileDTO;
+import com.group.application.mailfile.service.MailFileStoreService;
 import com.group.domain.mail.entity.enums.MailStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -21,6 +26,7 @@ public class MailController {
 
     private final MailService mailService;
     private final EmployeeService employeeService;
+    private final MailFileStoreService mailFileStoreService;
 
     @GetMapping("/list")
     public String sendMailBox(Model model, MailBoxDTO mailBoxDto, EmployeeDTO employeeDto,
@@ -40,24 +46,29 @@ public class MailController {
     }
 
     @GetMapping("/write")
-    public String writeMail(Model model, @CookieValue("uuid") String empUUID, EmployeeDTO employeeDto) {
+    public String writeMail(Model model, @CookieValue("uuid") String empUUID,
+                            EmployeeDTO employeeDto, MailBoxDTO mailBoxDto) {
         employeeDto.setEmpUUID(empUUID);
         model.addAttribute("employeeDto", employeeService.findByEmployee(employeeDto));
-        model.addAttribute("mailBoxDto", new MailBoxDTO());
+        model.addAttribute("mailBoxDto", mailBoxDto);
+        model.addAttribute("mailFileDto", mailFileStoreService.findByMailStoreId(mailBoxDto.getId()));
+
         return "/mail/write";
     }
 
     @PostMapping("/writeProc")
     public String writeProc(@RequestParam("action") String actionBtn,
-                            @ModelAttribute MailBoxDTO mailBoxDto, EmployeeDTO employeeDto,
-                            @CookieValue(value = "uuid") String empUUID) {
+                            @ModelAttribute("mailBoxDto") MailBoxDTO mailBoxDto, EmployeeDTO employeeDto,
+                            @CookieValue(value = "uuid") String empUUID,
+                            @RequestParam(name = "file", required = false) List<MultipartFile> mailFiles) {
         employeeDto.setEmpUUID(empUUID);
         EmployeeDTO dto = employeeService.findByEmployee(employeeDto);
         mailBoxDto.setSenderEmployeeId(dto.getId());
         mailBoxDto.setMailStatus(MailStatus.valueOf(actionBtn));
-        log.info("actionBtn", actionBtn);
-        mailService.sendMailToRecipient(mailBoxDto);
 
+        log.info("actionBtn", actionBtn);
+
+        mailService.sendMailToRecipient(mailBoxDto, mailFiles);
         return "redirect:/mail/list";
     }
 
@@ -89,6 +100,7 @@ public class MailController {
     @GetMapping("/detail")
     public String detail(@RequestParam("id") Integer id, Model model) {
         model.addAttribute("mailBoxDto", mailService.detail(id));
+        model.addAttribute("mailFileDto", mailFileStoreService.findByMailStoreId(id));
         return "/mail/detail";
     }
 }

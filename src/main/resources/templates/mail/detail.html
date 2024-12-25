@@ -8,6 +8,13 @@
 <div class="container">
     <strong>mailBoxDTO.id:</strong> <span th:text="${mailBoxDto.id}"></span><br/>
     <h1 th:text="${mailBoxDto.mailTitle}">제목입니다.</h1>
+
+    <div class="list-group">
+        <ul th:each="files :${mailFileDto}">
+            첨부파일 : <p th:text="${files.mailFileOriginName}"></p>
+            파일크기 : <p th:text="${files.mailFileSize}"></p>
+        </ul>
+    </div>
     <p class="author" th:text="'보내는 사람: ' + ${mailBoxDto.senderName}">작성자 정보</p>
     <p th:text="${mailBoxDto.mailContent}">여기에 게시글 내용이 표시됩니다.</p>
     <div class="actions">
