@@ -1,0 +1,23 @@
+*{margin: 0; padding: 0; box-sizing: border-box;}
+body {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /*backgroud*/
+}
+body::before {
+    content: "";
+    position: absolute; z-index: 1;
+    top: 0; right: 0; bottom: 0; left: 0;
+}
+
+.login-form {position: relative; z-index: 2;}
+
+.login-form h4 {
+    text-align: center;
+}
+.login-form h1 {
+    font-size: 30px;
+}

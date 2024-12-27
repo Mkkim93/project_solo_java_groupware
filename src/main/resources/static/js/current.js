@@ -8,8 +8,6 @@ function updateTime() {
 
     document.getElementById('current-time').textContent = timeString;
 
-
-
     setInterval(updateTime, 1000);
 
 }

@@ -62,8 +62,9 @@ public class MailFileStoreService {
         )).toList();
     }
 
-    public List<MailFileStore> findByMailStoreId(Integer id) {
-        return mailFileStoreRepository.findByMailBoxId(id);
+    public List<MailFileDTO> findByMailStoreId(Integer id) {
+        List<MailFileDTO> byMailBoxId = mailFileStoreRepository.findByMailBoxId(id);
+        return byMailBoxId;
     }
 
 

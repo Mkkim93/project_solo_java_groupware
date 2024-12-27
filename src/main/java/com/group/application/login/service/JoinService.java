@@ -11,15 +11,11 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class JoinService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final EmployeeRepository employeeRepository;
-
-    public JoinService(BCryptPasswordEncoder bCryptPasswordEncoder, EmployeeRepository employeeRepository) {
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.employeeRepository = employeeRepository;
-    }
 
     /**
      * # 회원가입 : 사원 등록
@@ -41,7 +37,6 @@ public class JoinService {
                 .empName(dto.getEmpName())
                 .empRegNo(dto.getEmpRegNo())
                 .userEmail(dto.getUserEmail())
-                .empNickname(dto.getEmpNickName())
                 .build();
         return e;
     }

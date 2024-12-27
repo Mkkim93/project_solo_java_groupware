@@ -94,7 +94,33 @@ public class MailApiController {
     public ResponseEntity<List<MailFileDTO>> uploadMailFile(@RequestParam(value = "file", required = false) List<MultipartFile> mailFiles,
                                                             @RequestParam("mailBoxId") Integer mailBoxId) throws IOException {
         List<MailFileDTO> result = mailFileStoreService.save(mailBoxId, mailFiles);
-
         return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/api/deleteFiles")
+    public ResponseEntity<List<MailFileDTO>> deleteMailFile(@RequestParam(value = "file", required = false) List<MultipartFile> mailFiles
+                                                            ) {
+
+        return null;
+    }
+
+    @PostMapping("/api/receiveMail")
+    public ResponseEntity<List<MailBoxDTO>> receiveMail() {
+
+        return null;
+    }
+
+    /**
+     * 메일 삭제 (메일함 -> 휴지통)
+     * @return
+     */
+    @PostMapping("/api/trash")
+    public void deleteMail(@RequestParam(value = "mailBoxId", required = false) Integer mailBoxId) {
+        mailTransService.mailTransByTrash(mailBoxId);
+    }
+
+    @PostMapping("/api/delete")
+    public void delete(@RequestParam(value = "mailBoxId", required = false) Integer mailBoxId) {
+        mailTransService.deleteMail(mailBoxId);
     }
 }

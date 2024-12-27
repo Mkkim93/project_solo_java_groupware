@@ -29,6 +29,7 @@ public class TodoDTO {
     private LocalDateTime todoCreate;
 
     private EmployeeDTO employee; // 사원 id
+    private String todoDeleted;
 
     public TodoDTO setDTO(Todo todo) {
         this.id = todo.getId();

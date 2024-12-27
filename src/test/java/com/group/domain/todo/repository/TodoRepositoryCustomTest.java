@@ -40,7 +40,6 @@ class TodoRepositoryCustomTest {
     @DisplayName("월 단위 일정 조회하기")
     void todoSearchByMonth() {
         TodoDTO todoDTO = new TodoDTO();
-        // todoDTO.setEmployee(1);
         List<Todo> byTodoOfMonth = todoRepositoryCustom.findByTodoOfMonth(todoDTO);
         for (Todo todo : byTodoOfMonth) {
             System.out.println("todo.getId() = " + todo.getId());

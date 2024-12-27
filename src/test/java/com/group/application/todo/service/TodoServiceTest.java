@@ -44,4 +44,9 @@ class TodoServiceTest {
         Assertions.assertThat(byTodoId.getId()).isEqualTo(id);
     }
 
+    @Test
+    @DisplayName("일정 조회")
+    void findByTodoList() {
+    }
+
 }

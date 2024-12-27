@@ -56,6 +56,15 @@ public class MailController {
         return "/mail/write";
     }
 
+    /**
+     *
+     * @param actionBtn SENDED - 전송 / DRAFT - 임시 저장
+     * @param mailBoxDto
+     * @param employeeDto
+     * @param empUUID
+     * @param mailFiles
+     * @return
+     */
     @PostMapping("/writeProc")
     public String writeProc(@RequestParam("action") String actionBtn,
                             @ModelAttribute("mailBoxDto") MailBoxDTO mailBoxDto, EmployeeDTO employeeDto,
@@ -103,4 +112,9 @@ public class MailController {
         model.addAttribute("mailFileDto", mailFileStoreService.findByMailStoreId(id));
         return "/mail/detail";
     }
+
+    /**
+     * 휴지통에 있는 메일을 영구 삭제
+     */
+
 }

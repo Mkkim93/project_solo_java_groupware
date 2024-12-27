@@ -30,6 +30,8 @@ public class QTodo extends EntityPathBase<Todo> {
 
     public final DateTimePath<java.time.LocalDateTime> todoCreate = createDateTime("todoCreate", java.time.LocalDateTime.class);
 
+    public final StringPath todoDeleted = createString("todoDeleted");
+
     public final DateTimePath<java.time.LocalDateTime> todoEndDate = createDateTime("todoEndDate", java.time.LocalDateTime.class);
 
     public final DateTimePath<java.time.LocalDateTime> todoStartDate = createDateTime("todoStartDate", java.time.LocalDateTime.class);

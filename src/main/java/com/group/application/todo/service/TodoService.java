@@ -5,6 +5,7 @@ import com.group.domain.todo.entity.Todo;
 import com.group.domain.todo.repository.TodoRepository;
 import com.group.domain.todo.repository.TodoQueryRepository;
 import com.group.domain.todo.repository.TodoRepositoryImpl;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -57,5 +58,11 @@ public class TodoService {
     public Integer findById(TodoDTO todoDto) {
         Todo todo = todoRepository.findById(todoDto.getId()).get();
         return todo.getId();
+    }
+
+    public Boolean deleteTodo(Integer todoId) {
+        Todo todo = todoRepository.findById(todoId).orElseThrow(() -> new EntityNotFoundException("find not todoContent!"));
+        Integer updateCount = todoRepository.deleteTodo(todo.getId());
+        return updateCount > 0;
     }
 }

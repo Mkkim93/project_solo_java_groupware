@@ -6,6 +6,10 @@ import com.group.domain.hr.entity.Employee;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.cglib.core.Local;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
@@ -14,6 +18,8 @@ import java.time.ZonedDateTime;
 @Table(name = "todo")
 @Getter @Setter
 @Builder
+@EntityListeners(AuditingEntityListener.class)
+@EnableJpaAuditing
 @AllArgsConstructor
 @NoArgsConstructor
 public class Todo {
@@ -39,18 +45,23 @@ public class Todo {
     @Column(name = "todo_status")
     private String todoStatus; // 일정 상태
 
+    @CreatedDate
     @Column(name = "todo_create", updatable = false)
     private LocalDateTime todoCreate; // 일정 등록일
 
+    @LastModifiedDate
     @Column(name = "todo_update")
     private LocalDateTime todoUpdate;
+
+    @Column(name = "todo_deleted")
+    private String todoDeleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "emp_id")
     private Employee employee;
 
     @PrePersist void createTodo() {
-        this.todoCreate = LocalDateTime.now(); // 일정을 등록한 시점
+        this.todoDeleted = "N";
     }
 
     public Todo setEntity(TodoDTO todoDTO) {

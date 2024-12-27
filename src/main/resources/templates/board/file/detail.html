@@ -55,8 +55,7 @@
 
                         <!-- 파일 다운로드 링크 수정 TODO 나중에 ajax 로 수정 예정 (현재 서버 내렸다가 올려야 사진 올라옴)-->
                         첨부파일: <a th:if="${fileStore.fileName}"
-                                 th:href="@{/board/file/download/{id}(id=${fileStore.id})}"
-                                 class="download-link"
+                                 th:href="@{/board/file/download/{id}(id=${fileStore.id})}" class="download-link"
                                  th:text="${fileStore.getOriginFileName()}">Download</a><br/>
                         <img th:src="|/images/${fileStore.getFileName()}|" class="img-fluid mt-2" alt="파일 미리보기" />
                     </div>

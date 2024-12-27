@@ -14,10 +14,9 @@
     <script src="/js/current.js"></script>
 </head>
 <body>
-
 <div class="dashboard">
     <!-- 사이드바 -->
-    <div class="sidebar">
+    <div class="sidebar-section">
         <div class="profile-section">
             <form th:action="@{/hr/detail}" th:object="${employeeDto}" method="get">
                 <h3 type="text" id="empName" name="empName" th:text="*{empName}"></h3>
@@ -26,8 +25,8 @@
                 <h3 type="text" id="roleType" name="roleType" th:text="${employeeDto.roleType}"></h3>
                 <button type="submit" class="btn">나의 정보</button>
             </form>
-
         </div>
+
         <ul class="menu">
             <li><a href="/hr/home"><i class="fa-solid fa-house"></i> 홈</a></li>
             <li><a href="/board/all/list"><i class="fa-solid fa-pen"></i> 게시판</a></li>
@@ -36,7 +35,7 @@
             <li><a href="#"><i class="fa-regular fa-comments"></i> 메신저</a></li>
             <li><a href="#"><i class="fa-solid fa-pen-to-square"></i> 전자결제</a></li>
             <li><a href="#"><i class="fa-solid fa-gear"></i> 설정</a></li>
-            <li><a href="/admin/view"><i class="fa-solid fa-gear"></i> 관리자 페이지</a></li>
+            <li><a href="/admin/main"><i class="fa-solid fa-gear"></i> 관리자 페이지</a></li>
         </ul>
     </div>
     <!-- 메인 대시보드 -->

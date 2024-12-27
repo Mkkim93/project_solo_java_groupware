@@ -67,11 +67,9 @@ public class EmployeeDTO {
         this.empName = e.getEmpName();
         this.empRegNo = e.getEmpRegNo();
         this.empRank = e.getEmpRank();
-        this.empNickName = e.getEmpNickname();
         this.userTel = e.getUserTel();
         this.userEmail = e.getUserEmail();
         this.empEmail = e.getEmpEmail();
-        this.empMileage = e.getEmpMileage();
         this.empNo = e.getEmpNo();
         this.empTel = e.getEmpTel();
         this.roleType = e.getRoleType();
@@ -87,14 +85,11 @@ public class EmployeeDTO {
         this.empName = e.getEmpName();
         this.empRegNo = e.getEmpRegNo();
         this.userEmail = e.getUserEmail();
-        this.empNickName = e.getEmpNickname();
         this.empRank = e.getEmpRank();
         this.userTel = e.getUserTel();
         this.empNo = e.getEmpNo();
-        this.empMileage = e.getEmpMileage();
         this.empImg = e.getEmpImg();
         this.empTel = e.getEmpTel();
-        this.empJoinDate = e.getEmpJoinDate();
         this.deptId = getDeptId();
         this.attId = getAttId();
         this.roleType = e.getRoleType();

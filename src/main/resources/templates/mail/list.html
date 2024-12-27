@@ -28,25 +28,26 @@
         </div>
 
         <!-- 우측 테이블 영역 -->
-        <div class="col-md-10">
-            <h2 class="text-center mb-4">전체 메일함</h2>
+        <div class="col-md-10" >
             <div>
                 <table class="table table-header table-striped">
-                    <thead>
+                    <thead id="mailTableHead">
+                    <h2 class="text-center mb-4" id="mailTableHeadH2">전체 메일함</h2>
                     <tr>
-                        <th class="text-center">체크 박스</th>
-                        <th class="text-center">즐겨 찾기</th>
-                        <th class="text-center">읽음 상태</th>
-                        <th class="text-center">보낸 사람</th>
-                        <th class="text-center">제목</th>
-                        <th class="text-center">받은 날짜</th>
+                        <th class="text-center"></th>
+                        <th class="text-center"></th>
+                        <th class="text-center"></th>
+                        <th class="text-center"></th>
+                        <th class="text-center"></th>
+                        <th class="text-center"></th>
+                        <th class="text-center"></th>
                     </tr>
                     </thead>
                     <tbody id="mailTableBody">
-                    <!-- List<MailBoxDTO>를 mailBoxList로 처리 -->
+
                     <tr th:each="mail : ${myMailBoxDto}">
 
-                        <input type="hidden" id="mailBoxId" th:text="*{mail.mailBoxId}" class="text-center"/>
+                        <td id="mailBoxId" th:value="*{mail.mailBoxId}" class="text-center"></td>
 
                         <td> <!--체크 박스-->
                             <input type="checkbox">
@@ -102,9 +103,8 @@
         fetch(url)
             .then(response => response.json())
             .then(data => {
-                console.log('fetch to mailType', mailType);
                 console.log(data.content)
-                updateMailTable(data.content); // 목록에는 data 의 content 를 넘겨서 실제 데이터 정보만 바인딩한다
+                updateMailTable(data.content, mailType); // 목록에는 data 의 content 를 넘겨서 실제 데이터 정보만 바인딩한다
                 renderPageNation(mailType, data); // 페이징을 처리할 function 에는 페이징 객체를 모두 넘긴다
                 console.log('fetch to data', data);
             })
@@ -123,9 +123,7 @@
         fetch(url)
             .then(response => response.json())
             .then(data => {
-                console.log('fetch to mailType', receiveType);
-                console.log(data.content)
-                updateMailTable(data.content); // 목록에는 data 의 content 를 넘겨서 실제 데이터 정보만 바인딩한다
+                updateMailTable(data.content, receiveType); // 목록에는 data 의 content 를 넘겨서 실제 데이터 정보만 바인딩한다
                 renderPageNation(receiveType, data); // 페이징을 처리할 function 에는 페이징 객체를 모두 넘긴다
                 console.log('fetch to data', data);
             })
@@ -137,7 +135,6 @@
 
     function loadMailFolderStatus(mailStatus, page) {
         var size = 10;
-        console.log('mailStatus', mailStatus);
         const url = `/api/folder3/${mailStatus}?page=${page}&size=${size}`;
         const mailTableBody = document.getElementById('mailTableBody');
         mailTableBody.innerHTML = '<tr><td colspan="6" class="text-center">Loading...</td></tr>'; // 로딩 표시
@@ -145,10 +142,7 @@
         fetch(url)
             .then(response => response.json())
             .then(data => {
-                console.log('fetch to mailStatus', mailStatus);
-                console.log('data.content', data.content)
-                console.log('data', data);
-                updateMailTable(data.content); // 목록에는 data 의 content 를 넘겨서 실제 데이터 정보만 바인딩한다
+                updateMailTable(data.content, mailStatus); // 목록에는 data 의 content 를 넘겨서 실제 데이터 정보만 바인딩한다
                 renderPageNation(mailStatus, data); // 페이징을 처리할 function 에는 페이징 객체를 모두 넘긴다
                 console.log('fetch to data', data);
             })
@@ -158,22 +152,64 @@
             });
     }
 
-    function updateMailTable(mailList) {
+    function updateMailTable(mailList, mailStatus) {
+        console.log('mailStatus', mailStatus)
+        console.log('mailList', mailList.forEach)
         const mailTableBody = document.getElementById('mailTableBody');
-        console.log('mailList', mailList);
-        console.log('mailList', mailList.forEach);
+        const mailTableHead = document.getElementById('mailTableHead');
+        const mailTableHeadH2 = document.getElementById('mailTableHeadH2');
+
+        let mailType = mailStatus;
+        console.log('mailStatus', mailStatus);
+        console.log('mailType', mailType);
+
 
         mailTableBody.innerHTML = ''; // 기존 데이터 삭제
         if (!Array.isArray(mailList)) {
             mailList = [mailList];
         }
-        mailList.forEach(mail => {
-            console.log('mail', mail);
-            console.log('mail.id', mail.id)
-            console.log('mail.mailBoxId', mail.mailBoxId);
+        const h2 = document.createElement('h2');
 
+        if (mailType === 'TOME') {
+            mailType = '내게쓴메일함';
+        } else if (mailType === 'SENDED') {
+            mailType = '보낸메일함';
+        } else if (mailType === 'IMPORT') {
+            mailType = '중요메일함';
+        } else if (mailType === 'DRAFT') {
+            mailType = '임시보관함';
+        } else if (mailType === 'TRASH') {
+            mailType = '휴지통';
+        } else if (mailType === 'INBOX') {
+            mailType = '받은메일함';
+        }
+
+        console.log('mailType', mailType);
+
+        h2.textContent = mailType;
+        mailTableHeadH2.innerHTML = '';
+        mailTableHeadH2.appendChild(h2);
+
+
+        const theadRow = document.createElement('tr');
+        theadRow.innerHTML = `
+
+          <tr>
+          <td class="text-center"></td>
+          <td class="text-center"></td>
+          <td class="text-center"></td>
+          <td class="text-center"></td>
+          <td class="text-center"></td>
+          <td class="text-center"></td>
+          </tr>
+        `;
+        mailTableHead.innerHTML = '';
+        mailTableHead.appendChild(theadRow);
+
+        mailList.forEach(mail => {
             const row = document.createElement('tr');
             row.innerHTML = `
+                <td class="text-center">${mail.id}</td>
                 <td class="text-center"><input type="checkbox"></td>
                 <td class="text-center"><input type="checkbox" name="isFavorite" ${mail.isFavorite ? 'checked' : ''}></td>
                 <td class="text-center">${mail.readStatus ? 'READ' : 'NOREAD'}</td>
@@ -186,11 +222,6 @@
     }
 
     function renderPageNation(mailStatus, data) {
-        console.log('data.number(현재페이지)', data.number);
-        console.log('data.totalPages(전체페이지)', data.totalPages);
-        console.log('mailStatus', mailStatus);
-        console.log('data.number', data.number);
-        console.log('data.size', data.size);
 
         const paginationElement = document.querySelector('.pagination');
         paginationElement.innerHTML = '';
@@ -200,7 +231,6 @@
             prevButton.innerHTML = `<a href="#" class="btn btn-link">이전</a>`;
             prevButton.addEventListener('click', function () {
                 fetchPage(mailStatus, data.number -1);
-                console.log('fetchPage()', mailStatus)
             })
             paginationElement.appendChild(prevButton);
         }
@@ -228,8 +258,6 @@
     }
 
     function fetchPage(mailStatus, page) {
-        console.log(page);
-        console.log('fetch By mailStatus', mailStatus);
         /*if (mailStatus === 'TOME' || mailStatus === 'INBOX') {
             loadMailFolder(mailStatus, page);
         }

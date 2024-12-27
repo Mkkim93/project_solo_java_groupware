@@ -12,10 +12,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
-import static jakarta.persistence.EnumType.*;
 import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
 
@@ -42,14 +40,24 @@ public class MailBox {
     @Column(name = "mail_date", updatable = false) // 메일 생성 날짜
     private LocalDateTime mailDate;
 
-
-    @Enumerated(STRING)
     @Column(name = "mail_status")
     private MailStatus mailStatus;
+
+    @Column(name = "mail_deleted")
+    private String mailDeleted;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "sender_emp_id")
     private Employee senderEmployee;
+
+    @PrePersist
+    void setMailBox() {
+        this.mailDeleted = "N";
+    }
+
+   /* @Enumerated(STRING)
+    @Column(name = "mail_sendType")
+    private MailSendType mailSendType;*/
 
     @ManyToMany(fetch = LAZY)
     @JoinTable(

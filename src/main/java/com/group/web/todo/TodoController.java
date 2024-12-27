@@ -22,9 +22,9 @@ public class TodoController {
     private final TodoService todoService;
     private final EmployeeService employeeService;
 
-
     @GetMapping("/detail")
-    public String showCalendar(EmployeeDTO employeeDto, Model model, TodoDTO todoDto, @CookieValue(value = "uuid") String empUUID) {
+    public String showCalendar(EmployeeDTO employeeDto, Model model, TodoDTO todoDto,
+                               @CookieValue(value = "uuid") String empUUID) {
         employeeDto.setEmpUUID(empUUID);
         EmployeeDTO dto = employeeService.findByEmployee(employeeDto);
         todoDto.setEmployee(dto);

@@ -216,6 +216,7 @@
     <div>제목테스트</div>
     <button id="closeButton">닫기</button>
     <button id="editButton">수정</button>
+    <button id="deleteButton" onclick="deleteTodo()">삭제</button>
 </dialog>
 <div class="container">
     <div class="sidebar">
@@ -273,6 +274,26 @@
             console.log(todoId);
             window.location.href = '/todo/modify/' + encodeURIComponent(todoId); // URL로 전달
         });
+
+        function deleteTodo() {
+            var id = document.getElementById('data-id').textContent.trim();
+            console.log('todoId', id);
+            const url = `/todo/delete/todos/${id}`;
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(id),
+            }).then(data => {
+                alert("일정이 삭제 되었습니다.")
+                location.reload();
+                console.log('data', data);
+            })
+                .catch(error => {
+                console.log('error', error);
+            })
+        }
 </script>
 </body>
 </html>

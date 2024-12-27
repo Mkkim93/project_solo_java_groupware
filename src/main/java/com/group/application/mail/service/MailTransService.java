@@ -45,4 +45,11 @@ public class MailTransService {
         return mailRepositoryImpl.findByMailReceiveType(mailTransDto, pageable);
     }
 
+    public void mailTransByTrash(Integer mailBoxId) {
+        mailTransRepository.mailTransByTrash(mailBoxId);
+    }
+
+    public void deleteMail(Integer mailBoXId) {
+        mailTransRepository.deleteMailTrans(mailBoXId);
+    }
 }

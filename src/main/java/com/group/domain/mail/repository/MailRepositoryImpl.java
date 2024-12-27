@@ -2,6 +2,7 @@ package com.group.domain.mail.repository;
 
 import com.group.application.mail.dto.*;
 import com.group.domain.mail.entity.MailBox;
+import com.group.domain.mail.entity.enums.IsDeleted;
 import com.group.domain.mail.entity.enums.MailStatus;
 import com.group.domain.mail.entity.enums.MailTypes;
 import com.group.domain.mail.entity.enums.ReceiveType;
@@ -29,10 +30,12 @@ import static com.group.domain.mailfile.entity.QMailFileStore.*;
 public class MailRepositoryImpl extends QuerydslRepositorySupport implements MailRepositoryCustom {
 
     private final JPAQueryFactory jpaQueryFactory;
+    private final MailTransRepository mailTransRepository;
 
-    public MailRepositoryImpl(EntityManager entityManager) {
+    public MailRepositoryImpl(EntityManager entityManager, MailTransRepository mailTransRepository) {
         super(MailBox.class);
         jpaQueryFactory = new JPAQueryFactory(entityManager);
+        this.mailTransRepository = mailTransRepository;
     }
 
     /**
@@ -53,7 +56,9 @@ public class MailRepositoryImpl extends QuerydslRepositorySupport implements Mai
                 .join(mailBox.senderEmployee, employee)
                 .where(
                         mailTrans.employee.id.eq(mailTransDto.getReceiveEmpId())
+                                
                                 .and(mailTrans.receiveType.eq(ReceiveType.valueOf(mailTransDto.getReceiveType())))
+                                .and(mailTrans.isDeleted.eq(IsDeleted.N))
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -84,7 +89,7 @@ public class MailRepositoryImpl extends QuerydslRepositorySupport implements Mai
                                 .and((
                                         mailTrans.receiveType.isNull())
                                 .or(
-                                        mailTrans.receiveType.ne(ReceiveType.valueOf("TRASH"))))
+                                        mailTrans.receiveType.ne(ReceiveType.TRASH))).and(mailTrans.isDeleted.eq(IsDeleted.N))
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -113,8 +118,11 @@ public class MailRepositoryImpl extends QuerydslRepositorySupport implements Mai
                 .join(mailBox.senderEmployee, employee)
                 .where(
                         mailTrans.employee.id.eq(mailBoxDto.getSenderEmployeeId())
-                                .and(mailTrans.receiveType.isNull())
+
+                                .and(
+                                        mailTrans.receiveType.isNull()
                                 .or(mailTrans.receiveType.ne(ReceiveType.valueOf("TRASH")))
+                                ).and(mailTrans.isDeleted.eq(IsDeleted.N))
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -132,11 +140,12 @@ public class MailRepositoryImpl extends QuerydslRepositorySupport implements Mai
 
         return jpaQueryFactory.select(new QMailBoxDTO(
                 mailBox.id, mailBox.senderEmployee.id,
-                mailBox.mailTitle, mailBox.mailContent, employee.empName, mailBox.mailDate))
+                mailBox.mailTitle, mailBox.mailContent, employee.empName, mailBox.mailDate, employee.empEmail))
                 .from(mailBox)
                 .join(mailBox.senderEmployee, employee)
-                .join(mailFileStore.mailBoxFileId, mailBox)
-                .where(mailBox.id.eq(id)).fetchOne();
+                .where(
+                        mailBox.id.eq(id)
+                ).fetchOne();
     }
     /**
      *

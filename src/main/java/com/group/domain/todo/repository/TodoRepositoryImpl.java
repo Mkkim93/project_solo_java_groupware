@@ -30,13 +30,15 @@ public class TodoRepositoryImpl extends QuerydslRepositorySupport implements Tod
 
     @Override
     public List<TodoDTO> findByOneTodo(TodoDTO todoDto) {
-
         List<TodoDTO> result = jpaQueryFactory.select(new QTodoDTO(
                         todo.id, todo.todoType, todo.todoTitle, todo.todoContent,
                         todo.todoStartDate, todo.todoEndDate, todo.todoStatus, todo.employee.id))
                 .from(todo)
                 .join(todo.employee, employee)
-                .where(todo.employee.id.eq(todoDto.getEmployee().getId()))
+                .where(
+                        todo.employee.id.eq(todoDto.getEmployee().getId())
+                                .and(todo.todoDeleted.eq("N"))
+                )
                 .fetch();
         return result;
     }
@@ -48,7 +50,9 @@ public class TodoRepositoryImpl extends QuerydslRepositorySupport implements Tod
                 .set(todo.todoTitle, existTitle(todoDto.getTodoTitle(), todoDto.getId()))
                 .set(todo.todoContent, existContent(todoDto.getTodoContent(), todoDto.getId()))
                 .set(todo.todoUpdate, LocalDateTime.now())
-                .where(todo.id.eq(todoDto.getId()))
+                .where(
+                        todo.id.eq(todoDto.getId())
+                )
                 .execute();
     }
 

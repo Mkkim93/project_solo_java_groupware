@@ -5,22 +5,112 @@
     <title>메일 상세 페이지</title>
 </head>
 <body>
+<table>
+    <thead>
+        <tr>
+            <th class="text-center">첨부파일명</th>
+            <th class="text-center">파일사이즈</th>
+        </tr>
+    </thead>
+    <tbody id="fileListBody">
+        <tr th:each="files :${mailFileDto}">
+            <td th:text="${files.mailFileOriginName}"></td>
+            <td th:text="${files.mailFileSize}"></td>
+        </tr>
+    </tbody>
+</table>
 <div class="container">
-    <strong>mailBoxDTO.id:</strong> <span th:text="${mailBoxDto.id}"></span><br/>
-    <h1 th:text="${mailBoxDto.mailTitle}">제목입니다.</h1>
-
-    <div class="list-group">
-        <ul th:each="files :${mailFileDto}">
-            첨부파일 : <p th:text="${files.mailFileOriginName}"></p>
-            파일크기 : <p th:text="${files.mailFileSize}"></p>
-        </ul>
-    </div>
-    <p class="author" th:text="'보내는 사람: ' + ${mailBoxDto.senderName}">작성자 정보</p>
-    <p th:text="${mailBoxDto.mailContent}">여기에 게시글 내용이 표시됩니다.</p>
+    <input type="hidden" th:text="${mailBoxDto.id}" id="mailBoxId" th:value="${mailBoxDto.id}"><br/>
+    <h1 th:text="${mailBoxDto.mailTitle}">메일 제목 표시</h1>
+    <span class="author" th:text="'보낸 사람: ' + ${mailBoxDto.senderName}">작성자 이름 표시</span>
+    <span th:text="'<' + ${mailBoxDto.empEmail} + '>'">작성자 메일 표시</span>
+    <p th:text="${mailBoxDto.mailContent}">메일 내용 표시</p>
     <div class="actions">
-        <!--<a class="btn" th:href="@{/board/boardmodify/{id}(id = ${boardDTO.id})}">수정</a>
-        <a class="btn delete" th:href="@{/board/boarddetailview/delete/{id}(id=${boardDTO.id})}">삭제</a>-->
+        <button type="button" class="btn trash" onclick="trashMail()">메일 삭제</button>
+        <button type="button" class="btn delete" onclick="mailDelete()">영구 삭제</button>
     </div>
 </div>
 </body>
+<script>
+    function loadFileList() {
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadFileList();
+        });
+
+        const fileTableBody = document.getElementById('fileListBody');
+        fileTableBody.innerHTML = `<tr><td colspan="6" class="text-center">Loading....</td></tr>`;
+        const url = `/api/uploadFiles`;
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                updateFileList(data);
+            })
+            .catch(error => {
+                console.log('error', error);
+                fileTableBody.innerHTML = `<tr><td colspan="6" class="text-center">Fail file Load</td></tr>`;
+            });
+    }
+
+    function updateFileList(fileList) {
+        const fileListBody = document.getElementById('fileListBody');
+        fileListBody.innerHTML = '';
+
+        if (!Array.isArray(fileList)) {
+            fileList = [fileList];
+        }
+
+        fileList.forEach(file => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="text-center">${file.mailFileOriginName}</td>
+                <td class="text-center">${file.mailFileSize}</td>
+            `;
+            fileListBody.appendChild(row);
+        });
+    }
+
+    function trashMail() {
+        const mailBoxId = document.getElementById('mailBoxId').getAttribute('value');
+        console.log('mailBoxId', mailBoxId);
+        const url = `/api/trash?mailBoxId=${mailBoxId}`;
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', // 요청 본문이 JSON임을 명시
+            },
+            body: JSON.stringify({mailBoxId: mailBoxId})
+            })
+            .then(data => {
+                console.log('삭제된 메일 data', data);
+                alert('메일이 삭제 되었습니다.');
+
+                window.location.href = '/mail/list';
+            })
+            .catch(error => {
+                console.log('error', error);
+            })
+    }
+
+    function mailDelete() {
+        const mailBoxId = document.getElementById('mailBoxId').getAttribute('value');
+        const url = `/api/delete?mailBoxId=${mailBoxId}`;
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({mailBoxId: mailBoxId})
+        })
+            .then(data => {
+                console.log('data', data);
+                alert('메일이 영구 삭제 되었습니다.');
+
+                window.location.href = '/mail/list';
+            })
+            .catch(error => {
+                console.log('error', error);
+            })
+    }
+</script>
 </html>

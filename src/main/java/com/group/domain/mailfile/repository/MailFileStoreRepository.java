@@ -1,5 +1,6 @@
 package com.group.domain.mailfile.repository;
 
+import com.group.application.mailfile.dto.MailFileDTO;
 import com.group.domain.mailfile.entity.MailFileStore;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,5 +16,5 @@ public interface MailFileStoreRepository extends JpaRepository<MailFileStore, In
             " mf.mailFileType) " +
             " from MailFileStore mf , MailBox mb " +
             " where mf.mailBoxFileId.id = mb.id and mb.id = :id")
-    List<MailFileStore> findByMailBoxId(@Param("id") Integer id);
+    List<MailFileDTO> findByMailBoxId(@Param("id") Integer id);
 }

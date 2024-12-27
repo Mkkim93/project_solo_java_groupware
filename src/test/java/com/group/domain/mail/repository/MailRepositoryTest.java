@@ -40,8 +40,6 @@ class MailRepositoryTest {
         Assertions.assertThat(myId.getSenderEmployee()).isEqualTo(1);
     }
 
-
-
     @Test
     @DisplayName("메일 조회 (INBOX, TOME)")
     void findMailTome() {
@@ -66,6 +64,13 @@ class MailRepositoryTest {
 
         results.stream().toList().forEach(System.out::println);
     }*/
+
+    @Test
+    @DisplayName("메일 단건 조회")
+    void findByOne() {
+        /*mailRepositoryImpl.findByOne(23);*/
+        mailRepositoryImpl.findByOne(5);
+    }
 }
 
 

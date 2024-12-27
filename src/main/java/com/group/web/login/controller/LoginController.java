@@ -21,6 +21,19 @@ public class LoginController {
     private final CookieUtil cookieUtil;
 
     @GetMapping("/login")
+    public String login() {
+        return "/login";
+    }
+
+    @PostMapping("/loginProc")
+    public String loginProc(@ModelAttribute("employeeDto") EmployeeDTO employeeDto,
+                            HttpServletResponse response) {
+        loginService.login(employeeDto);
+        response.addCookie(cookieUtil.saveCookie(employeeDto));
+        return "redirect:/hr/home";
+    }
+
+    /*@GetMapping("/login")
     public String login(@ModelAttribute("employeeDto") EmployeeDTO employeeDto) {
         return "/login";
     }
@@ -32,7 +45,6 @@ public class LoginController {
         Cookie cookie = cookieUtil.saveCookie(dto);
         response.addCookie(cookie);
         return "redirect:/hr/home";
-    }
-
+    }*/
 }
 

@@ -23,13 +23,13 @@ public interface MailRepository extends JpaRepository<MailBox, Integer> {
             "from mailbox mb " +
             "join mailtrans mt on mb.id = mt.mailBox_id " +
             "join employee e on e.id = mt.emp_id " +
-            "where mb.sender_emp_id = :senderId and mb.mail_status = 'SENDED' " +
+            "where mb.sender_emp_id = :senderId and mb.mail_status = 'SENDED' and mb.mail_deleted = 'N' " +
             "group by mb.id, mb.mail_title, mb.sender_emp_id",
             countQuery = "select count(mb.id) " +
                     "from mailbox mb " +
                     "join mailtrans mt on mb.id = mt.mailbox_id " +
                     "join employee e on e.id = mt.emp_id " +
-                    "where mb.sender_emp_id = :senderId and mb.mail_status = 'SENDED'",
+                    "where mb.sender_emp_id = :senderId and mb.mail_status = 'SENDED' and mb.mail_deleted = 'N' ",
             nativeQuery = true)
     Page<Object[]> findMailboxesWithReceiveTypeBySend(@Param("senderId") Integer senderId, Pageable pageable);
 
@@ -42,7 +42,7 @@ public interface MailRepository extends JpaRepository<MailBox, Integer> {
             "from mailbox mb " +
             "join mailrecvstore mr on mb.id = mr.mailBox_id " +
             "join employee e on e.id = mr.emp_id " +
-            "where mb.sender_emp_id = :senderId and mb.mail_status = 'DRAFT' " +
+            "where mb.sender_emp_id = :senderId and mb.mail_status = 'DRAFT' and mb.mail_deleted = 'N' " +
             "group by mb.id, mb.mail_title, mb.sender_emp_id",
             countQuery = "select count(mb.id) " +
                     "from mailbox mb " +
@@ -53,6 +53,8 @@ public interface MailRepository extends JpaRepository<MailBox, Integer> {
     Page<Object[]> findMailBoxesWithReceiveTypeByDraft(@Param("senderId") Integer senderId, Pageable pageable);
 
     @Modifying
-    @Query(value = "INSERT INTO mailrecvstore (mailbox_id, emp_id) VALUES (:mailboxId, :empId)", nativeQuery = true)
+    @Query(value = "insert into mailrecvstore (mailbox_id, emp_id) values (:mailboxId, :empId)", nativeQuery = true)
     void saveReceiveStore(@Param("mailboxId") Integer mailboxId, @Param("empId") Integer empId);
+
+
 }

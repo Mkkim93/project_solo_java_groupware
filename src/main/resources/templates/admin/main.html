@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/admin.css">
+    <title>Admin Page</title>
+</head>
+<body>
+<script src="/js/admin.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        renderCategory(); // 페이지 로드 후 호출
+    });
+</script>
+<!-- 좌측 고정 메뉴 -->
+<div class="sidebar">
+    <h3>관리자 페이지</h3>
+    <button onclick="renderCategory('register')">직원 정보 등록</button>
+    <button onclick="renderCategory('attendance')">직원 근태 관리</button>
+    <button onclick="renderCategory('management')">직원 정보 관리</button>
+    <button onclick="renderCategory('board')">게시판 관리</button>
+    <button onclick="renderCategory('mail')">메일함 관리</button>
+</div>
+
+<!-- 오른쪽 콘텐츠 -->
+<div class="content" id="content-area"></div>
+
+
+</body>
+</html>

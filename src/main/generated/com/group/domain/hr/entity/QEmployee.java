@@ -26,17 +26,13 @@ public class QEmployee extends EntityPathBase<Employee> {
 
     public final StringPath empEmail = createString("empEmail");
 
-    public final StringPath empImg = createString("empImg");
+    public final DateTimePath<java.time.LocalDateTime> empHireDate = createDateTime("empHireDate", java.time.LocalDateTime.class);
 
-    public final DateTimePath<java.time.LocalDateTime> empJoinDate = createDateTime("empJoinDate", java.time.LocalDateTime.class);
+    public final StringPath empImg = createString("empImg");
 
     public final StringPath empJoinYN = createString("empJoinYN");
 
-    public final NumberPath<Integer> empMileage = createNumber("empMileage", Integer.class);
-
     public final StringPath empName = createString("empName");
-
-    public final StringPath empNickname = createString("empNickname");
 
     public final StringPath empNo = createString("empNo");
 
@@ -47,6 +43,8 @@ public class QEmployee extends EntityPathBase<Employee> {
     public final StringPath empRegNo = createString("empRegNo");
 
     public final StringPath empTel = createString("empTel");
+
+    public final DateTimePath<java.time.LocalDateTime> empTerminationDate = createDateTime("empTerminationDate", java.time.LocalDateTime.class);
 
     public final StringPath empUUID = createString("empUUID");
 

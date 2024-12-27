@@ -10,7 +10,6 @@ public class WeatherController {
 
     @GetMapping("/info")
     public String getWeather() {
-
         return "/weather/info";
     }
 }

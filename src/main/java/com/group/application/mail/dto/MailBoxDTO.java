@@ -1,11 +1,8 @@
 package com.group.application.mail.dto;
 
 import com.group.domain.mail.entity.MailBox;
-import com.group.domain.mail.entity.enums.FavoriteType;
 import com.group.domain.mail.entity.enums.MailStatus;
-import com.group.domain.mail.entity.enums.ReadStatus;
 import com.querydsl.core.annotations.QueryProjection;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -27,6 +24,7 @@ public class MailBoxDTO {
     private String receiverEmail;
     private String receiveEmpNames;
     private LocalDateTime senderMailDate;
+    private String empEmail;
 
     private String favoriteType;
     private String readStatus;
@@ -34,13 +32,6 @@ public class MailBoxDTO {
 
     private Integer receiveEmpId;
     private String receiveType;
-
-    /*mailBox.id,
-    mailTrans.isFavorite,
-    mailTrans.readStatue,
-    employee.empName,
-    mailBox.mailTitle,
-    mailBox.mailDate*/
 
     public MailBoxDTO(Integer id, String mailTitle,
                       Integer senderEmployeeId, String senderName,
@@ -54,13 +45,14 @@ public class MailBoxDTO {
 
     @QueryProjection
     public MailBoxDTO(Integer id, Integer senderEmployeeId,
-                      String mailTitle, String mailContent, String senderName, LocalDateTime mailDate) {
+                      String mailTitle, String mailContent, String senderName, LocalDateTime mailDate, String empEmail) {
         this.id = id;
         this.senderEmployeeId = senderEmployeeId;
         this.mailTitle = mailTitle;
         this.mailContent = mailContent;
         this.senderName = senderName;
         this.mailDate = mailDate;
+        this.empEmail = empEmail;
     }
 
     /**

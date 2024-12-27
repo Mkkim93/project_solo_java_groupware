@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
 @Transactional
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
@@ -27,5 +26,4 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
     @Query("select e from Employee e where e.empUUID = :empUUID")
     EmployeeDTO findByEmployee(@Param("empUUID") String empUUID);
-
 }

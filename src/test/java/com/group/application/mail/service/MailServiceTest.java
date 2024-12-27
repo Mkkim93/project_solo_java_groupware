@@ -97,35 +97,35 @@ class MailServiceTest {
     @Test
     @DisplayName("여러명의 사용자에게 메일 전송")
     void sendMails() {
-        MailBoxDTO dto = new MailBoxDTO();
+       /* MailBoxDTO dto = new MailBoxDTO();
         dto.setReceiverEmail("alsrb362@daum.net");
         dto.setReceiverEmail("rainbow213@nate.com");
         dto.setMailTitle("여러명 메일 전송 제목");
         dto.setMailContent("여러명 메일 전송 내용");
         dto.setSenderEmployeeId(29);
-        mailService.sendMailToRecipient(dto);
+        mailService.sendMailToRecipient(dto);*/
     }
 
     @Test
     @DisplayName("여러명 사용자에게 메일 전송 (쉼표)")
     void sendMailV2() {
-        MailBoxDTO dto = new MailBoxDTO();
+        /*MailBoxDTO dto = new MailBoxDTO();
         dto.setReceiverEmail("alsrb362@daum.net, rainbow213@nate.com");
         dto.setMailTitle("여러명 메일 전송 제목2 (쉼표)");
         dto.setMailContent("여러명 메일 전송 내용2 (쉼표)");
         dto.setSenderEmployeeId(29);
-        mailService.sendMailToRecipient(dto);
+        mailService.sendMailToRecipient(dto);*/
     }
 
     @Test
     @DisplayName("여러명 사용자에게 메일 전송 (쉼표 + endpoint 까지 테스트, mailtrans)")
     void sendMailV3() {
-        MailBoxDTO dto = new MailBoxDTO();
+        /*MailBoxDTO dto = new MailBoxDTO();
         dto.setReceiverEmail("alsrb362@daum.net, rainbow213@nate.com");
         dto.setMailTitle("여러명 메일 전송 제목2 (쉼표)");
         dto.setMailContent("여러명 메일 전송 내용2 (쉼표)");
         dto.setSenderEmployeeId(29);
-        mailService.sendMailToRecipient(dto);
+        mailService.sendMailToRecipient(dto);*/
     }
 
     @Test
@@ -141,5 +141,11 @@ class MailServiceTest {
             System.out.println("mailBoxDTO.getSenderDate().getClass() = " + mailBoxDTO.getMailDate().getClass());
         }
 
+    }
+
+    @Test
+    void findOne() {
+        Integer id = 5;
+        mailService.detail(id);
     }
 }

@@ -155,10 +155,9 @@ public class MailService {
     /**
      * 메일 상세 페이지
      */
+    // TODO
     public MailBoxDTO detail(Integer id) {
-        MailBox mailbox = mailRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("no mailBox id"));
-            return mailRepositoryImpl.findByOne(mailbox.getId());
+            return mailRepositoryImpl.findByOne(id);
     }
 
     public Page<MailBoxDTO> findReceiveTypeBySend(MailBoxDTO mailBoxDto, Pageable pageable) {
@@ -186,4 +185,6 @@ public class MailService {
                 ((Timestamp) row[4]).toLocalDateTime()
         ));
     }
+
+
 }

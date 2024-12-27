@@ -1,0 +1,30 @@
+/* 좌측 메뉴를 고정시키기 */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #333;
+    color: white;
+    padding-top: 20px;
+    padding-left: 20px;
+}
+
+.sidebar button {
+    display: block;
+    background-color: #333333;
+    color: white;
+    padding: 8px;
+    text-decoration: none;
+}
+
+.sidebar button:hover {
+    background-color: #575757;
+}
+
+/* 오른쪽 콘텐츠 영역 */
+.content {
+    margin-left: 270px; /* 메뉴의 너비만큼 왼쪽 마진 추가 */
+    padding: 20px;
+}

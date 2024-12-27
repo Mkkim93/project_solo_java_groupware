@@ -1,10 +1,7 @@
 package com.group.domain.mail.entity;
 
 import com.group.domain.hr.entity.Employee;
-import com.group.domain.mail.entity.enums.FavoriteType;
-import com.group.domain.mail.entity.enums.MailTypes;
-import com.group.domain.mail.entity.enums.ReadStatus;
-import com.group.domain.mail.entity.enums.ReceiveType;
+import com.group.domain.mail.entity.enums.*;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -52,6 +49,10 @@ public class MailTrans {
     @Column(name = "mail_types")
     private MailTypes mailTypes;
 
+    @Enumerated(STRING)
+    @Column(name = "mailtrans_deleted")
+    private IsDeleted isDeleted;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "mailbox_id")
     private MailBox mailBox;
@@ -62,6 +63,7 @@ public class MailTrans {
 
     @PrePersist void createMailTrans() {
         this.readStatue = ReadStatus.NOREAD;
+        this.isDeleted = IsDeleted.N;
     }
 
     public void setReceiveMail(Integer mailBoxId, Integer receiveEmpId, String mailTypes) {

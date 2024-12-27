@@ -1,23 +1,32 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<html lang="en">
 <head>
-    <title>Login</title>
+    <meta charset="UTF-8">
+    <title>loginForm</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="/css/loginform.css">
 </head>
 <body>
-<form th:action="@{/loginProc}" name="loginForm" method="post">
-    <div class="mb-3">
-        <label for="empEmail">
-            <input type="email" id="empEmail" name="empEmail" placeholder="E-mail" required>
-        </label>
+<section class="login-form">
+    <h1>로그인</h1>
+    <h2>도메인을 포함한 로그인 ID를 입력해주세요</h2>
+    <form th:action="@{/loginProc}" name="loginForm" method="post">
+
+        <div class="int-area">
+            <label for="empEmail"></label>
+            <input type="email" name="empEmail" id="empEmail" placeholder="아이디" autocomplete="on" required>
+        </div>
+
+        <div class="int-area">
+            <label for="empPass"></label>
+            <input type="password" name="empPass" id="empPass" placeholder="비밀번호" autocomplete="on" required>
+        </div>
+
+        <button type="submit">로그인</button>
+    </form>
+    <div class="caption">
+        <a href="">비밀번호를 잊어버리셨나요?</a>
     </div>
-    <div class="mb-3">
-        <label for="empPass">
-            <input type="password" id="empPass" name="empPass" placeholder="Password" required>
-        </label>
-    </div>
-    <div class="btn-group" role="group" aria-label="Basic example">
-        <button type="submit" class="btn btn-primary">Sign In</button>
-    </div>
-</form>
+</section>
 </body>
 </html>

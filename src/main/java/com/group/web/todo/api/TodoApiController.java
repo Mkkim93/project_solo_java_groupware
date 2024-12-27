@@ -36,11 +36,24 @@ public class TodoApiController {
                                                   @CookieValue(value = "uuid") String empUUID, Model model) {
         employeeDto.setEmpUUID(empUUID);
         model.addAttribute("employeeDto", employeeService.findByEmployee(employeeDto));
+
         TodoDTO todoDto = new TodoDTO();
+
         todoDto.setEmployee(EmployeeDTO.builder()
                 .id(employee)
                 .build());
+
         List<TodoDTO> todoResult = todoService.findByTodoOne(todoDto);
         return ResponseEntity.ok(todoResult);
+    }
+
+    @PostMapping("/delete/todos/{id}")
+    public ResponseEntity<Void> deleteTodo(@PathVariable("id") Integer todoId) {
+        Boolean isDeleted = todoService.deleteTodo(todoId);
+        if (isDeleted) {
+            return ResponseEntity.noContent().build(); // status code : 204
+        } else {
+            return ResponseEntity.notFound().build(); // status code : 404
+        }
     }
 }
