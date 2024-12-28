@@ -1,0 +1,32 @@
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0; /* 상하 간격 조정 */
+}
+
+.pagination {
+    list-style: none; /* 기본 목록 스타일 제거 */
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 5px; /* 버튼 간 간격 */
+}
+
+.page-item {
+    margin: 0; /* 버튼 간격 초기화 */
+}
+
+.page-link {
+    display: inline-block;
+    padding: 8px 12px;
+    color: #007bff;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.page-link:hover {
+    background-color: #f0f0f0;
+    text-decoration: none;
+}

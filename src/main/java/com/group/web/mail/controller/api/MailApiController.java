@@ -10,6 +10,7 @@ import com.group.application.mailfile.dto.MailFileDTO;
 import com.group.application.mailfile.service.MailFileStoreService;
 import com.group.domain.mail.entity.enums.MailStatus;
 import com.group.domain.mailfile.entity.MailFileStore;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -109,7 +110,6 @@ public class MailApiController {
 
         return null;
     }
-
     /**
      * 메일 삭제 (메일함 -> 휴지통)
      * @return
@@ -123,4 +123,16 @@ public class MailApiController {
     public void delete(@RequestParam(value = "mailBoxId", required = false) Integer mailBoxId) {
         mailTransService.deleteMail(mailBoxId);
     }
+
+    @PostMapping("/api/checked/delete")
+    public void checkedTrash(@RequestParam(value = "mailBoxIds", required = false) List<Integer> mailBoxIds,
+                                          HttpServletResponse response) throws IOException {
+        mailTransService.checkBoxTrashMailBoxId(mailBoxIds);
+        response.sendRedirect("/mail/list");
+    }
+
+    /*@PostMapping("/api/favorite")
+    public void favoriteMail(@RequestParam(value = "mailBoxId", required = false) Integer mailBoxId) {
+        mailTransService.favoriteMail(mailBoxId);
+    }*/
 }

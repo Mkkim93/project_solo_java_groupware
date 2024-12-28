@@ -55,8 +55,7 @@ public class TodoController {
 
     @PostMapping("/modify/update/{id}")
     public String todoUpdateWriting(@PathVariable("id") Integer id,
-                                    @ModelAttribute TodoDTO todoDto,
-                                    HttpServletRequest request, Model model, EmployeeDTO employeeDto,
+                                    @ModelAttribute TodoDTO todoDto, Model model, EmployeeDTO employeeDto,
                                     @CookieValue(value = "uuid") String empUUID) {
         employeeDto.setEmpUUID(empUUID);
         EmployeeDTO dto = employeeService.findByEmployee(employeeDto);

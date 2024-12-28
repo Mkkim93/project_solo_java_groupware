@@ -3,30 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>loginForm</title>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <link rel="stylesheet" href="/css/loginform.css">
+    <link rel="stylesheet" href="/css/login.css">
 </head>
 <body>
-<section class="login-form">
+<div class="login-container">
     <h1>로그인</h1>
     <h2>도메인을 포함한 로그인 ID를 입력해주세요</h2>
     <form th:action="@{/loginProc}" name="loginForm" method="post">
 
-        <div class="int-area">
+        <div class="form-group">
             <label for="empEmail"></label>
             <input type="email" name="empEmail" id="empEmail" placeholder="아이디" autocomplete="on" required>
         </div>
 
-        <div class="int-area">
+        <div class="form-group">
             <label for="empPass"></label>
             <input type="password" name="empPass" id="empPass" placeholder="비밀번호" autocomplete="on" required>
         </div>
 
-        <button type="submit">로그인</button>
+        <button type="submit" class="login-btn">로그인</button>
     </form>
     <div class="caption">
-        <a href="">비밀번호를 잊어버리셨나요?</a>
+        <a href="#">비밀번호를 잊어버리셨나요?</a>
     </div>
-</section>
+</div>
 </body>
 </html>

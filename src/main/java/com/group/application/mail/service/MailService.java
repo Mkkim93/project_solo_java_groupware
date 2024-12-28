@@ -7,6 +7,7 @@ import com.group.application.mailfile.service.MailFileStoreService;
 import com.group.domain.hr.entity.Employee;
 import com.group.domain.hr.repository.EmployeeRepository;
 import com.group.domain.mail.entity.MailBox;
+import com.group.domain.mail.entity.enums.MailStatus;
 import com.group.domain.mail.repository.MailQueryRepository;
 import com.group.domain.mail.repository.MailRepository;
 import com.group.domain.mail.repository.MailRepositoryImpl;
@@ -54,6 +55,7 @@ public class MailService {
                 .mailTitle(mailBoxDto.getMailTitle())
                 .mailContent(mailBoxDto.getMailContent())
                 .mailDate(mailBoxDto.getMailDate())
+                .mailStatus(MailStatus.SENDED) // 나에게 메일을 작성하고 상태를 보낸 상태(SENDED)로 지정
                 .senderEmployee(Employee.builder()
                         .id(mailBoxDto.getSenderEmployeeId())
                         .build())
@@ -78,15 +80,19 @@ public class MailService {
                 .mailTitle(mailBoxDto.getMailTitle())
                 .mailContent(mailBoxDto.getMailContent())
                 .mailDate(mailBoxDto.getMailDate())
-                .mailStatus(mailBoxDto.getMailStatus())
-                .senderEmployee(Employee.builder()
+                .senderEmployee(
+                        Employee.builder()
                         .id(mailBoxDto.getSenderEmployeeId())
-                        .build())
+                        .build()
+                )
+                .mailStatus(mailBoxDto.getMailStatus()
+                )
                 .build();
 
         MailBox result = mailRepository.save(mailBoxEntity);
 
         Integer mailBoxId = result.getId();
+
         mailBoxDto.setId(mailBoxId);
 
         boolean existFile = file.stream().allMatch(MultipartFile::isEmpty);
@@ -95,10 +101,7 @@ public class MailService {
         log.info("existFile", existFile);
 
         // 전송 메일이 파일 존재 여부 확인
-
         saveFile(mailBoxDto.getId(), file);
-
-
         String receiverEmails = mailBoxDto.getReceiverEmail();
 
         List<String> empEmails = Arrays.stream(receiverEmails.split(","))
@@ -110,15 +113,17 @@ public class MailService {
         mailQueryRepository.saveMailBoxIdAndReceiveId(result.getId(), byEmpId);
 
         // logic 3-1) 임시 저장
-        if (mailBoxDto.getMailStatus().name().equals("DRAFT")) {
-            return;
-        }
+        if (result.getMailStatus() == MailStatus.DRAFT) {
+            log.info("result.getMailStatus={}", result.getMailStatus());
+            log.info("result.getClass={}", result.getClass());
 
+        }
         // logic 3-2) 최종 메일 발송
-        if (mailBoxDto.getMailStatus().name().equals("SENDED")) {
-            mailTransService.saveV2(result.getId(), byEmpId);
+        if (result.getMailStatus() == MailStatus.SENDED) {
+            mailTransService.saveAll(mailBoxId, byEmpId);
         }
     }
+
 
     // 메일을 전송할 때 메일 저장에 실패하면 예외를 던진다
     // 메일에 파일이 첨부되었을 때 파일 전송에 실패해도 메일을 전송 요청을 거부하도록 로직을 구성해야될듯
@@ -185,6 +190,5 @@ public class MailService {
                 ((Timestamp) row[4]).toLocalDateTime()
         ));
     }
-
 
 }

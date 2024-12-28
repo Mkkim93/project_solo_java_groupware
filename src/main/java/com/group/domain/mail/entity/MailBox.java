@@ -1,6 +1,7 @@
 package com.group.domain.mail.entity;
 
 import com.group.domain.hr.entity.Employee;
+import com.group.domain.mail.entity.enums.IsDeleted;
 import com.group.domain.mail.entity.enums.MailStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static jakarta.persistence.EnumType.*;
 import static jakarta.persistence.FetchType.*;
 import static jakarta.persistence.GenerationType.*;
 
@@ -40,6 +42,7 @@ public class MailBox {
     @Column(name = "mail_date", updatable = false) // 메일 생성 날짜
     private LocalDateTime mailDate;
 
+    @Enumerated(value = STRING)
     @Column(name = "mail_status")
     private MailStatus mailStatus;
 
@@ -76,5 +79,6 @@ public class MailBox {
        this.mailDate = mailDate;
        this.senderEmployee = senderEmployee;
        this.mailStatus = mailStatus;
+
     }
 }

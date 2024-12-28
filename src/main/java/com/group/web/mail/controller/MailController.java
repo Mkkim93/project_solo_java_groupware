@@ -4,6 +4,7 @@ import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.hr.service.EmployeeService;
 import com.group.application.mail.dto.MailBoxDTO;
 import com.group.application.mail.service.MailService;
+import com.group.application.mail.service.MailTransService;
 import com.group.application.mailfile.dto.MailFileDTO;
 import com.group.application.mailfile.service.MailFileStoreService;
 import com.group.domain.mail.entity.enums.MailStatus;
@@ -27,6 +28,7 @@ public class MailController {
     private final MailService mailService;
     private final EmployeeService employeeService;
     private final MailFileStoreService mailFileStoreService;
+    private final MailTransService mailTransService;
 
     @GetMapping("/list")
     public String sendMailBox(Model model, MailBoxDTO mailBoxDto, EmployeeDTO employeeDto,
@@ -113,8 +115,9 @@ public class MailController {
         return "/mail/detail";
     }
 
+
     /**
-     * 휴지통에 있는 메일을 영구 삭제
+     * checkBox 를 사용하여 메일을 처리
      */
 
 }

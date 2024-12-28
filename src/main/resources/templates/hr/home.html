@@ -98,22 +98,24 @@
         </div>
 
         <section class="notifications">
-            <div class="notification-card">
-                <h3>최근 알림</h3>
-                <ul>
+            <div class="notification-card1">
+                <h3 class="text-center">최근 알림</h3>
+                <ul id="notifications1">
                     <li>알림 제목 test1 : 알림 내용 test1</li>
                     <li>알림 제목 test2 : 알림 내용 test2</li>
                     <li>알림 제목 test3 : 알림 내용 test3</li>
                 </ul>
             </div>
-            <div class="notification-card">
-                <h3>사내 공지</h3>
-                <ul>
-                    <li>공지 제목 test1: 공지가 들어갈 곳입니다1</li>
-                    <li>공지 제목 test2: 공지가 들어갈 곳입니다1</li>
+
+
+            <div class="notification-card2">
+                <h3 class="text-center">사내 공지</h3>
+                <ul id="notifications2"> <!-- Correct the id to match the one in your JS -->
+                    <!-- List will be dynamically filled -->
                 </ul>
             </div>
         </section>
+
     </div>
 </div>
 
@@ -141,10 +143,7 @@
             success: function (res) {
                 alert("출근이 정상적으로 처리 되었습니다.");
                 document.getElementById('checkInTime').innerHTML = currentTime;
-                console.log('id', id);
-                console.log('employee', employee);
-                console.log('attOn', attOn);
-                console.log("출근 완료", res);
+                location.reload();
             },
             error: function (err) {
                 console.log("출근 실패", err);
@@ -229,11 +228,56 @@
             }
         }
     });
+
+    // 공지사항을 불러오는 함수
+    // 공지사항을 불러오는 함수
+    function loadNoticeContent() {
+        const url = '/api/notice';  // API 엔드포인트 (서버에서 공지사항 데이터를 반환한다고 가정)
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                console.log('data', data);  // Check the structure of the data
+                console.log('data.content', data.content);  // If data.content exists, use it
+                updateNoticeTable(data.content);  // Pass the content of the notices to the update function
+            })
+            .catch(error => {
+                console.log('Error:', error);
+            });
+    }
+
+    // 공지사항 목록을 업데이트하는 함수
+    function updateNoticeTable(noticeData) {
+        const noticeList = document.getElementById("notifications2");  // Ensure this matches the HTML id
+        noticeList.innerHTML = '';  // 기존 공지사항 목록을 초기화
+
+        if (!Array.isArray(noticeData)) {
+            noticeData = [noticeData];  // If noticeData is not an array, convert it to one
+        }
+
+        // noticeData 배열을 순회하면서 동적으로 공지사항을 추가
+        noticeData.forEach(data => {
+            console.log('data.boardTitle', data.boardTitle);
+            console.log('data.boardRegDate', data.boardRegDate);
+
+            // 각 공지사항을 나타내는 <li> 엘리먼트를 생성
+            const listItem = document.createElement("li");
+            listItem.classList.add("text-center");
+
+            // 공지 제목과 날짜를 동적으로 추가
+            listItem.innerHTML = `
+            <strong class="text-center">${data.boardTitle}</strong>: ${data.boardRegDate}
+        `;
+
+            // <ul>에 <li> 추가
+            noticeList.appendChild(listItem);
+        });
+    }
 </script>
 <script>
-    // DOMContentLoaded 이벤트로 HTML 로드가 완료된 후 함수를 호출
+    // 페이지 로드 시 시간 갱신과 공지사항 불러오기
     document.addEventListener("DOMContentLoaded", function() {
-        updateTime();  // 페이지 로드시 시간을 갱신하는 함수 호출
+        loadNoticeContent(); // 페이지 로드시 공지사항을 불러옴
+        updateTime();        // 페이지 로드시 시간을 갱신
     });
 </script>
 </body>

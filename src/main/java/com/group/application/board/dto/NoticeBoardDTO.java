@@ -5,6 +5,7 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.aspectj.weaver.ast.Not;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 
@@ -42,5 +43,11 @@ public class NoticeBoardDTO {
         this.boardContent = noticeBoardDto.getBoardContent();
         this.employee = employeeDto;
         return this;
+    }
+
+    public NoticeBoardDTO(Integer id, String boardTitle, LocalDateTime boardRegDate) {
+        this.id = id;
+        this.boardTitle = boardTitle;
+        this.boardRegDate = boardRegDate;
     }
 }

@@ -14,6 +14,7 @@ import static jakarta.persistence.GenerationType.*;
 @Table(name = "noticeboard")
 @Getter @Setter
 @NoArgsConstructor
+@NamedEntityGraph(name = "Board.all", attributeNodes = @NamedAttributeNode("board"))
 public class NoticeBoard {
 
     @Id @GeneratedValue(strategy = IDENTITY)

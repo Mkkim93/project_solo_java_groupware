@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>메일함</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/mail.css">
+
 </head>
 <body>
 <div class="container">
@@ -33,32 +35,26 @@
                 <table class="table table-header table-striped">
                     <thead id="mailTableHead">
                     <h2 class="text-center mb-4" id="mailTableHeadH2">전체 메일함</h2>
+                    <button type="submit" id="deleteButton">메일 삭제</button>
                     <tr>
-                        <th class="text-center"></th>
-                        <th class="text-center"></th>
-                        <th class="text-center"></th>
-                        <th class="text-center"></th>
-                        <th class="text-center"></th>
-                        <th class="text-center"></th>
-                        <th class="text-center"></th>
+                        <th class="text-center"><input type="checkbox" class="ck-all"></th><!--mailBoxId-->
+                        <th class="text-center">중요메일</th><!--favorite-->
+                        <th class="text-center">읽음상태</th><!--readStatus-->
+                        <th class="text-center">보낸사람</th><!--senderEmpName-->
+                        <th class="text-center">제목</th><!--mailTitle-->
+                        <th class="text-center">보낸날짜</th><!--mailDate-->
                     </tr>
                     </thead>
                     <tbody id="mailTableBody">
-
+                    <form id="deleteForm" action="/api/checked/delete" method="POST" style="display:none;">
                     <tr th:each="mail : ${myMailBoxDto}">
-
-                        <td id="mailBoxId" th:value="*{mail.mailBoxId}" class="text-center"></td>
-
-                        <td> <!--체크 박스-->
-                            <input type="checkbox">
+                        <td class="text-center"> <!--체크 박스-->
+                            <input type="checkbox" class="ck" name="mailBoxIds" th:value="${mail.mailBoxId}">
                         </td>
-
                         <td> <!--즐겨찾기-->
-                            <form method="post" action="/update-favorite" class="text-center">
                                 <input type="checkbox" name="isFavorite" value="true" id="favorite-checkbox"
                                        onchange="this.form.submit()" />
                                 <label for="favorite-checkbox"></label>
-                            </form>
                         </td>
 
                         <td id="readStatus" name="readStatus" th:text="*{mail.readStatus}" class="text-center"></td>
@@ -71,8 +67,10 @@
 
                         <td id="mailDate" th:text="*{mail.mailDate}" class="text-center"></td>
                     </tr>
+                    </form>
                     </tbody>
                 </table>
+                <div class="pagination-container">
                 <div class="pagination">
                     <li th:if="${myMailBoxDto.hasPrevious()}">
                         <a th:href="@{/mail/list(page=${myMailBoxDto.number - 1})}" class="btn btn-link">이전</a>
@@ -86,6 +84,7 @@
                     <li th:if="${myMailBoxDto.hasNext()}">
                         <a th:href="@{/mail/list(page=${myMailBoxDto.number + 1})}" class="btn btn-link">다음</a>
                     </li>
+                </div>
                 </div>
             </div>
             </div>
@@ -195,7 +194,7 @@
         theadRow.innerHTML = `
 
           <tr>
-          <td class="text-center"></td>
+          <td class="text-center"><input type="checkbox" class="ck-all"></td>
           <td class="text-center"></td>
           <td class="text-center"></td>
           <td class="text-center"></td>
@@ -205,17 +204,17 @@
         `;
         mailTableHead.innerHTML = '';
         mailTableHead.appendChild(theadRow);
-
         mailList.forEach(mail => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td class="text-center">${mail.id}</td>
-                <td class="text-center"><input type="checkbox"></td>
+                <form id="deleteForm" action="/api/checked/delete" method="POST" style="display:none;">
+                <td class="text-center"><input type="checkbox"  name="mailBoxIds" class="ck" value="${mail.id}"></td>
                 <td class="text-center"><input type="checkbox" name="isFavorite" ${mail.isFavorite ? 'checked' : ''}></td>
                 <td class="text-center">${mail.readStatus ? 'READ' : 'NOREAD'}</td>
                 <td class="text-center">${mail.senderName}</td>
                 <td class="text-center"><a href="/mail/detail?id=${mail.id}">${mail.mailTitle}</a></td>
                 <td class="text-center">${mail.mailDate}</td>
+                </form>
             `;
             mailTableBody.appendChild(row);
         });
@@ -289,5 +288,6 @@
         window.location.href = '/mail/list';
     }
 </script>
+<script src="/js/checkbox.js"></script>
 </body>
 </html>

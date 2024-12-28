@@ -125,25 +125,47 @@ body {
     margin-top: 20px;
 }
 
-.notification-card {
+.notification-card1 {
     background-color: #ecf0f1;
     padding: 20px;
     border-radius: 10px;
     width: 48%;
 }
 
-.notification-card h3 {
+.notification-card1 h3 {
     margin-bottom: 15px;
 }
 
-.notification-card ul {
+.notification-card1 ul {
     list-style-type: none;
     padding: 0;
 }
 
-.notification-card ul li {
+.notification-card1 ul li {
     margin-bottom: 10px;
 }
+
+.notification-card2 {
+    background-color: #ecf0f1;
+    padding: 20px;
+    border-radius: 10px;
+    width: 48%;
+}
+
+.notification-card2 h3 {
+    margin-bottom: 15px;
+}
+
+.notification-card2 ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.notification-card2 ul li {
+    margin-bottom: 10px;
+}
+
+
 
 .attendance-buttons {
     display: flex;

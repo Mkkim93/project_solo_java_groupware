@@ -63,7 +63,17 @@ public class MailTrans {
 
     @PrePersist void createMailTrans() {
         this.readStatue = ReadStatus.NOREAD;
-        this.isDeleted = IsDeleted.N;
+        this.isDeleted = IsDeleted.valueOf("N");
+    }
+
+    public MailTrans(Integer mailBoxId, Integer empId, String mailTypes) {
+        this.mailBox = MailBox.builder()
+                .id(mailBoxId)
+                .build();
+        this.employee = Employee.builder()
+                .id(empId)
+                .build();
+        this.mailTypes = MailTypes.valueOf(mailTypes);
     }
 
     public void setReceiveMail(Integer mailBoxId, Integer receiveEmpId, String mailTypes) {

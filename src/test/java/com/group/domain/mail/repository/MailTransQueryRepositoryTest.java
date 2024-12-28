@@ -1,6 +1,5 @@
 package com.group.domain.mail.repository;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,24 +8,23 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 @SpringBootTest
-class MailTransRepositoryTest {
+class MailTransQueryRepositoryTest {
 
-    @Autowired MailTransRepository mailTransRepository;
-
-    @Test
-    void mailBoxTrash() {
-        Integer result = mailTransRepository.mailTransByTrash(1);
-        Assertions.assertThat(result).isEqualTo(1);
-    }
+    @Autowired MailTransQueryRepository mqry;
 
     @Test
-    @DisplayName("체크박스로 선택된 mailBoxIds 를 벌크삭제")
-    void bulkTrash() {
+    @DisplayName("체크박스에 해당된 데이터 bulk update")
+    void bulkTest() {
         List<Integer> list = new ArrayList<>();
         list.add(2);
         list.add(3);
         list.add(5);
+
+        mqry.bulkTrashUpdate(list);
+
     }
 
 }

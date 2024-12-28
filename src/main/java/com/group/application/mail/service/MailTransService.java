@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.support.GroovyWebApplicationContext;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -33,8 +34,14 @@ public class MailTransService {
         mailTransRepository.save(mailTrans);
     }
 
-    public void saveV2(Integer mailBoxId, List<Integer> empId) {
-        mailTransQueryRepository.saveV2(mailBoxId, empId);
+    public void saveAll(Integer mailBoxId, List<Integer> empIds) {
+        String mailTypes = "INBOX";
+        List<MailTrans> mailTransList = new ArrayList<>();
+        for (Integer empId : empIds) {
+            MailTrans result = new MailTrans(mailBoxId, empId, mailTypes);
+            mailTransList.add(result);
+        }
+        mailTransRepository.saveAll(mailTransList);
     }
 
     public Page<MailTransDTO> typeByMailSearch(MailTransDTO mailTransDto, Pageable pageable) {
@@ -52,4 +59,12 @@ public class MailTransService {
     public void deleteMail(Integer mailBoXId) {
         mailTransRepository.deleteMailTrans(mailBoXId);
     }
+
+    public void checkBoxTrashMailBoxId(List<Integer> mailBoxIds) {
+        mailTransQueryRepository.bulkTrashUpdate(mailBoxIds);
+    }
+
+    /*public void favoriteMail(Integer mailBoxId) {
+        mailTransRepository.favoriteMailTrans(mailBoxId);
+    }*/
 }

@@ -6,6 +6,7 @@ import com.group.application.hr.service.EmployeeService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class HomeController {
     private final AttendanceService attendanceService;
 
     @GetMapping("/home")
-    public String home(@CookieValue("uuid") String empUUID,  Model model, EmployeeDTO employeeDto) {
+    public String home(@CookieValue("uuid") String empUUID, Model model, EmployeeDTO employeeDto) {
         employeeDto.setEmpUUID(empUUID);
         EmployeeDTO dto = employeeService.findByEmployee(employeeDto);
         model.addAttribute("employeeDto", dto);
