@@ -76,14 +76,6 @@ public class Employee {
     @JoinColumn(name = "dept_id")  // 부서 정보 (department PK)
     private Department department; // 실제 db Employee 테이블에 있는 department 의 외래 키
 
-    // MailBox 엔티티와의 다대다 관계 설정 (수신한 메일)
-    @ManyToMany(mappedBy = "receiverEmployees", fetch = FetchType.LAZY)
-    private List<MailBox> receivedMailBoxes = new ArrayList<>();
-
-    // MailBox 엔티티와의 일대다 관계 설정 (보낸 메일)
-    @OneToMany(mappedBy = "senderEmployee", fetch = FetchType.LAZY)
-    private List<MailBox> sentMailBoxes = new ArrayList<>();
-
     // 사원 등록 시점에 생성되는 데이터
     // 현재 날짜, 사원으 uuid (pk 대신 검증하기 위한 조건 데이터)
     @PrePersist void createInfo() {

@@ -1,6 +1,9 @@
 package com.group.domain.mail.repository;
 
+import com.group.application.mail.dto.MailBoxDTO;
 import com.group.domain.mail.entity.MailBox;
+import jakarta.validation.Valid;
+import org.apache.catalina.LifecycleState;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,10 +13,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Transactional
 @Repository
 public interface MailRepository extends JpaRepository<MailBox, Integer> {
 
+    // TODO 메서드 이름 수정 필요 (기능은 작동됨)
     @Query(value = "select " +
             "mb.id, " +
             "mb.mail_Title, " +
@@ -33,6 +39,7 @@ public interface MailRepository extends JpaRepository<MailBox, Integer> {
             nativeQuery = true)
     Page<Object[]> findMailboxesWithReceiveTypeBySend(@Param("senderId") Integer senderId, Pageable pageable);
 
+    // TODO 메서드 이름 수정 필요 (기능은 작동됨)
     @Query(value = "select " +
             "mb.id, " +
             "mb.mail_Title, " +
@@ -55,6 +62,5 @@ public interface MailRepository extends JpaRepository<MailBox, Integer> {
     @Modifying
     @Query(value = "insert into mailrecvstore (mailbox_id, emp_id) values (:mailboxId, :empId)", nativeQuery = true)
     void saveReceiveStore(@Param("mailboxId") Integer mailboxId, @Param("empId") Integer empId);
-
 
 }

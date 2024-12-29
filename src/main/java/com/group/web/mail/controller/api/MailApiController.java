@@ -131,8 +131,9 @@ public class MailApiController {
         response.sendRedirect("/mail/list");
     }
 
-    /*@PostMapping("/api/favorite")
-    public void favoriteMail(@RequestParam(value = "mailBoxId", required = false) Integer mailBoxId) {
-        mailTransService.favoriteMail(mailBoxId);
-    }*/
+    @GetMapping("/api/details")
+    public ResponseEntity<?> mailDetail(@RequestParam(value = "id", required = false) Integer mailBoxId) {
+
+        return null;
+    }
 }

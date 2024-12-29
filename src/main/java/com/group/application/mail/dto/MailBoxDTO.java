@@ -5,8 +5,11 @@ import com.group.domain.mail.entity.enums.MailStatus;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.catalina.LifecycleState;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -25,6 +28,7 @@ public class MailBoxDTO {
     private String receiveEmpNames;
     private LocalDateTime senderMailDate;
     private String empEmail;
+    private String receiverEmailCC;
 
     private String favoriteType;
     private String readStatus;
@@ -32,6 +36,12 @@ public class MailBoxDTO {
 
     private Integer receiveEmpId;
     private String receiveType;
+
+    private String empNameTO;
+    private String empNameCC;
+
+    private String empEmailsTO;
+    private String empEmailsCC;
 
     public MailBoxDTO(Integer id, String mailTitle,
                       Integer senderEmployeeId, String senderName,
@@ -45,14 +55,22 @@ public class MailBoxDTO {
 
     @QueryProjection
     public MailBoxDTO(Integer id, Integer senderEmployeeId,
-                      String mailTitle, String mailContent, String senderName, LocalDateTime mailDate, String empEmail) {
+                      String mailTitle, String mailContent,
+                      String senderName, String empEmail, String empEmailsTO,
+                      String empNameTO, String empEmailsCC, String empNameCC,
+                      LocalDateTime mailDate) {
         this.id = id;
         this.senderEmployeeId = senderEmployeeId;
         this.mailTitle = mailTitle;
         this.mailContent = mailContent;
         this.senderName = senderName;
-        this.mailDate = mailDate;
         this.empEmail = empEmail;
+        this.empEmailsTO = empEmailsTO;
+        this.empEmailsCC = empEmailsCC;
+        this.mailDate = mailDate;
+        this.empNameTO = empNameTO;
+        this.empNameCC = empNameCC;
+
     }
 
     /**

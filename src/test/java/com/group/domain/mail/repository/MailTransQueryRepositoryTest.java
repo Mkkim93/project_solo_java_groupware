@@ -27,4 +27,10 @@ class MailTransQueryRepositoryTest {
 
     }
 
+    @Test
+    @DisplayName("메일의 참조자 조회")
+    void findCC() {
+
+    }
+
 }

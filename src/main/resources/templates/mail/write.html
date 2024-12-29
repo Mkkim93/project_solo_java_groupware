@@ -18,6 +18,14 @@
         </div>
 
         <div class="mb-3">
+            <label for="receiverEmailCC" class="form-label">참조자
+                <input type="text" id="receiverEmailCC" name="receiverEmailCC"  th:field="*{receiverEmailCC}"
+                       class="form-control" placeholder="참조할 메일 주소를 입력하세요 (쉼표를 사용하여 여러명의 메일 주소 입력하세요)" required>
+            </label>
+        </div>
+
+
+        <div class="mb-3">
             <label for="senderEmployeeId" class="form-label">
             <input type="hidden" id="senderEmployeeId" name="senderEmployeeId" th:value="${employeeDto.id}"
                    class="form-control">

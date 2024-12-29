@@ -62,14 +62,6 @@ public class MailBox {
     @Column(name = "mail_sendType")
     private MailSendType mailSendType;*/
 
-    @ManyToMany(fetch = LAZY)
-    @JoinTable(
-            name = "mailrecvstore",
-            joinColumns = @JoinColumn(name = "mailbox_id"),
-            inverseJoinColumns = @JoinColumn(name = "emp_id")
-    )
-    private List<Employee> receiverEmployees;
-
     @Builder
     public MailBox(Integer id, String mailTitle, String mailContent,
                    LocalDateTime mailDate, Employee senderEmployee, MailStatus mailStatus) {

@@ -1,21 +1,20 @@
 package com.group.application.mail.service;
 
 import com.group.application.hr.dto.EmployeeDTO;
+import com.group.application.hr.dto.EmployeeEmailDto;
 import com.group.application.mail.dto.MailBoxDTO;
 import com.group.application.mail.dto.MyMailBoxDTO;
 import com.group.application.mailfile.service.MailFileStoreService;
 import com.group.domain.hr.entity.Employee;
 import com.group.domain.hr.repository.EmployeeRepository;
 import com.group.domain.mail.entity.MailBox;
+import com.group.domain.mail.entity.enums.ISCC;
 import com.group.domain.mail.entity.enums.MailStatus;
 import com.group.domain.mail.repository.MailQueryRepository;
 import com.group.domain.mail.repository.MailRepository;
 import com.group.domain.mail.repository.MailRepositoryImpl;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -72,6 +72,7 @@ public class MailService {
         return mailBoxDto.toDTO(result);
     }
 
+    // TODO InvocationTargetException 예외 처리 로직 구현 예정
     public void sendMailToRecipient(MailBoxDTO mailBoxDto, List<MultipartFile> file) {
 
         // logic 1 : mailBox 에 데이터 저장
@@ -82,8 +83,8 @@ public class MailService {
                 .mailDate(mailBoxDto.getMailDate())
                 .senderEmployee(
                         Employee.builder()
-                        .id(mailBoxDto.getSenderEmployeeId())
-                        .build()
+                                .id(mailBoxDto.getSenderEmployeeId())
+                                .build()
                 )
                 .mailStatus(mailBoxDto.getMailStatus()
                 )
@@ -95,6 +96,7 @@ public class MailService {
 
         mailBoxDto.setId(mailBoxId);
 
+        // TODO
         boolean existFile = file.stream().allMatch(MultipartFile::isEmpty);
 
         file.stream().toList().forEach(System.out::println);
@@ -102,15 +104,30 @@ public class MailService {
 
         // 전송 메일이 파일 존재 여부 확인
         saveFile(mailBoxDto.getId(), file);
-        String receiverEmails = mailBoxDto.getReceiverEmail();
 
+        // 실제 수신자의 mail 주소 , 로 구분
+        String receiverEmails = mailBoxDto.getReceiverEmail();
         List<String> empEmails = Arrays.stream(receiverEmails.split(","))
+                .filter(email -> email.matches("[^@]+@[^@]+\\.[^@]+"))
+                .map(String::trim)
+                .collect(Collectors.toList());
+
+        // 참조자들의 mail 주소 , 로 구분
+        String receiverEmailCC = mailBoxDto.getReceiverEmailCC();
+        List<String> empEmailsCC = Arrays.stream(receiverEmailCC.split(","))
+                .filter(email -> email.matches("[^@]+@[^@]+\\.[^@]+"))
                 .map(String::trim)
                 .collect(Collectors.toList());
 
         // logic 2 : mailrecvstore 에 데이터 저장
-        List<Integer> byEmpId = findByEmpId(empEmails);
-        mailQueryRepository.saveMailBoxIdAndReceiveId(result.getId(), byEmpId);
+
+        ISCC ccTypeTo = ISCC.TO;
+        List<Integer> byEmpIdTO = findByEmpId(empEmails);
+        mailQueryRepository.saveMailBoxIdAndReceiveId(result.getId(), byEmpIdTO, ccTypeTo);
+
+        ISCC ccTypeCC = ISCC.CC;
+        List<Integer> byEmpIdCC = findByEmpId(empEmailsCC);
+        mailQueryRepository.saveMailBoxIdAndReceiveIdCC(result.getId(), byEmpIdCC, ccTypeCC);
 
         // logic 3-1) 임시 저장
         if (result.getMailStatus() == MailStatus.DRAFT) {
@@ -118,9 +135,14 @@ public class MailService {
             log.info("result.getClass={}", result.getClass());
 
         }
+        // 수신자와 참조자의 id 를 합친다
+        List<Integer> totalccTypeId = new ArrayList<>();
+        totalccTypeId.addAll(byEmpIdTO);
+        totalccTypeId.addAll(byEmpIdCC);
+
         // logic 3-2) 최종 메일 발송
         if (result.getMailStatus() == MailStatus.SENDED) {
-            mailTransService.saveAll(mailBoxId, byEmpId);
+            mailTransService.saveAll(mailBoxId, totalccTypeId);
         }
     }
 
@@ -158,11 +180,11 @@ public class MailService {
     }
 
     /**
-     * 메일 상세 페이지
+     * 메일 상세 페이지 수신자 조회
      */
-    // TODO
-    public MailBoxDTO detail(Integer id) {
-            return mailRepositoryImpl.findByOne(id);
+    // TODO 잠시 닫음
+    public List<MailBoxDTO> detailTO(Integer mailBoxId, Integer empId) {
+        return mailRepositoryImpl.findByOneV2toTO(mailBoxId, empId);
     }
 
     public Page<MailBoxDTO> findReceiveTypeBySend(MailBoxDTO mailBoxDto, Pageable pageable) {
@@ -189,6 +211,14 @@ public class MailService {
                 (String) row[3],
                 ((Timestamp) row[4]).toLocalDateTime()
         ));
+    }
+
+    public List<EmployeeEmailDto> findByDetailTO(Integer mailBoxId) {
+        return mailQueryRepository.findByMailReceiverTo(mailBoxId);
+    }
+
+    public List<EmployeeEmailDto> findByDetailCC(Integer mailBoxId) {
+        return mailQueryRepository.findByMailReceiverCC(mailBoxId);
     }
 
 }

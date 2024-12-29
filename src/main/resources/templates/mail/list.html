@@ -51,7 +51,7 @@
                         <td class="text-center"> <!--체크 박스-->
                             <input type="checkbox" class="ck" name="mailBoxIds" th:value="${mail.mailBoxId}">
                         </td>
-                        <td> <!--즐겨찾기-->
+                        <td class="text-center"> <!--즐겨찾기-->
                                 <input type="checkbox" name="isFavorite" value="true" id="favorite-checkbox"
                                        onchange="this.form.submit()" />
                                 <label for="favorite-checkbox"></label>
@@ -159,9 +159,6 @@
         const mailTableHeadH2 = document.getElementById('mailTableHeadH2');
 
         let mailType = mailStatus;
-        console.log('mailStatus', mailStatus);
-        console.log('mailType', mailType);
-
 
         mailTableBody.innerHTML = ''; // 기존 데이터 삭제
         if (!Array.isArray(mailList)) {
@@ -188,7 +185,6 @@
         h2.textContent = mailType;
         mailTableHeadH2.innerHTML = '';
         mailTableHeadH2.appendChild(h2);
-
 
         const theadRow = document.createElement('tr');
         theadRow.innerHTML = `

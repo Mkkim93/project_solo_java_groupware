@@ -1,14 +1,13 @@
 package com.group.web.mail.controller;
 
 import com.group.application.hr.dto.EmployeeDTO;
+import com.group.application.hr.dto.EmployeeEmailDto;
 import com.group.application.hr.service.EmployeeService;
 import com.group.application.mail.dto.MailBoxDTO;
 import com.group.application.mail.service.MailService;
 import com.group.application.mail.service.MailTransService;
-import com.group.application.mailfile.dto.MailFileDTO;
 import com.group.application.mailfile.service.MailFileStoreService;
 import com.group.domain.mail.entity.enums.MailStatus;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -109,9 +109,31 @@ public class MailController {
     }
 
     @GetMapping("/detail")
-    public String detail(@RequestParam("id") Integer id, Model model) {
-        model.addAttribute("mailBoxDto", mailService.detail(id));
+    public String detail(@RequestParam("id") Integer id, Model model,
+                         @CookieValue("uuid") String empUUID, EmployeeDTO employeeDto) {
+
+        employeeDto.setEmpUUID(empUUID);
+        EmployeeDTO empDto = employeeService.findByEmployee(employeeDto);
+
+        MailBoxDTO mailBoxFindOne = mailService.detailTO(id, empDto.getId())
+                .stream()
+                .filter(dto -> dto.getId().equals(id)) // 조건: id가 같은 메일 찾기
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("해당 메일이 없습니다."));
+        List<EmployeeEmailDto> detailTO = mailService.findByDetailTO(id);
+        String resultTO = detailTO.stream().map(EmployeeEmailDto::format)
+                .collect(Collectors.joining(", "));
+
+        List<EmployeeEmailDto> detailCC = mailService.findByDetailCC(id);
+        String resultCC = detailCC.stream()
+                .map(EmployeeEmailDto::format)
+                .collect(Collectors.joining(", "));
+
+        model.addAttribute("mailBoxFindOne", mailBoxFindOne);
         model.addAttribute("mailFileDto", mailFileStoreService.findByMailStoreId(id));
+        model.addAttribute("to", resultTO);
+        model.addAttribute("cc", resultCC);
+
         return "/mail/detail";
     }
 

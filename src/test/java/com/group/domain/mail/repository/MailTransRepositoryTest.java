@@ -1,5 +1,6 @@
 package com.group.domain.mail.repository;
 
+import com.group.application.mail.dto.MailBoxDTO;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,7 @@ import java.util.List;
 class MailTransRepositoryTest {
 
     @Autowired MailTransRepository mailTransRepository;
-
+    @Autowired MailRepositoryImpl mailRepository;
     @Test
     void mailBoxTrash() {
         Integer result = mailTransRepository.mailTransByTrash(1);
@@ -29,4 +30,10 @@ class MailTransRepositoryTest {
         list.add(5);
     }
 
+    @Test
+    @DisplayName("참조자 조회")
+    void findCC() {
+        List<MailBoxDTO> byOneV2toCC = mailRepository.findByOneV2toTO(25, 29);
+        byOneV2toCC.stream().forEach(System.out::println);
+    }
 }

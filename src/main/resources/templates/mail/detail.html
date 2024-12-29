@@ -20,11 +20,24 @@
     </tbody>
 </table>
 <div class="container">
-    <input type="hidden" th:text="${mailBoxDto.id}" id="mailBoxId" th:value="${mailBoxDto.id}"><br/>
-    <h1 th:text="${mailBoxDto.mailTitle}">메일 제목 표시</h1>
-    <span class="author" th:text="'보낸 사람: ' + ${mailBoxDto.senderName}">작성자 이름 표시</span>
-    <span th:text="'<' + ${mailBoxDto.empEmail} + '>'">작성자 메일 표시</span>
-    <p th:text="${mailBoxDto.mailContent}">메일 내용 표시</p>
+
+    <input type="hidden" th:text="${mailBoxFindOne.id}" id="mailBoxId" th:value="${mailBoxFindOne.id}"><br/>
+
+    <h1 th:text="'메일 제목: ' + ${mailBoxFindOne.mailTitle}">메일 제목 표시</h1>
+    <span class="author" th:text="'보낸 사람: ' + ${mailBoxFindOne.senderName} + '<' + ${mailBoxFindOne.empEmail} + '>'">보낸사람 이름 표시</span></br>
+    <hr>
+
+    <span class="author">받는 사람 :
+    <span th:text="${to}"></span>
+    </span></br>
+    <hr>
+
+    <span class="author">참조자 :
+    <span th:text="${cc}"></span>
+    </span>
+
+    <p th:text="'메일 내용 : ' + ${mailBoxFindOne.mailContent}">메일 내용 표시</p>
+
     <div class="actions">
         <button type="button" class="btn trash" onclick="trashMail()">메일 삭제</button>
         <button type="button" class="btn delete" onclick="mailDelete()">영구 삭제</button>

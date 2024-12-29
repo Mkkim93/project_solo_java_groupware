@@ -48,14 +48,14 @@ class MailServiceTest {
     }
 
 
-    @Test
+    /*@Test
     public void testFetchReceiverEmployees() {
         MailBox mailBox = entityManager.find(MailBox.class, 1);
         List<Employee> employees = mailBox.getReceiverEmployees();
 
         assertNotNull(employees);
         assertFalse(employees.isEmpty());
-    }
+    }*/
 
     @Test
     @DisplayName("전체 메일함 조회")
@@ -90,7 +90,7 @@ class MailServiceTest {
 
     @Test
     @DisplayName("메일 상세 페이지 조회 시 id 값 (service)")
-    void mailDetailId() {
+    void mailDetailTOId() {
 
     }
 
@@ -146,6 +146,6 @@ class MailServiceTest {
     @Test
     void findOne() {
         Integer id = 5;
-        mailService.detail(id);
+
     }
 }

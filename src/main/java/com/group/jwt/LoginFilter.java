@@ -43,7 +43,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         /*String username = obtainUsername(req);
         String password = obtainPassword(req);*/
 
-
         log.info("attemptAuthentication Method ?");
         log.info("empEmail={}, empPass={}", empEmail, empPass);
 

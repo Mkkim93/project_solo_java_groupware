@@ -50,11 +50,7 @@ public class QEmployee extends EntityPathBase<Employee> {
 
     public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
-    public final ListPath<com.group.domain.mail.entity.MailBox, com.group.domain.mail.entity.QMailBox> receivedMailBoxes = this.<com.group.domain.mail.entity.MailBox, com.group.domain.mail.entity.QMailBox>createList("receivedMailBoxes", com.group.domain.mail.entity.MailBox.class, com.group.domain.mail.entity.QMailBox.class, PathInits.DIRECT2);
-
     public final StringPath roleType = createString("roleType");
-
-    public final ListPath<com.group.domain.mail.entity.MailBox, com.group.domain.mail.entity.QMailBox> sentMailBoxes = this.<com.group.domain.mail.entity.MailBox, com.group.domain.mail.entity.QMailBox>createList("sentMailBoxes", com.group.domain.mail.entity.MailBox.class, com.group.domain.mail.entity.QMailBox.class, PathInits.DIRECT2);
 
     public final StringPath userEmail = createString("userEmail");
 
