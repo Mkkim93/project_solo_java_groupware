@@ -131,6 +131,7 @@ public class MailController {
 
         model.addAttribute("mailBoxFindOne", mailBoxFindOne);
         model.addAttribute("mailFileDto", mailFileStoreService.findByMailStoreId(id));
+        model.addAttribute("employeeDto", empDto);
         model.addAttribute("to", resultTO);
         model.addAttribute("cc", resultCC);
 

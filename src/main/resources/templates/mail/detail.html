@@ -5,48 +5,133 @@
     <title>메일 상세 페이지</title>
 </head>
 <body>
-<table>
-    <thead>
-        <tr>
-            <th class="text-center">첨부파일명</th>
-            <th class="text-center">파일사이즈</th>
-        </tr>
-    </thead>
-    <tbody id="fileListBody">
-        <tr th:each="files :${mailFileDto}">
-            <td th:text="${files.mailFileOriginName}"></td>
-            <td th:text="${files.mailFileSize}"></td>
-        </tr>
-    </tbody>
-</table>
+
+<button type="button" onclick="reply()">답장</button>
+<button type="button" onclick="deliver()">전달</button>
+
 <div class="container">
+    <div id="replies">
+        <div class="reply"></div>
+    </div>
 
     <input type="hidden" th:text="${mailBoxFindOne.id}" id="mailBoxId" th:value="${mailBoxFindOne.id}"><br/>
 
-    <h1 th:text="'메일 제목: ' + ${mailBoxFindOne.mailTitle}">메일 제목 표시</h1>
-    <span class="author" th:text="'보낸 사람: ' + ${mailBoxFindOne.senderName} + '<' + ${mailBoxFindOne.empEmail} + '>'">보낸사람 이름 표시</span></br>
+    <h1 id="mailTitle" th:text="'메일 제목: ' + ${mailBoxFindOne.mailTitle}">메일 제목 표시</h1>
+    <span class="author" id="sender" th:text="'보낸 사람: ' + ${mailBoxFindOne.senderName} + '<' + ${mailBoxFindOne.empEmail} + '>'">보낸사람 이름 표시</span></br>
     <hr>
 
     <span class="author">받는 사람 :
-    <span th:text="${to}"></span>
+        <span id="receiver" th:text="*{to}"></span>
     </span></br>
     <hr>
 
     <span class="author">참조자 :
-    <span th:text="${cc}"></span>
+        <span id="referrer" th:text="${cc}"></span>
     </span>
 
-    <p th:text="'메일 내용 : ' + ${mailBoxFindOne.mailContent}">메일 내용 표시</p>
+    <table>
+        <thead>
+        <tr>
+            <th class="text-center">첨부파일명</th>
+            <th class="text-center">파일사이즈</th>
+        </tr>
+        </thead>
+        <tbody id="fileListBody">
+        <tr th:each="files : ${mailFileDto}">
+            <td th:text="${files.mailFileOriginName}"></td>
+            <td th:text="${files.mailFileSize}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p id="mailContent" th:text="'메일 내용 : ' + ${mailBoxFindOne.mailContent}">메일 내용 표시</p>
 
     <div class="actions">
         <button type="button" class="btn trash" onclick="trashMail()">메일 삭제</button>
         <button type="button" class="btn delete" onclick="mailDelete()">영구 삭제</button>
     </div>
 </div>
-</body>
-<script>
-    function loadFileList() {
 
+<script>
+    // 답장 버튼 클릭 시 실행
+    function reply() {
+        const mailBoxId = document.getElementById('mailBoxId').getAttribute('value');
+        fetch(`/api/reply?mailBoxId=${mailBoxId}`, {
+            method: 'POST'
+        }).then(response => response.json())
+            .then(data => {
+                console.log(data); // 서버로부터 받은 답장 데이터 확인
+                updateReplyForm(data); // 답장 폼 업데이트
+            })
+            .catch(error => {
+                console.log('답장 로드 실패:', error);
+            });
+    }
+
+    // 답장 폼을 기존 메일 내용 아래에 추가
+    function updateReplyForm(replyData) {
+        const repliesDiv = document.getElementById('replies'); // 답장들을 추가할 부모 요소
+        const newReply = document.createElement('div'); // 새로운 답장 div 생성
+        const sender = [[${employeeDto.empEmail}]];// 기존 보낸 사람 이름
+        const receiver = document.getElementById('sender').textContent.split(': ')[1]; // 기존 받는 사람
+        const referrer = document.getElementById('referrer').value; // 기존 참조자
+        const mailContent = document.getElementById('mailContent').textContent;
+        const mailTitle = document.getElementById('mailTitle').textContent;
+        newReply.classList.add('reply'); // 클래스 추가
+
+        // 답장 데이터로 내용 채우기
+        newReply.innerHTML = `
+        <form id="replyForm" onsubmit="submitReply(event)">
+            <label for="receiver">받는 사람</label>
+            <input type="text" id="receiver" name="receiver" value="${receiver}" /><br>
+
+            <label for="sender">보내는 사람</label>
+            <input type="text" id="sender" name="sender" value="${sender}" /><br>
+
+            <label for="referrer">참조자</label>
+            <input type="text" id="referrer" name="referrer" value="${referrer}" /><br>
+
+            <label for="title">제목</label>
+            <input type="text" id="title" name="title" value="RE: ${mailTitle}" /><br>
+
+            <label for="content">내용</label>
+            <textarea id="content" name="content">${mailContent}</textarea><br>
+            <button type="submit">답장</button>
+        </form>
+        `;
+
+        // 부모 요소에 새로운 답장을 추가
+        repliesDiv.appendChild(newReply);
+    }
+
+    // 답장 폼 제출 처리
+    function submitReply(event) {
+        event.preventDefault(); // 기본 폼 제출 방지
+
+        const form = event.target;
+        const formData = new FormData(form);
+
+        fetch('/api/reply', {
+            method: 'POST',
+            body: new URLSearchParams(formData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('답장 성공:', data);
+                alert('답장이 전송되었습니다.');
+                window.location.reload(); // 페이지 새로 고침
+            })
+            .catch(error => {
+                console.log('답장 실패:', error);
+            });
+    }
+
+    function deliver() {
+        // 전달 기능 구현
+    }
+
+    // 첨부파일 로딩 처리 (기존 코드 그대로)
+    function loadFileList() {
         document.addEventListener('DOMContentLoaded', () => {
             loadFileList();
         });
@@ -82,7 +167,6 @@
             fileListBody.appendChild(row);
         });
     }
-
     function trashMail() {
         const mailBoxId = document.getElementById('mailBoxId').getAttribute('value');
         console.log('mailBoxId', mailBoxId);
@@ -93,7 +177,7 @@
                 'Content-Type': 'application/json', // 요청 본문이 JSON임을 명시
             },
             body: JSON.stringify({mailBoxId: mailBoxId})
-            })
+        })
             .then(data => {
                 console.log('삭제된 메일 data', data);
                 alert('메일이 삭제 되었습니다.');
@@ -126,4 +210,8 @@
             })
     }
 </script>
+
+</body>
 </html>
+
+

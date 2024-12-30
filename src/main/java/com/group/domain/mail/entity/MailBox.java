@@ -53,6 +53,9 @@ public class MailBox {
     @JoinColumn(name = "sender_emp_id")
     private Employee senderEmployee;
 
+    @Column(name = "mail_parent_id")
+    private Integer mailParentId;
+
     @PrePersist
     void setMailBox() {
         this.mailDeleted = "N";

@@ -3,6 +3,7 @@ package com.group.application.mail.service;
 import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.hr.dto.EmployeeEmailDto;
 import com.group.application.mail.dto.MailBoxDTO;
+import com.group.application.mail.dto.MailReplyDTO;
 import com.group.application.mail.dto.MyMailBoxDTO;
 import com.group.application.mailfile.service.MailFileStoreService;
 import com.group.domain.hr.entity.Employee;
@@ -96,13 +97,11 @@ public class MailService {
 
         mailBoxDto.setId(mailBoxId);
 
-        // TODO
+        // TODO 파일 관련 로직
+        // 전송 메일이 파일 존재 여부 확인
         boolean existFile = file.stream().allMatch(MultipartFile::isEmpty);
-
         file.stream().toList().forEach(System.out::println);
         log.info("existFile", existFile);
-
-        // 전송 메일이 파일 존재 여부 확인
         saveFile(mailBoxDto.getId(), file);
 
         // 실제 수신자의 mail 주소 , 로 구분
@@ -120,7 +119,6 @@ public class MailService {
                 .collect(Collectors.toList());
 
         // logic 2 : mailrecvstore 에 데이터 저장
-
         ISCC ccTypeTo = ISCC.TO;
         List<Integer> byEmpIdTO = findByEmpId(empEmails);
         mailQueryRepository.saveMailBoxIdAndReceiveId(result.getId(), byEmpIdTO, ccTypeTo);
@@ -133,7 +131,6 @@ public class MailService {
         if (result.getMailStatus() == MailStatus.DRAFT) {
             log.info("result.getMailStatus={}", result.getMailStatus());
             log.info("result.getClass={}", result.getClass());
-
         }
         // 수신자와 참조자의 id 를 합친다
         List<Integer> totalccTypeId = new ArrayList<>();
@@ -219,6 +216,28 @@ public class MailService {
 
     public List<EmployeeEmailDto> findByDetailCC(Integer mailBoxId) {
         return mailQueryRepository.findByMailReceiverCC(mailBoxId);
+    }
+
+    public MailReplyDTO writeReplyMail(MailReplyDTO mailReplyDTO, List<MultipartFile> file) {
+        MailReplyDTO dto = mailQueryRepository.replyMail(mailReplyDTO);
+
+
+        // 파일 관련 로직
+        boolean existFile = file.stream().allMatch(MultipartFile::isEmpty);
+        file.stream().toList().forEach(System.out::println);
+        log.info("existFile", existFile);
+        saveFile(dto.getMailParentId(), file);
+
+        // 메일이 임시저장 (DRAFT) 이면 recvstore 에만 저장
+        if (mailReplyDTO.getMailStatus() == "DRAFT") {
+
+        }
+
+        // 메일이 전송 (SENDEN) 이면 mailrecvstore 와 mailtrans 모두 저장
+        if (mailReplyDTO.getMailStatus() == "SENDED") {
+
+        }
+        return null;
     }
 
 }

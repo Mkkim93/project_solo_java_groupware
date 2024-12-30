@@ -3,6 +3,7 @@ package com.group.web.mail.controller.api;
 import com.group.application.hr.dto.EmployeeDTO;
 import com.group.application.hr.service.EmployeeService;
 import com.group.application.mail.dto.MailBoxDTO;
+import com.group.application.mail.dto.MailReplyDTO;
 import com.group.application.mail.dto.MailTransDTO;
 import com.group.application.mail.service.MailService;
 import com.group.application.mail.service.MailTransService;
@@ -131,9 +132,16 @@ public class MailApiController {
         response.sendRedirect("/mail/list");
     }
 
-    @GetMapping("/api/details")
-    public ResponseEntity<?> mailDetail(@RequestParam(value = "id", required = false) Integer mailBoxId) {
+    @PostMapping("/api/reply")
+    public void replySendMail(@RequestParam(value = "mailBoxId", required = false) Integer mailBoxId,
+                              @RequestParam(value = "file", required = false) List<MultipartFile> mailFiles,
+                              @CookieValue("uuid") String empUUID, EmployeeDTO employeeDto,MailReplyDTO mailReplyDto,
+                              HttpServletResponse response) throws IOException {
 
-        return null;
+        employeeDto.setEmpUUID(empUUID);
+        employeeService.findByEmployee(employeeDto);
+        mailReplyDto.setMailParentId(mailBoxId);
+        mailService.writeReplyMail(mailReplyDto, mailFiles);
+        response.sendRedirect("/mail/list");
     }
 }
